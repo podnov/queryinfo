@@ -1,8 +1,3 @@
-# QueryInfo
-
-The purpose of this code is to have a Java api for creating a serializable query structure. A JSON example of this structure looks like so:
-
-```javascript
 {
   "conditionGroup" : {
     "conditionGroups" : [
@@ -48,4 +43,3 @@ The purpose of this code is to have a Java api for creating a serializable query
     }
   ]
 }
-```
