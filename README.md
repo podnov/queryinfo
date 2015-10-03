@@ -36,7 +36,7 @@ The purpose of this code is to have a Java api for creating a serializable query
     "pageIndex" : 0,
     "pageSize" : 9223372036854775807
   },
-  "requestedFields" : [
+  "requestedFieldNames" : [
     "a",
     "b",
     "c"
