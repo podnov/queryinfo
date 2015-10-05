@@ -1,62 +1,78 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.evanzeimet</groupId>
-    <artifactId>query-info</artifactId>
-    <version>1.0-SNAPSHOT</version>
+	<groupId>com.evanzeimet.queryinfo</groupId>
+	<artifactId>queryinfo-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-    <packaging>jar</packaging>
+	<modules>
+		<module>common</module>
+		<module>jpa</module>
+	</modules>
 
-    <build>
-        <finalName>query-info</finalName>
-    </build>
+	<properties>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 
-    <properties>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+		<version.com.fasterxml.jackson>2.6.2</version.com.fasterxml.jackson>
+		<version.commons-io.commons-io>2.4</version.commons-io.commons-io>
+		<version.javax.javaee-api>7.0</version.javax.javaee-api>
+		<version.junit.junit>4.12</version.junit.junit>
+		<version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
+		<version.org.hamcrest.hamcrest-all>1.3</version.org.hamcrest.hamcrest-all>
+	</properties>
 
-        <version.com.fasterxml.jackson>2.6.2</version.com.fasterxml.jackson>
-        <version.commons-io.commons-io>2.4</version.commons-io.commons-io>
-        <version.junit.junit>4.12</version.junit.junit>
-        <version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
-        <version.org.hamcrest.hamcrest-all>1.3</version.org.hamcrest.hamcrest-all>
-    </properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${version.com.fasterxml.jackson}</version>
+			</dependency>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${version.com.fasterxml.jackson}</version>
-        </dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${version.commons-io.commons-io}</version>
+				<scope>test</scope>
+			</dependency>
 
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${version.commons-io.commons-io}</version>
-            <scope>test</scope>
-        </dependency>
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${version.javax.javaee-api}</version>
+				<scope>provided</scope>
+			</dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit.junit}</version>
-            <scope>test</scope>
-        </dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${version.junit.junit}</version>
+				<scope>test</scope>
+			</dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${version.org.apache.commons.commons-lang3}</version>
-        </dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${version.org.apache.commons.commons-lang3}</version>
+			</dependency>
 
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>${version.org.hamcrest.hamcrest-all}</version>
-            <scope>test</scope>
-        </dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-all</artifactId>
+				<version>${version.org.hamcrest.hamcrest-all}</version>
+				<scope>test</scope>
+			</dependency>
 
-    </dependencies>
+		</dependencies>
+	</dependencyManagement>
+
 </project>
