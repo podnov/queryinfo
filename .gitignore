@@ -16,6 +16,3 @@ hs_err_pid*
 #intellij
 **/.idea/**
 **/*.iml
-/api/
-/jpa/
-/common/
