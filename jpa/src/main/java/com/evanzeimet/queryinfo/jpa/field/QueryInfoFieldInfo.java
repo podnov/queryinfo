@@ -14,8 +14,12 @@ public interface QueryInfoFieldInfo {
 
 	void setIsQueryable(Boolean isQueryable);
 
-	Boolean getIsResult();
+	Boolean getIsSelectable();
 
-	void setIsResult(Boolean isResult);
+	void setIsSelectable(Boolean isSelectable);
+
+	Boolean getIsSortable();
+
+	void setIsSortable(Boolean isSortable);
 
 }

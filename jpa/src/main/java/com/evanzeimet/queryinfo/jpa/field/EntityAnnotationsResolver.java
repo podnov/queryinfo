@@ -32,13 +32,15 @@ public class EntityAnnotationsResolver<T> implements QueryInfoFieldInfoResolver<
 		String entityAttributeName = createFieldName(annotatedMethod);
 		String fieldName = entityAttributeName;
 		boolean isQueryable = annotation.isQueryable();
-		boolean isResult = annotation.isResult();
+		boolean isSelectable = annotation.isSelectable();
+		boolean isSortable = annotation.isSortable();
 
 		return QueryInfoFieldInfoBuilder.create()
 				.entityAttributeName(entityAttributeName)
 				.fieldName(fieldName)
 				.isQueryable(isQueryable)
-				.isResult(isResult)
+				.isSelectable(isSelectable)
+				.isSortable(isSortable)
 				.build();
 	}
 

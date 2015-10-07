@@ -4,30 +4,30 @@ public class DefaultPaginationInfo implements PaginationInfo {
 
 	private static final long serialVersionUID = -1948731101502690045L;
 
-	private Long pageIndex;
-	private Long pageSize;
+	private Integer pageIndex;
+	private Integer pageSize;
 
 	public DefaultPaginationInfo() {
 
 	}
 
 	@Override
-	public Long getPageIndex() {
+	public Integer getPageIndex() {
 		return pageIndex;
 	}
 
 	@Override
-	public void setPageIndex(Long pageIndex) {
+	public void setPageIndex(Integer pageIndex) {
 		this.pageIndex = pageIndex;
 	}
 
 	@Override
-	public Long getPageSize() {
+	public Integer getPageSize() {
 		return pageSize;
 	}
 
 	@Override
-	public void setPageSize(Long pageSize) {
+	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 	}
 }

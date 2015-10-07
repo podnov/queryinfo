@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public interface PaginationInfo extends Serializable {
 
-	Long getPageIndex();
+	Integer getPageIndex();
 
-	void setPageIndex(Long pageIndex);
+	void setPageIndex(Integer pageIndex);
 
-	Long getPageSize();
+	Integer getPageSize();
 
-	void setPageSize(Long pageSize);
+	void setPageSize(Integer pageSize);
 
 }

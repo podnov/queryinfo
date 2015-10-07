@@ -5,7 +5,8 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	private String entityAttributeName;
 	private String fieldName;
 	private Boolean isQueryable;
-	private Boolean isResult;
+	private Boolean isSelectable;
+	private Boolean isSortable;
 
 	public DefaultQueryInfoFieldInfo() {
 	}
@@ -41,12 +42,22 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	}
 
 	@Override
-	public Boolean getIsResult() {
-		return isResult;
+	public Boolean getIsSelectable() {
+		return isSelectable;
 	}
 
 	@Override
-	public void setIsResult(Boolean isResult) {
-		this.isResult = isResult;
+	public void setIsSelectable(Boolean isSelectable) {
+		this.isSelectable = isSelectable;
+	}
+
+	@Override
+	public Boolean getIsSortable() {
+		return isSortable;
+	}
+
+	@Override
+	public void setIsSortable(Boolean isSortable) {
+		this.isSortable = isSortable;
 	}
 }

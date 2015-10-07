@@ -19,17 +19,17 @@ public class PaginationInfoBuilderTest {
 
 	@Test
 	public void build() {
-		Long givenPageIndex = 4L;
-		Long givenPageSize = 2L;
+		Integer givenPageIndex = 4;
+		Integer givenPageSize = 2;
 
 		PaginationInfo actualPaginationInfo = builder.pageIndex(givenPageIndex)
 				.pageSize(givenPageSize)
 				.build();
 
-		Long actualPageIndex = actualPaginationInfo.getPageIndex();
+		Integer actualPageIndex = actualPaginationInfo.getPageIndex();
 		assertEquals(givenPageIndex, actualPageIndex);
 
-		Long actualPageSize = actualPaginationInfo.getPageSize();
+		Integer actualPageSize = actualPaginationInfo.getPageSize();
 		assertEquals(givenPageSize, actualPageSize);
 	}
 }

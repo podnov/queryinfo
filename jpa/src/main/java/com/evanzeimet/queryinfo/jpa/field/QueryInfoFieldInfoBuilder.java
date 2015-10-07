@@ -14,7 +14,8 @@ public class QueryInfoFieldInfoBuilder {
 		result.setEntityAttributeName(builderRefrenceInstance.getEntityAttributeName());
 		result.setFieldName(builderRefrenceInstance.getFieldName());
 		result.setIsQueryable(builderRefrenceInstance.getIsQueryable());
-		result.setIsResult(builderRefrenceInstance.getIsResult());
+		result.setIsSelectable(builderRefrenceInstance.getIsSelectable());
+		result.setIsSortable(builderRefrenceInstance.getIsSortable());
 
 		return result;
 	}
@@ -38,8 +39,13 @@ public class QueryInfoFieldInfoBuilder {
 		return this;
 	}
 
-	public QueryInfoFieldInfoBuilder isResult(Boolean isResult) {
-		builderRefrenceInstance.setIsResult(isResult);
+	public QueryInfoFieldInfoBuilder isSelectable(Boolean isSelectable) {
+		builderRefrenceInstance.setIsSelectable(isSelectable);
+		return this;
+	}
+
+	public QueryInfoFieldInfoBuilder isSortable(boolean isSortable) {
+		builderRefrenceInstance.setIsSortable(isSortable);
 		return this;
 	}
 

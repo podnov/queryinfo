@@ -46,8 +46,11 @@ public class EntityAnnotationsResolverTest {
 		Boolean actualIsQueryable = actualFieldInfo.getIsQueryable();
 		assertTrue(actualIsQueryable);
 
-		Boolean actualIsResult = actualFieldInfo.getIsResult();
-		assertFalse(actualIsResult);
+		Boolean actualIsSelectable = actualFieldInfo.getIsSelectable();
+		assertFalse(actualIsSelectable);
+
+		Boolean actualIsSortable = actualFieldInfo.getIsSortable();
+		assertTrue(actualIsSortable);
 	}
 
 	@Test
@@ -218,7 +221,8 @@ public class EntityAnnotationsResolverTest {
 		private String stuffAndThings;
 
 		@QueryInfoField(isQueryable = true,
-				isResult = false)
+				isSelectable = false,
+				isSortable = true)
 		public String getStuffAndThings() {
 			return stuffAndThings;
 		}

@@ -2,16 +2,26 @@ package com.evanzeimet.queryinfo.condition;
 
 public enum ConditionOperator {
 
-	EQUAL_TO("=", "equals"),
-	NOT_EQUAL_TO("<>", "not equals"),
-	GREATER_THAN(">", "is greater than"),
-	GREATER_THAN_OR_EQUAL_TO(">=", "is greater than or equal to"),
-	LESS_THAN("<", "is less than"),
-	LESS_THAN_OR_EQUAL_TO("<=", "is less than or equal to"),
-	NULL("is null", "is null"),
-	NOT_NULL("is not null", "is not null"),
-	IN("is in", "is in"),
-	NOT_IN("is not in", "is not in");
+	EQUAL_TO("=",
+			"equals"),
+	NOT_EQUAL_TO("<>",
+			"not equals"),
+	GREATER_THAN(">",
+			"is greater than"),
+	GREATER_THAN_OR_EQUAL_TO(">=",
+			"is greater than or equal to"),
+	LESS_THAN("<",
+			"is less than"),
+	LESS_THAN_OR_EQUAL_TO("<=",
+			"is less than or equal to"),
+	NULL("is null",
+			"is null"),
+	NOT_NULL("is not null",
+			"is not null"),
+	IN("is in",
+			"is in"),
+	NOT_IN("is not in",
+			"is not in");
 
 	private final String description;
 	private final String text;
@@ -27,5 +37,18 @@ public enum ConditionOperator {
 
 	public String getText() {
 		return text;
+	}
+
+	public static ConditionOperator fromText(String text) {
+		ConditionOperator result = null;
+
+		for (ConditionOperator conditionOperator : ConditionOperator.values()) {
+			if (conditionOperator.getText().equals(text)) {
+				result = conditionOperator;
+				break;
+			}
+		}
+
+		return result;
 	}
 }

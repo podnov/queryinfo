@@ -25,22 +25,22 @@ public class PaginationInfoBuilder {
 
 	public static PaginationInfoBuilder createForAll() {
 		return create()
-				.pageIndex(0L)
-				.pageSize(Long.MAX_VALUE);
+				.pageIndex(0)
+				.pageSize(Integer.MAX_VALUE);
 	}
 
 	public static PaginationInfoBuilder createForOne() {
 		return create()
-				.pageIndex(0L)
-				.pageIndex(1L);
+				.pageIndex(0)
+				.pageIndex(1);
 	}
 
-	public PaginationInfoBuilder pageIndex(Long pageIndex) {
+	public PaginationInfoBuilder pageIndex(Integer pageIndex) {
 		builderReferenceInstance.setPageIndex(pageIndex);
 		return this;
 	}
 
-	public PaginationInfoBuilder pageSize(Long pageSize) {
+	public PaginationInfoBuilder pageSize(Integer pageSize) {
 		builderReferenceInstance.setPageSize(pageSize);
 		return this;
 	}

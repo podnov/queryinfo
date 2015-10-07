@@ -3,24 +3,44 @@ package com.evanzeimet.queryinfo.jpa.from;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 
-public class QueryInfoFromContext {
+public class QueryInfoJPAContext<RootEntity> {
 
+	protected CriteriaBuilder criteriaBuilder;
+	protected CriteriaQuery<?> criteriaQuery;
 	protected Map<QueryInfoJoinKey, Join<?, ?>> joins = new HashMap<>();
-	protected From<?, ?> root;
+	protected Root<RootEntity> root;
 
-	public QueryInfoFromContext() {
+	public QueryInfoJPAContext() {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	public <L, R> From<L, R> getRoot() {
-		return (From<L, R>) root;
+	public CriteriaBuilder getCriteriaBuilder() {
+		return criteriaBuilder;
 	}
 
-	public void setRoot(From<?, ?> root) {
+	public void setCriteriaBuilder(CriteriaBuilder criteriaBuilder) {
+		this.criteriaBuilder = criteriaBuilder;
+	}
+
+	public CriteriaQuery<?> getCriteriaQuery() {
+		return criteriaQuery;
+	}
+
+	public void setCriteriaQuery(CriteriaQuery<?> criteriaQuery) {
+		this.criteriaQuery = criteriaQuery;
+	}
+
+	public Root<RootEntity> getRoot() {
+		return root;
+	}
+
+	public void setRoot(Root<RootEntity> root) {
 		this.root = root;
 	}
 
