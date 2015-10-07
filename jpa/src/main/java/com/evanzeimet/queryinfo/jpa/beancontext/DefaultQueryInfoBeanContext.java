@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa;
+package com.evanzeimet.queryinfo.jpa.beancontext;
 
 import com.evanzeimet.queryinfo.jpa.field.EntityAnnotationsResolver;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfoResolver;

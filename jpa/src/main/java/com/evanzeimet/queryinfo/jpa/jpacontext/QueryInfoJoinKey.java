@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.from;
+package com.evanzeimet.queryinfo.jpa.jpacontext;
 
 import javax.persistence.criteria.From;
 

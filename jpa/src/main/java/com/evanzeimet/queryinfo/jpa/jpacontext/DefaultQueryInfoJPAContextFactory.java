@@ -1,10 +1,10 @@
-package com.evanzeimet.queryinfo.jpa.from;
+package com.evanzeimet.queryinfo.jpa.jpacontext;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import com.evanzeimet.queryinfo.jpa.CriteriaQueryBeanContext;
+import com.evanzeimet.queryinfo.jpa.beancontext.CriteriaQueryBeanContext;
 
 public class DefaultQueryInfoJPAContextFactory<RootEntity>
 		implements QueryInfoJPAContextFactory<RootEntity> {

@@ -1,7 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.selection;
 
 import com.evanzeimet.queryinfo.QueryInfo;
-import com.evanzeimet.queryinfo.jpa.from.QueryInfoJPAContext;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public interface QueryInfoSelectionSetter<RootEntity> {
 

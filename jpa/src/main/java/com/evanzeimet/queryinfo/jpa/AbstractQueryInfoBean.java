@@ -11,15 +11,16 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.from.QueryInfoJPAContext;
-import com.evanzeimet.queryinfo.jpa.from.QueryInfoJPAContextFactory;
+import com.evanzeimet.queryinfo.jpa.beancontext.CriteriaQueryBeanContext;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.predicate.PredicateFactory;
+import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoOriginalResultTransformer;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public abstract class AbstractCriteriaQueryBean<RootEntity, InitialResultType, FinalResultType> {
+public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, FinalResultType> {
 
 	protected static final int DEFAULT_PAGE_INDEX = 0;
 	protected static final int DEFAULT_MAX_RESULTS = 20;
@@ -32,17 +33,10 @@ public abstract class AbstractCriteriaQueryBean<RootEntity, InitialResultType, F
 	protected EntityManager entityManager;
 
 
-	public AbstractCriteriaQueryBean(CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> context) {
+	public AbstractQueryInfoBean(CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> context) {
 		this.beanContext = context;
 	}
 
-	/**
-	 * TODO: select distinct count(*) isn't going to work.
-	 *
-	 * Should we:
-	 *
-	 * select count(select distinct ... from real query results)?
-	 **/
 	public Long count(QueryInfo queryInfo) throws QueryInfoException {
 		Boolean useDistinctSelections = beanContext.getUseDistinctSelections();
 
@@ -74,6 +68,7 @@ public abstract class AbstractCriteriaQueryBean<RootEntity, InitialResultType, F
 	}
 
 	public List<FinalResultType> query(QueryInfo queryInfo) throws QueryInfoException {
+		// TODO queryinfo coalesce parts?
 		Class<InitialResultType> InitialResultTypeClass = beanContext.getInitialResultTypeClass();
 		CriteriaQuery<InitialResultType> criteriaQuery = criteriaBuilder.createQuery(InitialResultTypeClass);
 
@@ -135,7 +130,7 @@ public abstract class AbstractCriteriaQueryBean<RootEntity, InitialResultType, F
 	protected void setQueryPredicates(CriteriaQuery<?> criteriaQuery,
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
-		PredicateFactory<RootEntity> predicateFactory = beanContext.getPredicateFactory();
+		QueryInfoPredicateFactory<RootEntity> predicateFactory = beanContext.getPredicateFactory();
 		Predicate[] predicates = predicateFactory.createPredicates(jpaContext, queryInfo);
 
 		criteriaQuery.where(predicates);
@@ -147,7 +142,7 @@ public abstract class AbstractCriteriaQueryBean<RootEntity, InitialResultType, F
 		QueryInfoSelectionSetter<RootEntity> selectionSetter = beanContext.getSelectionSetter();
 		selectionSetter.setSelection(jpaContext, queryInfo);
 	}
-	
+
 	protected List<FinalResultType> transformInitialResults(List<InitialResultType> originalResults) {
 		QueryInfoOriginalResultTransformer<InitialResultType, FinalResultType> originalResultTransormer = beanContext.getOriginalResultTransformer();
 		return originalResultTransormer.transform(originalResults);

@@ -8,7 +8,7 @@ import javax.persistence.criteria.From;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
-import com.evanzeimet.queryinfo.jpa.from.QueryInfoJPAContext;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public interface QueryInfoPathFactory<RootEntity>  {
 
@@ -19,7 +19,7 @@ public interface QueryInfoPathFactory<RootEntity>  {
 	void setFieldInfos(Map<String, QueryInfoFieldInfo> fieldInfos);
 
 	<T> Expression<T> getPathForField(From<?, RootEntity> from,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<?> jpaContext,
 			String fieldName,
 			QueryInfoFieldPurpose purpose) throws QueryInfoException;
 

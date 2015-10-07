@@ -1,9 +1,9 @@
-package com.evanzeimet.queryinfo.jpa.from;
+package com.evanzeimet.queryinfo.jpa.jpacontext;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
-import com.evanzeimet.queryinfo.jpa.CriteriaQueryBeanContext;
+import com.evanzeimet.queryinfo.jpa.beancontext.CriteriaQueryBeanContext;
 
 public interface QueryInfoJPAContextFactory<RootEntity> {
 

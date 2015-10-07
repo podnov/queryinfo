@@ -16,14 +16,14 @@ import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
-import com.evanzeimet.queryinfo.jpa.from.QueryInfoJPAContext;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
-public class DefaultPredicateFactory<RootEntity> implements PredicateFactory<RootEntity> {
+public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPredicateFactory<RootEntity> {
 
 	private QueryInfoPathFactory<RootEntity> pathFactory;
 
-	public DefaultPredicateFactory() {
+	public DefaultQueryInfoPredicateFactory() {
 
 	}
 

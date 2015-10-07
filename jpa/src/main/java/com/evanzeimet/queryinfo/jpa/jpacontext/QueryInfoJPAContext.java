@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.from;
+package com.evanzeimet.queryinfo.jpa.jpacontext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <L, R> Join<L, R> getJoin(From<L, ?> joinParent,
+	public <L, R> Join<L, R> getJoin(From<?, ?> joinParent,
 			String joinAttributeName) {
 
 		QueryInfoJoinKey joinKey = createJoinKey(joinParent,
@@ -84,9 +84,9 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <L, R> Join<L, R> resolveJoin(From<L, ?> joinParent,
+	public <L, R> Join<L, R> resolveJoin(From<?, ?> joinParent,
 			String joinAttributeName) {
-		Join<L, Object> result = getJoin(joinParent, joinAttributeName);
+		Join<?, ?> result = getJoin(joinParent, joinAttributeName);
 
 		if (result == null) {
 			result = joinParent.join(joinAttributeName);

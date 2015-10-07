@@ -11,6 +11,7 @@
 	<modules>
 		<module>common</module>
 		<module>jpa</module>
+		<module>queryinfo-integration-tests</module>
 	</modules>
 
 	<properties>
@@ -25,6 +26,7 @@
 		<version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
 		<version.org.hamcrest.hamcrest-all>1.3</version.org.hamcrest.hamcrest-all>
 		<version.org.mockito.mockito-all>1.9.5</version.org.mockito.mockito-all>
+		<version.org.wildfly.wildfly-parent>9.0.1.Final</version.org.wildfly.wildfly-parent>
 	</properties>
 
 	<dependencyManagement>
@@ -36,9 +38,9 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${version.com.fasterxml.jackson}</version>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-jpa</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
@@ -86,6 +88,14 @@
 				<artifactId>mockito-all</artifactId>
 				<version>${version.org.mockito.mockito-all}</version>
 				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.wildfly</groupId>
+				<artifactId>wildfly-parent</artifactId>
+				<version>${version.org.wildfly.wildfly-parent}</version>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 
 		</dependencies>
