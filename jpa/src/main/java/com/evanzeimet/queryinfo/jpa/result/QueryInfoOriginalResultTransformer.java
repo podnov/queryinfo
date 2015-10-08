@@ -2,7 +2,7 @@ package com.evanzeimet.queryinfo.jpa.result;
 
 import java.util.List;
 
-public interface QueryInfoOriginalResultTransformer<InitialResultType, FinalResultType> {
+public interface QueryInfoOriginalResultTransformer<InitialTupleResultType, FinalTupleResultType> {
 
-	List<FinalResultType> transform(List<InitialResultType> initialResults);
+	List<FinalTupleResultType> transform(List<InitialTupleResultType> initialResults);
 }

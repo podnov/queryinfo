@@ -1,0 +1,87 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.evanzeimet.queryinfo</groupId>
+		<artifactId>queryinfo-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>queryinfo-integration-tests-db</artifactId>
+	<packaging>jar</packaging>
+	
+	<properties>
+		<queryinfo.db.changeLogFile>queryinfo-it.changelog.xml</queryinfo.db.changeLogFile>
+		<queryinfo.db.driver>com.mysql.jdbc.Driver</queryinfo.db.driver>
+		<queryinfo.db.password>queryinfo_test</queryinfo.db.password>
+		<queryinfo.db.username>queryinfo_test</queryinfo.db.username>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>normalize line endings</id>
+								<phase>package</phase>
+								<configuration>
+									<tasks>
+										<!-- we don't want to mix windows and unix line endings as they affect the changeset checksum -->
+										<fixcrlf srcdir="${basedir}/src/main/resources" eol="unix" />
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>liquibase-update</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+						<artifactId>liquibase-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>update queryinfo database</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>update</goal>
+								</goals>
+								<configuration>
+									<changeLogFile>${queryinfo.db.changeLogFile}</changeLogFile>
+									<driver>${queryinfo.db.driver}</driver>
+									<url>${queryinfo.db.url}</url>
+									<username>${queryinfo.db.username}</username>
+									<password>${queryinfo.db.password}</password>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>local</id>
+			<properties>
+				<queryinfo.db.url>jdbc:mysql://localhost:3306/queryinfo_test</queryinfo.db.url>
+			</properties>
+		</profile>
+	</profiles>
+</project>

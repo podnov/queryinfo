@@ -18,14 +18,16 @@ import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoOriginalResultTransformer;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
+import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
+import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, FinalResultType> {
+public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, FinalTupleResultType> {
 
 	protected static final int DEFAULT_PAGE_INDEX = 0;
 	protected static final int DEFAULT_MAX_RESULTS = 20;
 
-	protected CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> beanContext;
+	protected CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> beanContext;
 	protected CriteriaBuilder criteriaBuilder;
 
 	@Inject
@@ -33,7 +35,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, Final
 	protected EntityManager entityManager;
 
 
-	public AbstractQueryInfoBean(CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> context) {
+	public AbstractQueryInfoBean(CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> context) {
 		this.beanContext = context;
 	}
 
@@ -45,7 +47,6 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, Final
 			throw new QueryInfoException(message);
 		}
 
-		// TODO queryinfo coalesce parts?
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 
 		QueryInfoJPAContext<RootEntity> jpaContext = createJpaContext(criteriaQuery);
@@ -54,24 +55,11 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, Final
 		TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
 
 		return typedQuery.getSingleResult();
-
 	}
 
-	protected QueryInfoJPAContext<RootEntity> createJpaContext(CriteriaQuery<?> criteriaQuery) {
-		QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = beanContext.getJpaContextFactory();
-		return jpaContextFactory.createJpaContext(criteriaBuilder, beanContext, criteriaQuery);
-	}
-
-	@PostConstruct
-	protected void postConstruct() {
-		criteriaBuilder = entityManager.getCriteriaBuilder();
-	}
-
-	public List<FinalResultType> query(QueryInfo queryInfo) throws QueryInfoException {
+	protected <ResultClass> List<ResultClass> executeQueryInfoQuery(CriteriaQuery<ResultClass> criteriaQuery,
+			QueryInfo queryInfo) throws QueryInfoException {
 		// TODO queryinfo coalesce parts?
-		Class<InitialResultType> InitialResultTypeClass = beanContext.getInitialResultTypeClass();
-		CriteriaQuery<InitialResultType> criteriaQuery = criteriaBuilder.createQuery(InitialResultTypeClass);
-
 		Boolean distinct = beanContext.getUseDistinctSelections();
 		criteriaQuery.distinct(distinct);
 
@@ -81,16 +69,119 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, Final
 		setQueryPredicates(criteriaQuery, jpaContext, queryInfo);
 		setQueryOrders(criteriaQuery, jpaContext, queryInfo);
 
-		TypedQuery<InitialResultType> typedQuery = entityManager.createQuery(criteriaQuery);
+		TypedQuery<ResultClass> typedQuery = entityManager.createQuery(criteriaQuery);
 
 		setPaginationInfo(typedQuery, queryInfo);
 
-		List<InitialResultType> initialResults = typedQuery.getResultList();
+		return typedQuery.getResultList();
+	}
+
+	protected QueryInfoJPAContext<RootEntity> createJpaContext(CriteriaQuery<?> criteriaQuery) {
+		QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = beanContext.getJpaContextFactory();
+		return jpaContextFactory.createJpaContext(criteriaBuilder,
+				beanContext,
+				criteriaQuery);
+	}
+
+	@PostConstruct
+	protected void postConstruct() {
+		criteriaBuilder = entityManager.getCriteriaBuilder();
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> List<T> query(QueryInfo queryInfo, QueryInfoResultType resultType)
+			throws QueryInfoException {
+		if (resultType == null) {
+			String message = "Result type not specified";
+			throw new QueryInfoException(message);
+		}
+
+		List<T> result = null;
+
+		switch (resultType) {
+			case ENTITY:
+				result = (List<T>) queryForEntities(queryInfo);
+				break;
+
+			case TUPLE:
+				result = (List<T>) queryForTuples(queryInfo);
+				break;
+		}
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> PaginatedResult<T> queryForPaginatedResult(QueryInfo queryInfo,
+			QueryInfoResultType resultType)
+			throws QueryInfoException {
+		if (resultType == null) {
+			String message = "Result type not specified";
+			throw new QueryInfoException(message);
+		}
+
+		PaginatedResult<T> result = null;
+
+		switch (resultType) {
+			case ENTITY:
+				result = (PaginatedResult<T>) queryForPaginatedEntities(queryInfo);
+				break;
+
+			case TUPLE:
+				result = (PaginatedResult<T>) queryForPaginatedTuples(queryInfo);
+				break;
+		}
+
+		return result;
+	}
+
+	public PaginatedResult<FinalTupleResultType> queryForPaginatedTuples(QueryInfo queryInfo)
+			throws QueryInfoException {
+		PaginatedResult<FinalTupleResultType> result = new DefaultPaginatedResult<>();
+
+		Long totalCount = count(queryInfo);
+		result.setTotalCount(totalCount);
+
+		if (totalCount > 0) {
+			List<FinalTupleResultType> pageResults = queryForTuples(queryInfo);
+			result.setPageResults(pageResults);
+		}
+
+		return result;
+	}
+
+	public PaginatedResult<RootEntity> queryForPaginatedEntities(QueryInfo queryInfo)
+			throws QueryInfoException {
+		PaginatedResult<RootEntity> result = new DefaultPaginatedResult<>();
+
+		Long totalCount = count(queryInfo);
+		result.setTotalCount(totalCount);
+
+		if (totalCount > 0) {
+			List<RootEntity> pageResults = queryForEntities(queryInfo);
+			result.setPageResults(pageResults);
+		}
+
+		return result;
+	}
+
+	public List<RootEntity> queryForEntities(QueryInfo queryInfo) throws QueryInfoException {
+		Class<RootEntity> rootEntityClass = beanContext.getRootEntityClass();
+		CriteriaQuery<RootEntity> criteriaQuery = criteriaBuilder.createQuery(rootEntityClass);
+
+		return executeQueryInfoQuery(criteriaQuery, queryInfo);
+	}
+
+	public List<FinalTupleResultType> queryForTuples(QueryInfo queryInfo) throws QueryInfoException {
+		Class<InitialTupleResultType> initialTupleResultTypeClass = beanContext.getInitialTupleResultTypeClass();
+		CriteriaQuery<InitialTupleResultType> criteriaQuery = criteriaBuilder.createQuery(initialTupleResultTypeClass);
+
+		List<InitialTupleResultType> initialResults = executeQueryInfoQuery(criteriaQuery, queryInfo);
 
 		return transformInitialResults(initialResults);
 	}
 
-	protected void setPaginationInfo(TypedQuery<InitialResultType> typedQuery,
+	protected void setPaginationInfo(TypedQuery<?> typedQuery,
 			QueryInfo queryInfo) {
 		PaginationInfo paginationInfo = queryInfo.getPaginationInfo();
 
@@ -120,7 +211,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, Final
 		typedQuery.setMaxResults(maxResults);
 	}
 
-	protected void setQueryOrders(CriteriaQuery<InitialResultType> criteriaQuery,
+	protected void setQueryOrders(CriteriaQuery<?> criteriaQuery,
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoOrderFactory<RootEntity> orderFactory = beanContext.getOrderFactory();
@@ -136,15 +227,15 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialResultType, Final
 		criteriaQuery.where(predicates);
 	}
 
-	protected void setQuerySelections(CriteriaQuery<InitialResultType> criteriaQuery,
+	protected void setQuerySelections(CriteriaQuery<?> criteriaQuery,
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) {
 		QueryInfoSelectionSetter<RootEntity> selectionSetter = beanContext.getSelectionSetter();
 		selectionSetter.setSelection(jpaContext, queryInfo);
 	}
 
-	protected List<FinalResultType> transformInitialResults(List<InitialResultType> originalResults) {
-		QueryInfoOriginalResultTransformer<InitialResultType, FinalResultType> originalResultTransormer = beanContext.getOriginalResultTransformer();
+	protected List<FinalTupleResultType> transformInitialResults(List<InitialTupleResultType> originalResults) {
+		QueryInfoOriginalResultTransformer<InitialTupleResultType, FinalTupleResultType> originalResultTransormer = beanContext.getTupleResultTransformer();
 		return originalResultTransormer.transform(originalResults);
 	}
 }

@@ -7,15 +7,15 @@ import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoOriginalResultTransformer;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 
-public interface CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> {
+public interface CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> {
 
 	QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory();
 
 	QueryInfoOrderFactory<RootEntity> getOrderFactory();
 
-	Class<InitialResultType> getInitialResultTypeClass();
+	Class<InitialTupleResultType> getInitialTupleResultTypeClass();
 
-	QueryInfoOriginalResultTransformer<InitialResultType, FinalResultType> getOriginalResultTransformer();
+	QueryInfoOriginalResultTransformer<InitialTupleResultType, FinalTupleResultType> getTupleResultTransformer();
 
 	QueryInfoPathFactory<RootEntity> getPathFactory();
 

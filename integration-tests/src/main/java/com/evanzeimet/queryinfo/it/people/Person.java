@@ -1,10 +1,14 @@
 package com.evanzeimet.queryinfo.it.people;
 
+import java.util.List;
+
+import com.evanzeimet.queryinfo.it.companies.Company;
+
 public interface Person {
 
-	Long getCompanyId();
+	List<Company> getEmployers();
 
-	void setCompanyId(Long companyId);
+	void setEmployers(List<Company> employers);
 
 	String getFirstName();
 

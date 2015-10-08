@@ -1,10 +1,18 @@
 package com.evanzeimet.queryinfo.it.companies;
 
+import java.util.List;
+
+import com.evanzeimet.queryinfo.it.people.DefaultPerson;
+import com.evanzeimet.queryinfo.it.people.Person;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class DefaultCompany implements Company {
 
 	private String address1;
 	private String address2;
 	private String city;
+	@JsonDeserialize(contentAs = DefaultPerson.class)
+	private List<Person> employees;
 	private Long id;
 	private String name;
 	private String state;
@@ -42,6 +50,16 @@ public class DefaultCompany implements Company {
 	@Override
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	@Override
+	public List<Person> getEmployees() {
+		return employees;
+	}
+
+	@Override
+	public void setEmployees(List<Person> employees) {
+		this.employees = employees;
 	}
 
 	@Override

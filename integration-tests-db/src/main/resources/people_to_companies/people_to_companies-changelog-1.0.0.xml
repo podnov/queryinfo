@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+		
+	<changeSet id="1" author="podnov">
+		<createTable tableName="people_to_companies">
+			<column name="person_id" type="bigint" />
+			<column name="company_id" type="bigint" />
+		</createTable>
+	</changeSet>
+	
+	<changeSet id="2" author="podnov">
+		<addPrimaryKey tableName="people_to_companies" 
+			columnNames="person_id, company_id" />
+	</changeSet>
+</databaseChangeLog>

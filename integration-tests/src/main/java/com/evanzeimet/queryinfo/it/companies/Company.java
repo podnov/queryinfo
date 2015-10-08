@@ -1,5 +1,9 @@
 package com.evanzeimet.queryinfo.it.companies;
 
+import java.util.List;
+
+import com.evanzeimet.queryinfo.it.people.Person;
+
 public interface Company {
 
 	String getAddress1();
@@ -13,6 +17,10 @@ public interface Company {
 	String getCity();
 
 	void setCity(String city);
+
+	List<Person> getEmployees();
+
+	void setEmployees(List<Person> employees);
 
 	Long getId();
 

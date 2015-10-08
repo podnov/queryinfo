@@ -16,8 +16,8 @@ public class QueryInfoBeanContextRegistry {
 	private Instance<CriteriaQueryBeanContext<?, ?, ?>> pathFactories;
 
 	@SuppressWarnings("unchecked")
-	public <RootEntity, InitialResultType, FinalResultType> CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> getContext(Class<RootEntity> rootEntityClass) {
-		CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType> result = null;
+	public <RootEntity, InitialTupleResultType, FinalTupleResultType> CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> getContext(Class<RootEntity> rootEntityClass) {
+		CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> result = null;
 
 		Iterator<CriteriaQueryBeanContext<?, ?, ?>> iterator = pathFactories.iterator();
 
@@ -27,7 +27,7 @@ public class QueryInfoBeanContextRegistry {
 			Class<?> beanContextRootEntityClass = currentBeanContext.getRootEntityClass();
 
 			if (rootEntityClass.equals(beanContextRootEntityClass)) {
-				result = (CriteriaQueryBeanContext<RootEntity, InitialResultType, FinalResultType>) currentBeanContext;
+				result = (CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType>) currentBeanContext;
 				break;
 			}
 		}

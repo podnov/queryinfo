@@ -1,8 +1,15 @@
 package com.evanzeimet.queryinfo.it.people;
 
+import java.util.List;
+
+import com.evanzeimet.queryinfo.it.companies.Company;
+import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class DefaultPerson implements Person {
 
-	private Long companyId;
+	@JsonDeserialize(contentAs = DefaultCompany.class)
+	private List<Company> employers;
 	private String firstName;
 	private Long id;
 	private String lastName;
@@ -12,13 +19,13 @@ public class DefaultPerson implements Person {
 	}
 
 	@Override
-	public Long getCompanyId() {
-		return companyId;
+	public List<Company> getEmployers() {
+		return employers;
 	}
 
 	@Override
-	public void setCompanyId(Long companyId) {
-		this.companyId = companyId;
+	public void setEmployers(List<Company> employers) {
+		this.employers = employers;
 	}
 
 	@Override
