@@ -1,6 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.path;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -9,22 +10,23 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.beancontext.CriteriaQueryBeanContext;
+import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPathParts;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public abstract class AbstractQueryInfoEntityPathFactory<RootEntity> implements QueryInfoPathFactory<RootEntity> {
-
-	private Class<RootEntity> entityClass;
-	private Map<String /* fieldName */, QueryInfoFieldInfo> fieldInfos = new HashMap<>();
+public class DefaultQueryInfoPathFactory<RootEntity>
+		implements QueryInfoPathFactory<RootEntity> {
 
 	@Inject
-	private QueryInfoBeanContextRegistry beanContextRegistry;
+	protected QueryInfoBeanContextRegistry beanContextRegistry;
 
-	public AbstractQueryInfoEntityPathFactory(Class<RootEntity> entityClass) {
+	protected Class<RootEntity> entityClass;
+
+	public DefaultQueryInfoPathFactory(Class<RootEntity> entityClass) {
+		// TODO producer inspect annotation for constuctor argument?
 		this.entityClass = entityClass;
 	}
 
@@ -33,22 +35,13 @@ public abstract class AbstractQueryInfoEntityPathFactory<RootEntity> implements 
 		return entityClass;
 	}
 
-	@Override
-	public Map<String, QueryInfoFieldInfo> getFieldInfos() {
-		return fieldInfos;
-	}
-
-	@Override
-	public void setFieldInfos(Map<String, QueryInfoFieldInfo> fieldInfos) {
-		this.fieldInfos = fieldInfos;
-	}
-
-	protected <T> Expression<T> getEntityPath(From<?, RootEntity> from,
+	protected <T> Expression<T> getEntityPath(QueryInfoJPAContext<?> jpaContext,
+			From<?, RootEntity> from,
 			String fieldName,
 			QueryInfoFieldPurpose purpose) throws QueryInfoException {
 		Expression<T> result = null;
 
-		validateFieldInfo(fieldName, purpose);
+		validateFieldInfo(jpaContext, fieldName, purpose);
 
 		try {
 			result = from.get(fieldName);
@@ -63,8 +56,8 @@ public abstract class AbstractQueryInfoEntityPathFactory<RootEntity> implements 
 		return result;
 	}
 
-	protected <T, JoinedEntity> Expression<T> getJoinPath(From<?, RootEntity> from,
-			QueryInfoJPAContext<?> jpaContext,
+	protected <T, JoinedEntity> Expression<T> getJoinPath(QueryInfoJPAContext<?> jpaContext,
+			From<?, RootEntity> from,
 			QueryInfoFieldPathParts pathParts,
 			QueryInfoFieldPurpose purpose) throws QueryInfoException {
 		String joinAttributeName = pathParts.consumeJoin();
@@ -72,20 +65,20 @@ public abstract class AbstractQueryInfoEntityPathFactory<RootEntity> implements 
 
 		Class<JoinedEntity> joinedClass = join.getModel().getBindableJavaType();
 
-		CriteriaQueryBeanContext<JoinedEntity, ?, ?> joinBeanContext = beanContextRegistry.getContext(joinedClass);
+		QueryInfoBeanContext<JoinedEntity, ?> joinBeanContext = beanContextRegistry.getContext(joinedClass);
 		QueryInfoPathFactory<JoinedEntity> pathFactory = joinBeanContext.getPathFactory();
 
 		String joinFieldName = pathParts.toString();
 
-		return pathFactory.getPathForField(join,
-				jpaContext,
+		return pathFactory.getPathForField(jpaContext,
+				join,
 				joinFieldName,
 				purpose);
 	}
 
 	@Override
-	public <T> Expression<T> getPathForField(From<?, RootEntity> from,
-			QueryInfoJPAContext<?> jpaContext,
+	public <T> Expression<T> getPathForField(QueryInfoJPAContext<?> jpaContext,
+			From<?, RootEntity> from,
 			String fieldName,
 			QueryInfoFieldPurpose purpose) throws QueryInfoException {
 		Expression<T> result = null;
@@ -94,16 +87,21 @@ public abstract class AbstractQueryInfoEntityPathFactory<RootEntity> implements 
 
 		if (pathParts.hasJoins()) {
 			// TODO need to validate that joins are supposed to be walked w/ their own annotation
-			result = getJoinPath(from, jpaContext, pathParts, purpose);
+			result = getJoinPath(jpaContext, from, pathParts, purpose);
 		} else {
-			result = getEntityPath(from, fieldName, purpose);
+			result = getEntityPath(jpaContext, from, fieldName, purpose);
 		}
 
 		return result;
 	}
 
-	protected void validateFieldInfo(String fieldName, QueryInfoFieldPurpose purpose)
+	protected void validateFieldInfo(QueryInfoJPAContext<?> jpaContext,
+			String fieldName,
+			QueryInfoFieldPurpose purpose)
 			throws QueryInfoException {
+		QueryInfoBeanContext<?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		Map<String /* fieldName */, QueryInfoFieldInfo> fieldInfos = beanContext.getFieldInfos();
+
 		QueryInfoFieldInfo fieldInfo = fieldInfos.get(fieldName);
 
 		if (fieldInfo == null) {

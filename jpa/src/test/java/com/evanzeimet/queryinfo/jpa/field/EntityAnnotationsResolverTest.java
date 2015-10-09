@@ -17,11 +17,11 @@ import com.evanzeimet.queryinfo.QueryInfoException;
 
 public class EntityAnnotationsResolverTest {
 
-	private EntityAnnotationsResolver<TestEntity> resolver;
+	private EntityAnnotationsQueryInfoFieldResolver<TestEntity> resolver;
 
 	@Before
 	public void setUp() {
-		resolver = new EntityAnnotationsResolver<TestEntity>(TestEntity.class);
+		resolver = new EntityAnnotationsQueryInfoFieldResolver<TestEntity>(TestEntity.class);
 	}
 
 	@Test

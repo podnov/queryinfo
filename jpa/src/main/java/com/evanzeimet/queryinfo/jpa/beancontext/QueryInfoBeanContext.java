@@ -1,21 +1,23 @@
 package com.evanzeimet.queryinfo.jpa.beancontext;
 
+import java.util.Map;
+
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
-import com.evanzeimet.queryinfo.jpa.result.QueryInfoOriginalResultTransformer;
+import com.evanzeimet.queryinfo.jpa.result.QueryInfoTupleTransformer;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 
-public interface CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> {
+public interface QueryInfoBeanContext<RootEntity, FinalTupleResultType> {
+
+	Map<String /* fieldName */, QueryInfoFieldInfo> getFieldInfos();
 
 	QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory();
 
 	QueryInfoOrderFactory<RootEntity> getOrderFactory();
 
-	Class<InitialTupleResultType> getInitialTupleResultTypeClass();
-
-	QueryInfoOriginalResultTransformer<InitialTupleResultType, FinalTupleResultType> getTupleResultTransformer();
 
 	QueryInfoPathFactory<RootEntity> getPathFactory();
 
@@ -24,6 +26,8 @@ public interface CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, Fi
 	Class<RootEntity> getRootEntityClass();
 
 	QueryInfoSelectionSetter<RootEntity> getSelectionSetter();
+
+	QueryInfoTupleTransformer<FinalTupleResultType> getTupleTransformer();
 
 	Boolean getUseDistinctSelections();
 

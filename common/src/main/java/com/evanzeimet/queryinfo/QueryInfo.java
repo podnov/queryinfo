@@ -24,6 +24,4 @@ public interface QueryInfo extends Serializable {
 	List<Sort> getSorts();
 
 	void setSorts(List<Sort> sorts);
-
-	// TODO result type entity/tuple?
 }

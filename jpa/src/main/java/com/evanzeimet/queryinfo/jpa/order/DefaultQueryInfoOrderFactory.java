@@ -3,6 +3,8 @@ package com.evanzeimet.queryinfo.jpa.order;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.LocalBean;
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
@@ -10,29 +12,22 @@ import javax.persistence.criteria.Root;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.evanzeimet.queryinfo.sort.SortDirection;
 
+@LocalBean
 public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderFactory<RootEntity> {
 
-	private CriteriaBuilder criteriaBuilder;
-	private QueryInfoPathFactory<RootEntity> pathFactory;
+	@Inject
+	protected QueryInfoBeanContextRegistry beanContextRegistry;
 
 	public DefaultQueryInfoOrderFactory() {
 
-	}
-
-	@Override
-	public QueryInfoPathFactory<RootEntity> getPathFactory() {
-		return pathFactory;
-	}
-
-	@Override
-	public void setPathFactory(QueryInfoPathFactory<RootEntity> pathFactory) {
-		this.pathFactory = pathFactory;
 	}
 
 	protected Order createOrder(QueryInfoJPAContext<RootEntity> jpaContext,
@@ -40,9 +35,9 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 		Order result;
 
 		String fieldName = sort.getFieldName();
-
 		Expression<?> path = getPathForField(jpaContext, fieldName);
 
+		CriteriaBuilder criteriaBuilder = jpaContext.getCriteriaBuilder();
 		SortDirection direction = SortDirection.fromSort(sort);
 
 		if (SortDirection.DESC.equals(direction)) {
@@ -83,9 +78,12 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 
 	protected Expression<?> getPathForField(QueryInfoJPAContext<RootEntity> jpaContext,
 			String fieldName) throws QueryInfoException {
+		QueryInfoBeanContext<RootEntity, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoPathFactory<RootEntity> pathFactory = beanContext.getPathFactory();
 		Root<RootEntity> root = jpaContext.getRoot();
-		return pathFactory.getPathForField(root,
-				jpaContext,
+
+		return pathFactory.getPathForField(jpaContext,
+				root,
 				fieldName,
 				QueryInfoFieldPurpose.ORDER);
 	}

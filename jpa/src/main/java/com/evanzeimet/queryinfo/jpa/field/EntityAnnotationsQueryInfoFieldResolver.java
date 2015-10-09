@@ -14,7 +14,7 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
-public class EntityAnnotationsResolver<T> implements QueryInfoFieldInfoResolver<T> {
+public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFieldInfoResolver<T> {
 
 	private static final String NON_UNIQUE_FIELD_NAME_MESSAGE_JOIN_TEXT = String.format(".%n");
 
@@ -22,7 +22,7 @@ public class EntityAnnotationsResolver<T> implements QueryInfoFieldInfoResolver<
 
 	private Class<T> entityClass;
 
-	public EntityAnnotationsResolver(Class<T> entityClass) {
+	public EntityAnnotationsQueryInfoFieldResolver(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
 

@@ -5,29 +5,31 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.beancontext.CriteriaQueryBeanContext;
+import com.evanzeimet.queryinfo.QueryInfoResultType;
+import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
-import com.evanzeimet.queryinfo.jpa.result.QueryInfoOriginalResultTransformer;
+import com.evanzeimet.queryinfo.jpa.result.QueryInfoTupleTransformer;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, FinalTupleResultType> {
+public abstract class AbstractQueryInfoBean<RootEntity, FinalTupleResultType> {
 
 	protected static final int DEFAULT_PAGE_INDEX = 0;
 	protected static final int DEFAULT_MAX_RESULTS = 20;
 
-	protected CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> beanContext;
+	protected QueryInfoBeanContext<RootEntity, FinalTupleResultType> beanContext;
 	protected CriteriaBuilder criteriaBuilder;
 
 	@Inject
@@ -35,7 +37,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, 
 	protected EntityManager entityManager;
 
 
-	public AbstractQueryInfoBean(CriteriaQueryBeanContext<RootEntity, InitialTupleResultType, FinalTupleResultType> context) {
+	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, FinalTupleResultType> context) {
 		this.beanContext = context;
 	}
 
@@ -99,12 +101,12 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, 
 		List<T> result = null;
 
 		switch (resultType) {
-			case ENTITY:
-				result = (List<T>) queryForEntities(queryInfo);
+			case FLAT:
+				result = (List<T>) queryForTuples(queryInfo);
 				break;
 
-			case TUPLE:
-				result = (List<T>) queryForTuples(queryInfo);
+			case HIERARCHICAL:
+				result = (List<T>) queryForEntities(queryInfo);
 				break;
 		}
 
@@ -123,12 +125,11 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, 
 		PaginatedResult<T> result = null;
 
 		switch (resultType) {
-			case ENTITY:
-				result = (PaginatedResult<T>) queryForPaginatedEntities(queryInfo);
-				break;
-
-			case TUPLE:
+			case FLAT:
 				result = (PaginatedResult<T>) queryForPaginatedTuples(queryInfo);
+				break;
+			case HIERARCHICAL:
+				result = (PaginatedResult<T>) queryForPaginatedEntities(queryInfo);
 				break;
 		}
 
@@ -173,10 +174,9 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, 
 	}
 
 	public List<FinalTupleResultType> queryForTuples(QueryInfo queryInfo) throws QueryInfoException {
-		Class<InitialTupleResultType> initialTupleResultTypeClass = beanContext.getInitialTupleResultTypeClass();
-		CriteriaQuery<InitialTupleResultType> criteriaQuery = criteriaBuilder.createQuery(initialTupleResultTypeClass);
+		CriteriaQuery<Tuple> criteriaQuery = criteriaBuilder.createQuery(Tuple.class);
 
-		List<InitialTupleResultType> initialResults = executeQueryInfoQuery(criteriaQuery, queryInfo);
+		List<Tuple> initialResults = executeQueryInfoQuery(criteriaQuery, queryInfo);
 
 		return transformInitialResults(initialResults);
 	}
@@ -196,7 +196,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, 
 			Integer pageSize = paginationInfo.getPageSize();
 
 			if (pageIndex == null) {
-				pageIndex = 0;
+				pageIndex = DEFAULT_PAGE_INDEX;
 			}
 
 			if (pageSize == null) {
@@ -234,8 +234,8 @@ public abstract class AbstractQueryInfoBean<RootEntity, InitialTupleResultType, 
 		selectionSetter.setSelection(jpaContext, queryInfo);
 	}
 
-	protected List<FinalTupleResultType> transformInitialResults(List<InitialTupleResultType> originalResults) {
-		QueryInfoOriginalResultTransformer<InitialTupleResultType, FinalTupleResultType> originalResultTransormer = beanContext.getTupleResultTransformer();
+	protected List<FinalTupleResultType> transformInitialResults(List<Tuple> originalResults) {
+		QueryInfoTupleTransformer<FinalTupleResultType> originalResultTransormer = beanContext.getTupleTransformer();
 		return originalResultTransormer.transform(originalResults);
 	}
 }

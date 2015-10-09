@@ -28,8 +28,9 @@ public class QueryInfoJPAContext<RootEntity> {
 		this.criteriaBuilder = criteriaBuilder;
 	}
 
-	public CriteriaQuery<?> getCriteriaQuery() {
-		return criteriaQuery;
+	@SuppressWarnings("unchecked")
+	public <T> CriteriaQuery<T> getCriteriaQuery() {
+		return (CriteriaQuery<T>) criteriaQuery;
 	}
 
 	public void setCriteriaQuery(CriteriaQuery<?> criteriaQuery) {

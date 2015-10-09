@@ -16,6 +16,16 @@ public class QueryInfoFieldUtils {
 
 	}
 
+	public List<String> coalesceRequestedFields(QueryInfo queryInfo) {
+		List<String> result = queryInfo.getRequestedFieldNames();
+
+		if (result == null) {
+			result = Collections.emptyList();
+		}
+
+		return result;
+	}
+
 	public List<String> getFieldNames(List<QueryInfoFieldInfo> fields) {
 		List<String> result = new ArrayList<>(fields.size());
 
