@@ -1,12 +1,13 @@
 package com.evanzeimet.queryinfo.jpa.field;
 
-import java.util.List;
+import java.util.Map;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public interface QueryInfoFieldInfoResolver<T> {
 
-	List<QueryInfoFieldInfo> resolve(QueryInfoPathFactory<T> pathFactory) throws QueryInfoException;
+	Map<String /* fieldName */, QueryInfoFieldInfo> resolve(QueryInfoPathFactory<T> pathFactory)
+			throws QueryInfoException;
 
 }

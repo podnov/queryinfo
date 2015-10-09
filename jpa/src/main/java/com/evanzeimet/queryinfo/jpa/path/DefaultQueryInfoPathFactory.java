@@ -1,17 +1,14 @@
 package com.evanzeimet.queryinfo.jpa.path;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPathParts;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
@@ -20,12 +17,12 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 public class DefaultQueryInfoPathFactory<RootEntity>
 		implements QueryInfoPathFactory<RootEntity> {
 
-	@Inject
 	protected QueryInfoBeanContextRegistry beanContextRegistry;
-
 	protected Class<RootEntity> entityClass;
 
-	public DefaultQueryInfoPathFactory(Class<RootEntity> entityClass) {
+	public DefaultQueryInfoPathFactory(QueryInfoBeanContextRegistry beanContextRegistry,
+			Class<RootEntity> entityClass) {
+		this.beanContextRegistry = beanContextRegistry;
 		// TODO producer inspect annotation for constuctor argument?
 		this.entityClass = entityClass;
 	}
@@ -65,7 +62,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 		Class<JoinedEntity> joinedClass = join.getModel().getBindableJavaType();
 
-		QueryInfoBeanContext<JoinedEntity, ?> joinBeanContext = beanContextRegistry.getContext(joinedClass);
+		QueryInfoBeanContext<JoinedEntity, ?, ?> joinBeanContext = beanContextRegistry.getContext(joinedClass);
 		QueryInfoPathFactory<JoinedEntity> pathFactory = joinBeanContext.getPathFactory();
 
 		String joinFieldName = pathParts.toString();
@@ -99,7 +96,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 			String fieldName,
 			QueryInfoFieldPurpose purpose)
 			throws QueryInfoException {
-		QueryInfoBeanContext<?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoBeanContext<?, ?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
 		Map<String /* fieldName */, QueryInfoFieldInfo> fieldInfos = beanContext.getFieldInfos();
 
 		QueryInfoFieldInfo fieldInfo = fieldInfos.get(fieldName);

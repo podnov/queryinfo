@@ -11,4 +11,5 @@ public interface QueryInfoOrderFactory<RootEntity> {
 
 	List<Order> createOrders(QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
+
 }

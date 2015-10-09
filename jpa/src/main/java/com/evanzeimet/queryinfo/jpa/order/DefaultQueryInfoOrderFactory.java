@@ -3,8 +3,6 @@ package com.evanzeimet.queryinfo.jpa.order;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.LocalBean;
-import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
@@ -12,22 +10,20 @@ import javax.persistence.criteria.Root;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.beancontext.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.evanzeimet.queryinfo.sort.SortDirection;
 
-@LocalBean
 public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderFactory<RootEntity> {
 
-	@Inject
 	protected QueryInfoBeanContextRegistry beanContextRegistry;
 
-	public DefaultQueryInfoOrderFactory() {
-
+	public DefaultQueryInfoOrderFactory(QueryInfoBeanContextRegistry beanContextRegistry) {
+		this.beanContextRegistry = beanContextRegistry;
 	}
 
 	protected Order createOrder(QueryInfoJPAContext<RootEntity> jpaContext,
@@ -78,7 +74,8 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 
 	protected Expression<?> getPathForField(QueryInfoJPAContext<RootEntity> jpaContext,
 			String fieldName) throws QueryInfoException {
-		QueryInfoBeanContext<RootEntity, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoBeanContext<RootEntity, ?, ?> beanContext = beanContextRegistry.getContextForRoot(
+				jpaContext);
 		QueryInfoPathFactory<RootEntity> pathFactory = beanContext.getPathFactory();
 		Root<RootEntity> root = jpaContext.getRoot();
 

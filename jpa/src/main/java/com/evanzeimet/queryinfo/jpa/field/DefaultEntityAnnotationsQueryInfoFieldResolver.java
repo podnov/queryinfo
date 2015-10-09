@@ -2,8 +2,10 @@ package com.evanzeimet.queryinfo.jpa.field;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,8 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
-public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFieldInfoResolver<T> {
+public class DefaultEntityAnnotationsQueryInfoFieldResolver<T>
+		implements QueryInfoFieldInfoResolver<T> {
 
 	private static final String NON_UNIQUE_FIELD_NAME_MESSAGE_JOIN_TEXT = String.format(".%n");
 
@@ -22,7 +25,7 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 
 	private Class<T> entityClass;
 
-	public EntityAnnotationsQueryInfoFieldResolver(Class<T> entityClass) {
+	public DefaultEntityAnnotationsQueryInfoFieldResolver(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
 
@@ -35,13 +38,9 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 		boolean isSelectable = annotation.isSelectable();
 		boolean isSortable = annotation.isSortable();
 
-		return QueryInfoFieldInfoBuilder.create()
-				.entityAttributeName(entityAttributeName)
-				.fieldName(fieldName)
-				.isQueryable(isQueryable)
-				.isSelectable(isSelectable)
-				.isSortable(isSortable)
-				.build();
+		return QueryInfoFieldInfoBuilder.create().entityAttributeName(
+				entityAttributeName).fieldName(fieldName).isQueryable(isQueryable).isSelectable(
+						isSelectable).isSortable(isSortable).build();
 	}
 
 	protected String createFieldName(Method annotatedMethod) throws QueryInfoException {
@@ -71,6 +70,20 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 		return result;
 	}
 
+	protected List<QueryInfoFieldInfo> createQueryInfoFieldInfos() throws QueryInfoException {
+		List<Method> annotatedMethods = findAnnotatedMethods(entityClass);
+
+		int annotatedMethodCount = annotatedMethods.size();
+		List<QueryInfoFieldInfo> result = new ArrayList<>(annotatedMethodCount);
+
+		for (Method annotatedMethod : annotatedMethods) {
+			QueryInfoFieldInfo fieldInfo = createFieldInfo(annotatedMethod);
+			result.add(fieldInfo);
+		}
+
+		return result;
+	}
+
 	protected List<Method> findAnnotatedMethods(Class<T> entityClass) {
 		Method[] methods = entityClass.getMethods();
 
@@ -86,7 +99,8 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 		return annotatedMethods;
 	}
 
-	protected List<String> generateNonUniqueFieldNameMessages(ListMultimap<String, QueryInfoFieldInfo> fieldNameMap) {
+	protected List<String> generateNonUniqueFieldNameMessages(
+			ListMultimap<String, QueryInfoFieldInfo> fieldNameMap) {
 		List<String> nonUniqueFieldNameTexts = new ArrayList<>();
 		Iterator<String> fieldNames = fieldNameMap.keySet().iterator();
 
@@ -105,7 +119,8 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 
 				String pathsText = StringUtils.join(entityAttributeNames, ", ");
 
-				String nonUniqueFieldNameText = String.format("Found [%s] field infos for name [%s]: %s",
+				String nonUniqueFieldNameText = String.format(
+						"Found [%s] field infos for name [%s]: %s",
 						fieldInfoCount,
 						fieldName,
 						pathsText);
@@ -115,8 +130,7 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 		return nonUniqueFieldNameTexts;
 	}
 
-	protected ListMultimap<String, QueryInfoFieldInfo> mapFieldsToNames(
-			List<QueryInfoFieldInfo> fieldInfos) {
+	protected ListMultimap<String /* fieldName */, QueryInfoFieldInfo> mapFieldsToNonUniqueNames(List<QueryInfoFieldInfo> fieldInfos) {
 		ListMultimap<String, QueryInfoFieldInfo> fieldNameMap = ArrayListMultimap.create();
 
 		for (QueryInfoFieldInfo fieldInfo : fieldInfos) {
@@ -127,27 +141,34 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 		return fieldNameMap;
 	}
 
-	@Override
-	public List<QueryInfoFieldInfo> resolve(QueryInfoPathFactory<T> pathFactory)
-			throws QueryInfoException {
-		List<Method> annotatedMethods = findAnnotatedMethods(entityClass);
+	protected Map<String /*fieldName */, QueryInfoFieldInfo> mapFieldsToUniqueFieldNames(List<QueryInfoFieldInfo> fieldInfos) {
+		int fieldInfoCount = fieldInfos.size();
+		Map<String, QueryInfoFieldInfo> result = new HashMap<>(fieldInfoCount);
 
-		int annotatedMethodCount = annotatedMethods.size();
-		List<QueryInfoFieldInfo> result = new ArrayList<>(annotatedMethodCount);
-
-		for (Method annotatedMethod : annotatedMethods) {
-			QueryInfoFieldInfo fieldInfo = createFieldInfo(annotatedMethod);
-			result.add(fieldInfo);
+		for (QueryInfoFieldInfo fieldInfo : fieldInfos) {
+			String fieldName = fieldInfo.getFieldName();
+			result.put(fieldName, fieldInfo);
 		}
-
-		validateFieldNameUniqueness(result);
 
 		return result;
 	}
 
+	// TODO make the map a getter/setter class so we can avoid these comments everywhere?
+	@Override
+	public Map<String /* fieldName */, QueryInfoFieldInfo> resolve(
+			QueryInfoPathFactory<T> pathFactory)
+					throws QueryInfoException {
+		List<QueryInfoFieldInfo> fieldInfos = createQueryInfoFieldInfos();
+
+		validateFieldNameUniqueness(fieldInfos);
+
+		return mapFieldsToUniqueFieldNames(fieldInfos);
+	}
+
 	protected void validateFieldNameUniqueness(List<QueryInfoFieldInfo> fieldInfos)
 			throws QueryInfoException {
-		ListMultimap<String, QueryInfoFieldInfo> fieldNameMap = mapFieldsToNames(fieldInfos);
+		ListMultimap<String, QueryInfoFieldInfo> fieldNameMap = mapFieldsToNonUniqueNames(
+				fieldInfos);
 		List<String> nonUniqueFieldNameMessages = generateNonUniqueFieldNameMessages(fieldNameMap);
 
 		int nonUniqueFieldNameCount = nonUniqueFieldNameMessages.size();
@@ -157,7 +178,8 @@ public class EntityAnnotationsQueryInfoFieldResolver<T> implements QueryInfoFiel
 			String nonUniqueFieldsNamesText = StringUtils.join(nonUniqueFieldNameMessages,
 					NON_UNIQUE_FIELD_NAME_MESSAGE_JOIN_TEXT);
 
-			String message = String.format("Found [%s] non-unique field names for entity [%s]:%n%s.",
+			String message = String.format(
+					"Found [%s] non-unique field names for entity [%s]:%n%s.",
 					nonUniqueFieldNameCount,
 					entityName,
 					nonUniqueFieldsNamesText);

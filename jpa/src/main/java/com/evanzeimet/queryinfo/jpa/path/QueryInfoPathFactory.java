@@ -7,9 +7,9 @@ import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoPathFactory<RootEntity>  {
+public interface QueryInfoPathFactory<RootEntity> {
 
-	Class<?> getEntityClass();
+	Class<RootEntity> getEntityClass();
 
 	<T> Expression<T> getPathForField(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,

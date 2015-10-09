@@ -1,13 +1,15 @@
 package com.evanzeimet.queryinfo.it.people;
 
-import com.evanzeimet.queryinfo.jpa.AbstractQueryInfoBean;
-import com.evanzeimet.queryinfo.jpa.beancontext.CriteriaQueryBeanContext;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
+import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
 
-public class PeopleQueryInfoBean
-		extends AbstractQueryInfoBean<PersonEntity, PersonEntity, PersonEntity> {
+@Stateless
+public class PeopleQueryInfoBean extends AbstractEntityQueryInfoBean<PersonEntity> {
 
-	public PeopleQueryInfoBean(CriteriaQueryBeanContext<PersonEntity, PersonEntity, PersonEntity> context) {
+	@Inject
+	public PeopleQueryInfoBean(PeopleQueryInfoBeanContext context) {
 		super(context);
 	}
 
