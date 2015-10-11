@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.it;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,19 +23,17 @@ package com.evanzeimet.queryinfo.jpa.bean;
  */
 
 
-import javax.persistence.Tuple;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractTupleQueryInfoBeanContext;
+@ApplicationScoped
+public class EntityManagerProducer {
 
-public abstract class AbstractTupleQueryInfoBean<RootEntity, QueryInfoResult>
-		extends AbstractQueryInfoBean<RootEntity, Tuple, QueryInfoResult> {
-
-	public AbstractTupleQueryInfoBean() {
-		super();
-	}
-
-	public AbstractTupleQueryInfoBean(AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> context) {
-		super(context);
-	}
+	@Produces
+	@QueryInfoEntityManager
+	@PersistenceContext(unitName = "queryinfo_test")
+	private EntityManager queryinfoTestEntityManager;
 
 }

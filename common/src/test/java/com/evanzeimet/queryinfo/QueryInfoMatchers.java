@@ -143,7 +143,7 @@ public class QueryInfoMatchers {
 			@Override
 			protected boolean matchesSafely(Object actual) {
 				boolean result = false;
-				ObjectWriter objectWriter = QueryInfoTestUtils.createObjectMapperWriter();
+				ObjectWriter objectWriter = QueryInfoTestUtils.createObjectWriter();
 
 				try {
 					actualJson = objectWriter.writeValueAsString(actual);

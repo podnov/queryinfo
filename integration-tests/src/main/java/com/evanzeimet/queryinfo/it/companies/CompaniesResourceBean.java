@@ -23,27 +23,38 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
+import javax.ws.rs.core.Response;
+import org.slf4j.Logger;
+
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.it.QueryInfoITUtils;
 
 @Stateless
-public class CompanyQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<CompanyEntity> {
+public class CompaniesResourceBean implements CompaniesResource {
 
 	@Inject
-	@QueryInfoEntityManager
-	private EntityManager entityManager;
+	private Logger logger;
+
+	@Inject
+	private CompanyQueryInfoBean queryInfoBean;
 
 	@Override
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+	public Response query(DefaultQueryInfo queryInfo) {
+		Response result;
 
-	@Override
-	public Class<CompanyEntity> getRootEntityClass() {
-		return CompanyEntity.class;
-	}
+		try {
+			List<CompanyEntity> companies = queryInfoBean.query(queryInfo);
+			result = Response.ok(companies).build();
+		} catch (QueryInfoException e) {
+			logger.error("Could not retrieve companies", e);
+			result = QueryInfoITUtils.createUnprocessableEntityResponse();
+		}
 
+		return result;
+	}
 }

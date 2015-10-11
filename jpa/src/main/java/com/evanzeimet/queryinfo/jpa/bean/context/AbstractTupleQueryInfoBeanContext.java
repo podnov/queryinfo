@@ -38,9 +38,12 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 
 	private DefaultTupleQueryInfoSelectionSetter<RootEntity> selectionSetter;
 
+	public AbstractTupleQueryInfoBeanContext() {
+		super();
+	}
+
 	public AbstractTupleQueryInfoBeanContext(QueryInfoBeanContextRegistry beanContextRegistry) {
 		super(beanContextRegistry);
-		selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(beanContextRegistry);
 	}
 
 	@Override
@@ -57,6 +60,12 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	@Override
 	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
 		return selectionSetter;
+	}
+
+	@Override
+	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
+		super.setBeanContextRegistry(beanContextRegistry);
+		selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(beanContextRegistry);
 	}
 
 }

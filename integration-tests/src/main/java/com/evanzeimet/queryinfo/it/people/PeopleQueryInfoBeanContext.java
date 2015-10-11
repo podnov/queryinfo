@@ -25,16 +25,21 @@ package com.evanzeimet.queryinfo.it.people;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
+import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
 
 @Stateless
 public class PeopleQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<PersonEntity> {
 
 	@Inject
-	public PeopleQueryInfoBeanContext(QueryInfoBeanContextRegistry beanContextRegistry) {
-		super(beanContextRegistry);
+	@QueryInfoEntityManager
+	private EntityManager entityManager;
+
+	@Override
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 
 	@Override

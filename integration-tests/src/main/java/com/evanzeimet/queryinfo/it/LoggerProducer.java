@@ -1,6 +1,4 @@
-package com.evanzeimet.queryinfo.it.people;
-
-import javax.annotation.PostConstruct;
+package com.evanzeimet.queryinfo.it;
 
 /*
  * #%L
@@ -26,17 +24,31 @@ import javax.annotation.PostConstruct;
 
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.InjectionPoint;
 
-import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Stateless
-public class PeopleQueryInfoBean extends AbstractEntityQueryInfoBean<PersonEntity> {
+public class LoggerProducer {
 
-	@Inject
-	@PostConstruct
-	protected void postConstruct(PeopleQueryInfoBeanContext context) {
-		setBeanContext(context);
+	@Produces
+	public Logger produceLogger(InjectionPoint injectionPoint) {
+		Bean<?> bean = injectionPoint.getBean();
+		Class<?> clazz;
+
+		if (bean == null) {
+			clazz = injectionPoint.getMember().getDeclaringClass();
+		} else {
+			clazz = bean.getBeanClass();
+		}
+
+		return produceLogger(clazz);
 	}
 
+	public Logger produceLogger(Class<?> clazz) {
+		return LoggerFactory.getLogger(clazz);
+	}
 }

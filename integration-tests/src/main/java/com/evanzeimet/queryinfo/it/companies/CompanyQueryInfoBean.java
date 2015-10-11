@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.it.companies;
 
+import javax.annotation.PostConstruct;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -32,8 +34,9 @@ import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
 public class CompanyQueryInfoBean extends AbstractEntityQueryInfoBean<CompanyEntity> {
 
 	@Inject
-	public CompanyQueryInfoBean(CompanyQueryInfoBeanContext beanContext) {
-		super(beanContext);
+	@PostConstruct
+	protected void postConstruct(CompanyQueryInfoBeanContext context) {
+		setBeanContext(context);
 	}
 
 }

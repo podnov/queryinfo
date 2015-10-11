@@ -40,13 +40,15 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		extends AbstractQueryInfoBeanContext<RootEntity, RootEntity, RootEntity> {
 
 	private Map<String, QueryInfoFieldInfo> fieldInfos;
-	private QueryInfoResultConverter<RootEntity, RootEntity> resultConveter;
+	private QueryInfoResultConverter<RootEntity, RootEntity> resultConveter = new DefaultEntityQueryInfoResultConverter<>();
 	private QueryInfoSelectionSetter<RootEntity> selectionSetter;
+
+	public AbstractEntityQueryInfoBeanContext() {
+		super();
+	}
 
 	public AbstractEntityQueryInfoBeanContext(QueryInfoBeanContextRegistry beanContextRegistry) {
 		super(beanContextRegistry);
-		resultConveter = new DefaultEntityQueryInfoResultConverter<>();
-		selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>(beanContextRegistry);
 	}
 
 	@Override
@@ -75,5 +77,11 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 	@Override
 	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
 		return selectionSetter;
+	}
+
+	@Override
+	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
+		super.setBeanContextRegistry(beanContextRegistry);
+		selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>(beanContextRegistry);
 	}
 }

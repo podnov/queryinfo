@@ -25,7 +25,6 @@ package com.evanzeimet.queryinfo.jpa.bean;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -33,7 +32,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
@@ -52,13 +50,18 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 
 	protected QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext;
 	protected CriteriaBuilder criteriaBuilder;
-
-	@Inject
-	@QueryInfoEntityManager
 	protected EntityManager entityManager;
 
-	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> context) {
-		this.beanContext = context;
+	public AbstractQueryInfoBean() {
+		super();
+	}
+
+	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
+		setBeanContext(beanContext);
+	}
+
+	protected void setBeanContext(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
+		this.beanContext = beanContext;
 	}
 
 	public Long count(QueryInfo queryInfo) throws QueryInfoException {
@@ -88,6 +91,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 
 	@PostConstruct
 	protected void postConstruct() {
+		entityManager = beanContext.getEntityManager();
 		criteriaBuilder = entityManager.getCriteriaBuilder();
 	}
 

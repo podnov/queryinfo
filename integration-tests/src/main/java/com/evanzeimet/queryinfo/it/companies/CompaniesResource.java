@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa;
+package com.evanzeimet.queryinfo.it.companies;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,21 +22,22 @@ package com.evanzeimet.queryinfo.jpa;
  * #L%
  */
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import javax.inject.Qualifier;
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
 
-@Qualifier
-@Retention(RUNTIME)
-@Target({ FIELD, METHOD, PARAMETER, TYPE })
-public @interface QueryInfoEntityManager {
+@Path("companies")
+public interface CompaniesResource {
 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response query(DefaultQueryInfo queryInfo);
 
 }

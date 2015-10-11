@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.it.companies;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,19 +23,13 @@ package com.evanzeimet.queryinfo.jpa.bean;
  */
 
 
-import javax.persistence.Tuple;
+import org.junit.runner.RunWith;
 
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractTupleQueryInfoBeanContext;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
 
-public abstract class AbstractTupleQueryInfoBean<RootEntity, QueryInfoResult>
-		extends AbstractQueryInfoBean<RootEntity, Tuple, QueryInfoResult> {
-
-	public AbstractTupleQueryInfoBean() {
-		super();
-	}
-
-	public AbstractTupleQueryInfoBean(AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> context) {
-		super(context);
-	}
+@RunWith(Cucumber.class)
+@CucumberOptions(plugin = { "pretty", "html:target/cucumber" })
+public class CompaniesFeatureIT {
 
 }

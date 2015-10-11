@@ -31,10 +31,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 
 import com.evanzeimet.queryinfo.it.companies.Company;
+import com.evanzeimet.queryinfo.it.companies.CompanyEntity;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -42,23 +47,32 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PersonEntity extends DefaultPerson {
 
 	@JsonIgnore
-	private List<Company> employerEntities;
+	private List<CompanyEntity> employerEntities;
 
-	public List<Company> getEmployerEntities() {
+
+	@ManyToMany
+	@JoinTable(name = "people_to_companies",
+			joinColumns = { @JoinColumn(name = "person_id",
+					referencedColumnName = "id") },
+			inverseJoinColumns = { @JoinColumn(name = "company_id",
+					referencedColumnName = "id") })
+	public List<CompanyEntity> getEmployerEntities() {
 		return employerEntities;
 	}
 
-	public void setEmployerEntities(List<Company> employerEntities) {
+	public void setEmployerEntities(List<CompanyEntity> employerEntities) {
 		this.employerEntities = employerEntities;
 	}
 
 	@Override
+	@QueryInfoField
 	@Column(name = "first_name")
 	public String getFirstName() {
 		return super.getFirstName();
 	}
 
 	@Override
+	@QueryInfoField
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -67,6 +81,7 @@ public class PersonEntity extends DefaultPerson {
 	}
 
 	@Override
+	@QueryInfoField
 	@Column(name = "last_name")
 	public String getLastName() {
 		return super.getLastName();

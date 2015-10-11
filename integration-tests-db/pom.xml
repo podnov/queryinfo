@@ -13,7 +13,6 @@
 
 	<properties>
 		<queryinfo.db.changeLogFile>queryinfo-it.changelog.xml</queryinfo.db.changeLogFile>
-
 	</properties>
 
 	<profiles>
@@ -68,7 +67,7 @@
 								</goals>
 								<configuration>
 									<changeLogFile>${queryinfo.db.changeLogFile}</changeLogFile>
-									<driver>${queryinfo.db.driver}</driver>
+									<driver>${queryinfo.db.driver.class}</driver>
 									<url>${queryinfo.db.url}</url>
 									<username>${queryinfo.db.username}</username>
 									<password>${queryinfo.db.password}</password>

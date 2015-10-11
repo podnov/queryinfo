@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.evanzeimet.queryinfo.QueryInfo;
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
 
 @Path("people")
 public interface PeopleResource {
@@ -37,6 +37,6 @@ public interface PeopleResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	Response query(QueryInfo queryInfo);
+	Response query(DefaultQueryInfo queryInfo);
 
 }

@@ -40,13 +40,13 @@ public class QueryInfoTestUtils {
 
 	public static String createActualJson(Object actual)
 			throws JsonProcessingException {
-		ObjectWriter writer = createObjectMapperWriter();
+		ObjectWriter writer = createObjectWriter();
 		String json = writer.writeValueAsString(actual);
 		return dosToUnix(json);
 	}
 
 	@SuppressWarnings("deprecation")
-	public static ObjectWriter createObjectMapperWriter() {
+	public static ObjectWriter createObjectWriter() {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

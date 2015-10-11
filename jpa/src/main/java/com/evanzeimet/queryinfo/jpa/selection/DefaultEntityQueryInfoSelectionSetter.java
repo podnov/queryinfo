@@ -52,6 +52,9 @@ public class DefaultEntityQueryInfoSelectionSetter<RootEntity>
 	protected void setRequestAllSelection(QueryInfoJPAContext<RootEntity> jpaContext) {
 		CriteriaQuery<RootEntity> criteriaQuery = jpaContext.getCriteriaQuery();
 		Root<RootEntity> root = jpaContext.getRoot();
+		// TODO how does this align w/ DefaultEntityAnnotationsQueryInfoFieldResolver validation? do
+		// we need to validate that the whole root is accessible? or do we just ignore for
+		// selections when using entity query info bean?
 		criteriaQuery.select(root);
 	}
 
