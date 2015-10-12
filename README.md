@@ -52,4 +52,4 @@ The purpose of this code is to have a Java api for creating a serializable query
 
 Using the queryinfo-jpa module, you can map condition field names (lefHandSide) to JPA entities using annotations.  The framework can create and execute a JPA CriteriaQuery based on your QueryInfo.
 
-In the integration-tests module, see the [CompanyEntity](queryinfo-integration-test-pu/src/main/java/com/evanzeimet/queryinfo/it/companies/CompanyEntity) and [Conditions Cucumber Feature File](queryinfo-integration-test/src/main/resources/com/evanzeimet/queryinfo/it/conditions/conditions.feature) for an example.
+In the integration-tests module, see the [CompanyEntity](integration-test-pu/src/main/java/com/evanzeimet/queryinfo/it/companies/CompanyEntity) and [Conditions Cucumber Feature File](integration-tests/src/main/resources/com/evanzeimet/queryinfo/it/conditions/conditions.feature) for an example.
