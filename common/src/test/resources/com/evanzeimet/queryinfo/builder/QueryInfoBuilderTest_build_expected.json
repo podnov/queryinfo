@@ -1,0 +1,44 @@
+{
+  "conditionGroup" : {
+    "conditionGroups" : [
+      {
+        "conditions" : [
+          {
+            "leftHandSide" : "category",
+            "operator" : "=",
+            "rightHandSide" : "Awesome Stuff"
+          },
+          {
+            "leftHandSide" : "priority",
+            "operator" : ">",
+            "rightHandSide" : "2"
+          }
+        ],
+        "operator" : "or"
+      }
+    ],
+    "conditions" : [
+      {
+        "leftHandSide" : "active",
+        "operator" : "=",
+        "rightHandSide" : "true"
+      }
+    ],
+    "operator" : "and"
+  },
+  "paginationInfo" : {
+    "pageIndex" : 0,
+    "pageSize" : 2147483647
+  },
+  "requestedFieldNames" : [
+    "a",
+    "b",
+    "c"
+  ],
+  "sorts" : [
+    {
+      "direction" : "asc",
+      "fieldName" : "x"
+    }
+  ]
+}

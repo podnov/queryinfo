@@ -1,0 +1,251 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.evanzeimet.queryinfo</groupId>
+		<artifactId>queryinfo-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>queryinfo-integration-tests</artifactId>
+	<packaging>war</packaging>
+
+	<properties>
+		<cargo.basedir>target/cargo</cargo.basedir>
+		<cargo.containerId>wildfly9x</cargo.containerId>
+		<cargo.skip>false</cargo.skip>
+		<cargo.wildfly.debug.port>5006</cargo.wildfly.debug.port>
+		<cargo.wildfly.management-http.port>9991</cargo.wildfly.management-http.port>
+		<cargo.wildfly.version>9.0.1.Final</cargo.wildfly.version>
+
+		<cargo.wildfly.install>${cargo.basedir}/installs/wildfly-dist-${cargo.wildfly.version}/wildfly-${cargo.wildfly.version}</cargo.wildfly.install>
+		<cargo.wildfly.modules>${cargo.wildfly.install}/modules</cargo.wildfly.modules>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>queryinfo-common</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>queryinfo-jpa</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>queryinfo-integration-tests-db</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>queryinfo-integration-tests-pu</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>queryinfo-integration-tests-ear</artifactId>
+			<type>ear</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${version.mysql.mysql-connector-java}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.spec.javax.transaction</groupId>
+			<artifactId>jboss-transaction-api_1.2_spec</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<testResources>
+					<testResource>
+						<directory>src/test/resources</directory>
+						<filtering>true</filtering>
+					</testResource>
+				</testResources>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-ear-plugin</artifactId>
+						<configuration>
+							<modules>
+								<jarModule>
+									<groupId>com.evanzeimet.queryinfo</groupId>
+									<artifactId>queryinfo-jpa</artifactId>
+								</jarModule>
+								<warModule>
+									<groupId>com.evanzeimet.queryinfo</groupId>
+									<artifactId>queryinfo-integration-tests</artifactId>
+								</warModule>
+							</modules>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<inherited>false</inherited>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.10</version>
+						<executions>
+							<execution>
+								<id>copy-wildfly-modules</id>
+								<phase>process-test-resources</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>mysql</groupId>
+											<artifactId>mysql-connector-java</artifactId>
+											<version>${version.mysql.mysql-connector-java}</version>
+											<outputDirectory>${cargo.wildfly.modules}/com/mysql/main</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.cargo</groupId>
+						<artifactId>cargo-maven2-plugin</artifactId>
+						<configuration>
+							<skip>${cargo.skip}</skip>
+							<container>
+								<containerId>${cargo.containerId}</containerId>
+								<output>${project.build.directory}/cargo.container.log</output>
+								<artifactInstaller>
+									<groupId>org.wildfly</groupId>
+									<artifactId>wildfly-dist</artifactId>
+									<version>${cargo.wildfly.version}</version>
+								</artifactInstaller>
+							</container>
+							<deployables>
+								<deployable>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>queryinfo-integration-tests-ear</artifactId>
+									<type>ear</type>
+								</deployable>
+							</deployables>
+							<configuration>
+								<files>
+									<copy>
+										<file>${project.basedir}/target/test-classes/wildfly/standalone/configuration/</file>
+										<todir>configuration/</todir>
+										<overwrite>true</overwrite>
+									</copy>
+									<copy>
+										<file>${project.basedir}/target/test-classes/wildfly/modules</file>
+										<todir>../../installs/wildfly-dist-${cargo.wildfly.version}/wildfly-${cargo.wildfly.version}/modules</todir>
+										<overwrite>true</overwrite>
+									</copy>
+								</files>
+								<properties>
+									<cargo.jboss.management-http.port>${cargo.wildfly.management-http.port}</cargo.jboss.management-http.port>
+								</properties>
+							</configuration>
+						</configuration>
+						<executions>
+							<execution>
+								<id>start-wildfly</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>start</goal>
+								</goals>
+								<configuration>
+									<configuration>
+										<!-- Yo dawg, I heard you like configurations in your configurations 
+											so I put a configuration in your configuration so you can configure while 
+											you configure -->
+										<properties>
+											<cargo.jvmargs>
+												-Xdebug
+												-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${cargo.wildfly.debug.port}
+											</cargo.jvmargs>
+										</properties>
+									</configuration>
+								</configuration>
+							</execution>
+							<execution>
+								<id>stop-wildfly</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
