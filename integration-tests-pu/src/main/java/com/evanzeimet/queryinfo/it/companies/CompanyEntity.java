@@ -43,7 +43,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "companies")
 public class CompanyEntity extends DefaultCompany {
 
-	@JsonIgnore
 	private List<PersonEntity> employeeEntities;
 
 	@Override
@@ -67,6 +66,7 @@ public class CompanyEntity extends DefaultCompany {
 		return super.getCity();
 	}
 
+	@JsonIgnore
 	@ManyToMany(mappedBy = "employerEntities")
 	public List<PersonEntity> getEmployeesEntities() {
 		return employeeEntities;

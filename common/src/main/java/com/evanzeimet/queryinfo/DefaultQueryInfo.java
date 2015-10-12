@@ -30,7 +30,6 @@ import com.evanzeimet.queryinfo.sort.DefaultSort;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultQueryInfo implements QueryInfo {
@@ -41,9 +40,9 @@ public class DefaultQueryInfo implements QueryInfo {
 	private ConditionGroup conditionGroup;
 	@JsonDeserialize(as = DefaultPaginationInfo.class)
 	private PaginationInfo paginationInfo;
-	private List<String> requestedFieldNames = new ArrayList<String>();
+	private List<String> requestedFieldNames;
 	@JsonDeserialize(contentAs = DefaultSort.class)
-	private List<Sort> sorts = new ArrayList<Sort>();
+	private List<Sort> sorts;
 
 	public DefaultQueryInfo() {
 

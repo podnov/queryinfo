@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.pagination;
+package com.evanzeimet.queryinfo;
 
 /*
  * #%L
@@ -22,34 +22,25 @@ package com.evanzeimet.queryinfo.pagination;
  * #L%
  */
 
-import java.util.List;
 
-public class DefaultPaginatedResult<T> implements PaginatedResult<T> {
 
-	private List<T> pageResults;
-	private Long totalCount;
+public class QueryInfoRuntimeException extends RuntimeException {
 
-	public DefaultPaginatedResult() {
+	private static final long serialVersionUID = -2013214996144812311L;
 
+	public QueryInfoRuntimeException() {
+		super();
 	}
 
-	@Override
-	public List<T> getPageResults() {
-		return pageResults;
+	public QueryInfoRuntimeException(String message) {
+		super(message);
 	}
 
-	@Override
-	public void setPageResults(List<T> pageResults) {
-		this.pageResults = pageResults;
+	public QueryInfoRuntimeException(Throwable cause) {
+		super(cause);
 	}
 
-	@Override
-	public Long getTotalCount() {
-		return totalCount;
-	}
-
-	@Override
-	public void setTotalCount(Long totalCount) {
-		this.totalCount = totalCount;
+	public QueryInfoRuntimeException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

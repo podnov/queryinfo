@@ -24,9 +24,9 @@ package com.evanzeimet.queryinfo.builder;
 
 import static com.evanzeimet.queryinfo.QueryInfoMatchers.equalsCondition;
 import static com.evanzeimet.queryinfo.QueryInfoMatchers.equalsJson;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ public class ConditionGroupBuilderTest {
 				.build();
 
 		List<ConditionGroup> actualConditionGroups = actualConditionGroup.getConditionGroups();
-		assertThat(actualConditionGroups, empty());
+		assertNull(actualConditionGroups);
 
 		List<Condition> actualConditions = actualConditionGroup.getConditions();
 		assertThat(actualConditions, hasSize(1));
@@ -149,7 +149,7 @@ public class ConditionGroupBuilderTest {
 		assertThat(actualNestedConditionGroup, equalsJson(givenConditionGroup));
 
 		List<Condition> actualNestedConditions = actualConditionGroup.getConditions();
-		assertThat(actualNestedConditions, empty());
+		assertNull(actualNestedConditions);
 
 		String actualConditionGroupOperator = actualConditionGroup.getOperator();
 		String expectedConditionGroupOperator = ConditionGroupOperator.AND.getText();

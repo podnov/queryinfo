@@ -41,6 +41,7 @@ public class DefaultQueryInfoJPAContextFactory<RootEntity>
 		QueryInfoJPAContext<RootEntity> result = new QueryInfoJPAContext<RootEntity>();
 
 		result.setCriteriaBuilder(criteriaBuilder);
+		result.setCriteriaQuery(criteriaQuery);
 		result.setRoot(root);
 
 		return result;

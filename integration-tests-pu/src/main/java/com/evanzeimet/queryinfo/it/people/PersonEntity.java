@@ -46,10 +46,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "people")
 public class PersonEntity extends DefaultPerson {
 
-	@JsonIgnore
 	private List<CompanyEntity> employerEntities;
 
-
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "people_to_companies",
 			joinColumns = { @JoinColumn(name = "person_id",

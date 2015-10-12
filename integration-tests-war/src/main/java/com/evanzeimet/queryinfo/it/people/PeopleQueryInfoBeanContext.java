@@ -1,8 +1,10 @@
 package com.evanzeimet.queryinfo.it.people;
 
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,27 +25,8 @@ package com.evanzeimet.queryinfo.it.people;
  */
 
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
-import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
+public interface PeopleQueryInfoBeanContext
+		extends QueryInfoBeanContext<PersonEntity, PersonEntity, PersonEntity> {
 
-@Stateless
-public class PeopleQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<PersonEntity> {
-
-	@Inject
-	@QueryInfoEntityManager
-	private EntityManager entityManager;
-
-	@Override
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	@Override
-	public Class<PersonEntity> getRootEntityClass() {
-		return PersonEntity.class;
-	}
 }

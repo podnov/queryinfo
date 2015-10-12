@@ -42,7 +42,7 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 		super();
 	}
 
-	public AbstractTupleQueryInfoBeanContext(QueryInfoBeanContextRegistry beanContextRegistry) {
+	public AbstractTupleQueryInfoBeanContext(DefaultQueryInfoBeanContextRegistry beanContextRegistry) {
 		super(beanContextRegistry);
 	}
 

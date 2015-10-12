@@ -34,12 +34,13 @@ public class DefaultCompany implements Company {
 	private String address1;
 	private String address2;
 	private String city;
-	@JsonDeserialize(contentAs = DefaultPerson.class)
-	private List<Person> employees;
 	private Long id;
 	private String name;
 	private String state;
 	private String zip;
+
+	@JsonDeserialize(contentAs = DefaultPerson.class)
+	private List<Person> employees;
 
 	public DefaultCompany() {
 

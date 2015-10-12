@@ -24,7 +24,6 @@ package com.evanzeimet.queryinfo.condition;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultConditionGroup implements ConditionGroup {
@@ -32,9 +31,9 @@ public class DefaultConditionGroup implements ConditionGroup {
 	private static final long serialVersionUID = -4685739021151165664L;
 
 	@JsonDeserialize(contentAs = DefaultConditionGroup.class)
-	private List<ConditionGroup> conditionGroups = new ArrayList<ConditionGroup>();
+	private List<ConditionGroup> conditionGroups;
 	@JsonDeserialize(contentAs = DefaultCondition.class)
-	private List<Condition> conditions = new ArrayList<Condition>();
+	private List<Condition> conditions;
 	private String operator = ConditionGroupOperator.AND.getText();
 
 	public DefaultConditionGroup() {

@@ -1,27 +1,14 @@
 package com.evanzeimet.queryinfo.jpa.field;
 
 /*
- * #%L
- * queryinfo-jpa
- * $Id:$
- * $HeadURL:$
- * %%
- * Copyright (C) 2015 Evan Zeimet
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * #%L queryinfo-jpa $Id:$ $HeadURL:$ %% Copyright (C) 2015 Evan Zeimet %% Licensed under the Apache
+ * License, Version 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License. #L%
  */
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -128,8 +115,16 @@ public class QueryInfoFieldUtils {
 
 	public boolean hasAnyRequestedFieldName(QueryInfo queryInfo, List<String> fieldNames) {
 		List<String> requestedFieldNames = queryInfo.getRequestedFieldNames();
-		boolean disjoint = Collections.disjoint(requestedFieldNames, fieldNames);
-		return !disjoint;
+		boolean result;
+
+		if (requestedFieldNames == null) {
+			result = false;
+		} else {
+			boolean disjoint = Collections.disjoint(requestedFieldNames, fieldNames);
+			result = !disjoint;
+		}
+
+		return result;
 	}
 
 	public boolean hasAnySortFieldName(QueryInfo queryInfo, List<String> fieldNames) {

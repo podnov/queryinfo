@@ -27,14 +27,17 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Table;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -55,12 +58,17 @@ public class TestUtils {
 		this.objectMapper = createObjectMapper();
 	}
 
-	public void assertEquals(DataTable expected, List<DefaultCompany> actual) {
-		DataTable actualDataTable = DataTable.create(actual);
-		assertEquals(expected, actualDataTable);
+	public void assertEquals(DataTable expected,
+			List<DefaultCompany> actual,
+			String[] columnNames) {
+		Locale locale = Locale.getDefault();
+		DataTable actualDataTable = DataTable.create(actual, locale, columnNames);
+		assertEquals(expected, actualDataTable, columnNames);
 	}
 
-	public void assertEquals(DataTable expected, DataTable actual) {
+	public void assertEquals(DataTable expected,
+			DataTable actual,
+			String[] companiesFields) {
 		new TableDiffer(expected, actual).calculateDiffs();
 	}
 
@@ -91,6 +99,21 @@ public class TestUtils {
 		objectMapper.writer(prettyPrinter);
 
 		return objectMapper;
+	}
+
+	public String getEntityTable(Class<?> entityClass) {
+		String result;
+		Table table = entityClass.getAnnotation(Table.class);
+
+		if (table == null) {
+			String message = String.format("Could not find table information on [%s]",
+					entityClass.getCanonicalName());
+			throw new QueryInfoRuntimeException(message);
+		} else {
+			result = table.name();
+		}
+
+		return result;
 	}
 
 	public <T> T objectify(String json, Class<T> clazz) throws QueryInfoException {
@@ -141,5 +164,21 @@ public class TestUtils {
 		}
 
 		return result;
+	}
+
+	public void truncateTable(Class<?> entityClass) {
+		String tableName = getEntityTable(entityClass);
+		truncateTable(tableName);
+	}
+
+	public void truncateTable(String tableName) {
+		String sql = String.format("truncate table %s", tableName);
+
+		EntityTransaction transaction = entityManager.getTransaction();
+		transaction.begin();
+
+		entityManager.createNativeQuery(sql).executeUpdate();
+
+		transaction.commit();
 	}
 }

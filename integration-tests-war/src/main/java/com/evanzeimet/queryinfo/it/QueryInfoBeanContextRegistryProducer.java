@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.it;
 
 /*
  * #%L queryinfo-integration-tests $Id:$ $HeadURL:$ %% Copyright (C) 2015 Evan Zeimet %% Licensed
@@ -21,26 +21,29 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
+import com.evanzeimet.queryinfo.jpa.bean.context.DefaultQueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
+
 @Stateless
 public class QueryInfoBeanContextRegistryProducer {
 
-	// TODO will this work? doubt it
 	@Inject
 	@Any
-	private Instance<WTF> beanContextInstances;
+	private Instance<QueryInfoBeanContext<?, ?, ?>> beanContextInstances;
 
 	@Produces
 	public QueryInfoBeanContextRegistry produceBeanContextRegistry() {
-		Iterator<WTF> iterator = beanContextInstances.iterator();
+		Iterator<QueryInfoBeanContext<?, ?, ?>> iterator = beanContextInstances.iterator();
 
 		List<QueryInfoBeanContext<?, ?, ?>> beanContexts = new ArrayList<>();
 
 		while (iterator.hasNext()) {
-			WTF beanContext = iterator.next();
-			beanContexts.add((QueryInfoBeanContext<?, ?, ?>) beanContext);
+			QueryInfoBeanContext<?, ?, ?> beanContext = iterator.next();
+			beanContexts.add(beanContext);
 		}
 
-		return new QueryInfoBeanContextRegistry(beanContexts);
+		return new DefaultQueryInfoBeanContextRegistry(beanContexts);
 	}
 
 }

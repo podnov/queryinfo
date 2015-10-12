@@ -2,7 +2,6 @@
   "conditionGroup" : {
     "conditionGroups" : [
       {
-        "conditionGroups" : [ ],
         "conditions" : [
           {
             "leftHandSide" : "category",

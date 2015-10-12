@@ -43,11 +43,23 @@ import cucumber.api.java.en.When;
 
 public class CompaniesSteps {
 
+	private static final String[] COMPANIES_FIELDS = new String[] {
+			"name",
+			"address1",
+			"address2",
+			"city",
+			"state",
+			"zip"
+	};
+
 	private static final Type COMPANIES_LIST_RESULT_TYPE = new TypeReference<List<DefaultCompany>>() {
 	}.getType();
 
+	private static boolean needToPersistCompanies = true;
+
 	private Response actualResponse;
 	private TestUtils testUtils;
+
 
 	public CompaniesSteps() {
 		setUpRestAssured();
@@ -55,12 +67,16 @@ public class CompaniesSteps {
 	}
 
 	protected void setUpRestAssured() {
-		RestAssured.basePath = "queryinfo-integration-tests";
+		RestAssured.basePath = "queryinfo-it";
 	}
 
 	@Given("^these companies:$")
 	public void Given_these_companies(List<CompanyEntity> companies) {
-		testUtils.persistEntities(companies);
+		if (needToPersistCompanies) {
+			needToPersistCompanies = false;
+			testUtils.truncateTable(CompanyEntity.class);
+			testUtils.persistEntities(companies);
+		}
 	}
 
 	@Given("^the companies query info web service$")
@@ -93,6 +109,6 @@ public class CompaniesSteps {
 		List<DefaultCompany> actual = testUtils.objectify(actualReponseJson,
 				COMPANIES_LIST_RESULT_TYPE);
 
-		testUtils.assertEquals(expected, actual);
+		testUtils.assertEquals(expected, actual, COMPANIES_FIELDS);
 	}
 }

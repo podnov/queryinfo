@@ -30,11 +30,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class DefaultPerson implements Person {
 
-	@JsonDeserialize(contentAs = DefaultCompany.class)
-	private List<Company> employers;
 	private String firstName;
 	private Long id;
 	private String lastName;
+
+	@JsonDeserialize(contentAs = DefaultCompany.class)
+	private List<Company> employers;
 
 	public DefaultPerson() {
 

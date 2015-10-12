@@ -1,8 +1,10 @@
 package com.evanzeimet.queryinfo.it.companies;
 
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,27 +25,8 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
 
-@Stateless
-public class CompanyQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<CompanyEntity> {
-
-	@Inject
-	@QueryInfoEntityManager
-	private EntityManager entityManager;
-
-	@Override
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
-
-	@Override
-	public Class<CompanyEntity> getRootEntityClass() {
-		return CompanyEntity.class;
-	}
+public interface CompanyQueryInfoBeanContext
+		extends QueryInfoBeanContext<CompanyEntity, CompanyEntity, CompanyEntity> {
 
 }

@@ -47,7 +47,7 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		super();
 	}
 
-	public AbstractEntityQueryInfoBeanContext(QueryInfoBeanContextRegistry beanContextRegistry) {
+	public AbstractEntityQueryInfoBeanContext(DefaultQueryInfoBeanContextRegistry beanContextRegistry) {
 		super(beanContextRegistry);
 	}
 

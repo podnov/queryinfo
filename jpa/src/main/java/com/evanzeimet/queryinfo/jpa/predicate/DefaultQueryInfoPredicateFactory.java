@@ -37,26 +37,18 @@ import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPredicateFactory<RootEntity> {
 
-	private QueryInfoPathFactory<RootEntity> pathFactory;
+	private QueryInfoBeanContextRegistry beanContextRegistry;
 
-	public DefaultQueryInfoPredicateFactory() {
-
-	}
-
-	@Override
-	public QueryInfoPathFactory<RootEntity> getPathFactory() {
-		return pathFactory;
-	}
-
-	@Override
-	public void setPathFactory(QueryInfoPathFactory<RootEntity> pathFactory) {
-		this.pathFactory = pathFactory;
+	public DefaultQueryInfoPredicateFactory(QueryInfoBeanContextRegistry beanContextRegistry) {
+		this.beanContextRegistry = beanContextRegistry;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -65,6 +57,9 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 			ConditionOperator conditionOperator,
 			String fieldValue) throws QueryInfoException {
 		Predicate result = null;
+
+		QueryInfoBeanContext beanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoPathFactory pathFactory = beanContext.getPathFactory();
 
 		CriteriaBuilder criteriaBuilder = jpaContext.getCriteriaBuilder();
 		Root<RootEntity> root = jpaContext.getRoot();

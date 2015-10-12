@@ -11,6 +11,9 @@
 		<module>common</module>
 		<module>jpa</module>
 		<module>integration-tests-db</module>
+		<module>integration-tests-pu</module>
+		<module>integration-tests-war</module>
+		<module>integration-tests-ear</module>
 		<module>integration-tests</module>
 	</modules>
 
@@ -54,19 +57,62 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>queryinfo-common</artifactId>
 				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-common</artifactId>
+				<version>${project.version}</version>
+				<type>ejb</type>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>queryinfo-jpa</artifactId>
 				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-jpa</artifactId>
+				<version>${project.version}</version>
+				<type>ejb</type>
 			</dependency>
 
 			<dependency>
 				<groupId>${project.groupId}</groupId>
 				<artifactId>queryinfo-integration-tests-db</artifactId>
 				<version>${project.version}</version>
-				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-integration-tests-pu</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-integration-tests-pu</artifactId>
+				<version>${project.version}</version>
+				<type>ejb</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-integration-tests-ear</artifactId>
+				<version>${project.version}</version>
+				<type>ear</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>queryinfo-integration-tests-war</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 
 			<dependency>
