@@ -48,7 +48,7 @@ The purpose of this code is to have a Java api for creating a serializable query
     }
   ]
 }
-
+```
 
 Using the queryinfo-jpa module, you can map condition field names (lefHandSide) to JPA entities using annotations.  The framework can create and execute a JPA CriteriaQuery based on your QueryInfo.
 
