@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.companies;
+package com.evanzeimet.queryinfo.it.conditions;
 
 /*
  * #%L
@@ -31,6 +31,9 @@ import java.util.List;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.it.TestUtils;
+import com.evanzeimet.queryinfo.it.companies.CompanyEntity;
+import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
+import com.evanzeimet.queryinfo.it.cucumber.CucumberUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -41,7 +44,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class CompaniesSteps {
+public class ConditionsSteps {
 
 	private static final String[] COMPANIES_FIELDS = new String[] {
 			"name",
@@ -49,7 +52,8 @@ public class CompaniesSteps {
 			"address2",
 			"city",
 			"state",
-			"zip"
+			"zip",
+			"yearFounded"
 	};
 
 	private static final Type COMPANIES_LIST_RESULT_TYPE = new TypeReference<List<DefaultCompany>>() {
@@ -58,11 +62,12 @@ public class CompaniesSteps {
 	private static boolean needToPersistCompanies = true;
 
 	private Response actualResponse;
+	private CucumberUtils cucumberUtils;
 	private TestUtils testUtils;
 
-
-	public CompaniesSteps() {
+	public ConditionsSteps() {
 		setUpRestAssured();
+		cucumberUtils = new CucumberUtils();
 		testUtils = TestUtils.create();
 	}
 
@@ -109,6 +114,6 @@ public class CompaniesSteps {
 		List<DefaultCompany> actual = testUtils.objectify(actualReponseJson,
 				COMPANIES_LIST_RESULT_TYPE);
 
-		testUtils.assertEquals(expected, actual, COMPANIES_FIELDS);
+		cucumberUtils.assertEquals(expected, actual, COMPANIES_FIELDS);
 	}
 }

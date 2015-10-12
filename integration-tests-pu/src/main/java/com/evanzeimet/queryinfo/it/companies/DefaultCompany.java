@@ -37,6 +37,7 @@ public class DefaultCompany implements Company {
 	private Long id;
 	private String name;
 	private String state;
+	private Integer yearFounded;
 	private String zip;
 
 	@JsonDeserialize(contentAs = DefaultPerson.class)
@@ -114,6 +115,16 @@ public class DefaultCompany implements Company {
 	@Override
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	@Override
+	public Integer getYearFounded() {
+		return yearFounded;
+	}
+
+	@Override
+	public void setYearFounded(Integer yearFounded) {
+		this.yearFounded = yearFounded;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.companies;
+package com.evanzeimet.queryinfo.it.cucumber;
 
 /*
  * #%L
@@ -23,46 +23,30 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import java.util.List;
+import cucumber.deps.com.thoughtworks.xstream.converters.UnmarshallingContext;
+import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-import com.evanzeimet.queryinfo.it.people.Person;
 
-public interface Company {
+public class LongConverter extends AbstractDecimalFormatConverter {
 
-	String getAddress1();
+	public LongConverter() {
+		this("#0");
+	}
 
-	void setAddress1(String address1);
+	public LongConverter(String pattern) {
+		super(pattern);
+	}
 
-	String getAddress2();
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean canConvert(Class clazz) {
+		return Long.class.isAssignableFrom(clazz);
+	}
 
-	void setAddress2(String address2);
-
-	String getCity();
-
-	void setCity(String city);
-
-	List<Person> getEmployees();
-
-	void setEmployees(List<Person> employees);
-
-	Integer getYearFounded();
-
-	void setYearFounded(Integer founded);
-
-	Long getId();
-
-	void setId(Long id);
-
-	String getName();
-
-	void setName(String name);
-
-	String getState();
-
-	void setState(String state);
-
-	String getZip();
-
-	void setZip(String zip);
-
+	@Override
+	protected Object unmarshalNonNull(HierarchicalStreamReader reader,
+			UnmarshallingContext context) {
+		String value = reader.getValue();
+		return Long.valueOf(value);
+	}
 }

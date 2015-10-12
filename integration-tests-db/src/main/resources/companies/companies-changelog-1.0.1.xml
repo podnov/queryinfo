@@ -20,16 +20,16 @@
   #L%
   -->
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
 		http://www.liquibase.org/xml/ns/dbchangelog-ext
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
-	<include file="people/people-changelog-1.0.0.xml" />
-	<include file="companies/companies-changelog-1.0.0.xml" />
-	<include file="people_to_companies/people_to_companies-changelog-1.0.0.xml" />
-	<include file="companies/companies-changelog-1.0.1.xml" />
-
+		
+	<changeSet id="1" author="podnov">
+		<addColumn tableName="companies">
+			<column name="year_founded" type="int" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

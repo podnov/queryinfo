@@ -1,7 +1,14 @@
-Initial Setup:
+Initial DB Setup:
 
 create database queryinfo_test DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 
 create user 'queryinfo_test'@'%' identified by 'queryinfo_test';
 
 grant all on queryinfo_test.* to 'queryinfo_test'@'%';
+
+
+
+Run liquibase-update:
+
+# use liquibase-update profile in concunction with an environment profile
+mvn verify -pl integration-tests-db -Pliquibase-update,local liquibase:update

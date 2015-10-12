@@ -101,6 +101,13 @@ public class CompanyEntity extends DefaultCompany {
 
 	@Override
 	@QueryInfoField
+	@Column(name = "year_founded")
+	public Integer getYearFounded() {
+		return super.getYearFounded();
+	}
+
+	@Override
+	@QueryInfoField
 	@Column(name = "zip")
 	public String getZip() {
 		return super.getZip();

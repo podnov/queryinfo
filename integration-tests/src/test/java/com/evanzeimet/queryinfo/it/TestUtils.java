@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.persistence.EntityManager;
@@ -38,15 +37,11 @@ import javax.persistence.Table;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
-import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import cucumber.api.DataTable;
-import cucumber.runtime.table.TableDiffer;
 
 public class TestUtils {
 
@@ -56,20 +51,6 @@ public class TestUtils {
 	public TestUtils(EntityManager entityManager) {
 		this.entityManager = entityManager;
 		this.objectMapper = createObjectMapper();
-	}
-
-	public void assertEquals(DataTable expected,
-			List<DefaultCompany> actual,
-			String[] columnNames) {
-		Locale locale = Locale.getDefault();
-		DataTable actualDataTable = DataTable.create(actual, locale, columnNames);
-		assertEquals(expected, actualDataTable, columnNames);
-	}
-
-	public void assertEquals(DataTable expected,
-			DataTable actual,
-			String[] companiesFields) {
-		new TableDiffer(expected, actual).calculateDiffs();
 	}
 
 	public static TestUtils create() {
