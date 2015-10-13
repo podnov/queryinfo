@@ -1,0 +1,11 @@
+---
+
+language: java
+
+install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcargo.skip=true -B -V
+
+before_script:
+ - mysql -e 'create database queryinfo_test default character set utf8 default collate utf8_general_ci;'
+ - mvn verify -Ptravis liquibase:update -pl integration-tests-db
+
+script: mvn verify -Ptravis

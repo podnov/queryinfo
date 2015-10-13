@@ -309,8 +309,10 @@
 
 	<profiles>
 		<profile>
-			<id>local</id>
+			<id>travis</id>
 			<properties>
+				<queryinfo.db.password></queryinfo.db.password>
+				<queryinfo.db.username>travis</queryinfo.db.username>
 				<queryinfo.db.url>jdbc:mysql://localhost:3306/queryinfo_test</queryinfo.db.url>
 			</properties>
 		</profile>
