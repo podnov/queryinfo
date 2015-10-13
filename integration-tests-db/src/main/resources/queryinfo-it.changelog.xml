@@ -28,8 +28,6 @@
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
 	<include file="people/people-changelog-1.0.0.xml" />
-	<include file="companies/companies-changelog-1.0.0.xml" />
-	<include file="people_to_companies/people_to_companies-changelog-1.0.0.xml" />
-	<include file="companies/companies-changelog-1.0.1.xml" />
+	<include file="organizations/organizations-changelog-1.0.0.xml" />
 
 </databaseChangeLog>

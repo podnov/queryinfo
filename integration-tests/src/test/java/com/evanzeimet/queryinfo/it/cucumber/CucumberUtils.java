@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
-
 import cucumber.api.DataTable;
 import cucumber.api.Transformer;
 import cucumber.deps.com.thoughtworks.xstream.XStream;
@@ -45,7 +43,7 @@ public class CucumberUtils {
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 	public void assertEquals(DataTable expected,
-			List<DefaultCompany> actual,
+			List<?> actual,
 			String[] columnNames) {
 		DataTable actualDataTable = convertListToDataTable(actual, columnNames);
 		assertEquals(expected, actualDataTable, columnNames);
@@ -57,7 +55,7 @@ public class CucumberUtils {
 		new TableDiffer(expected, actual).calculateDiffs();
 	}
 
-	public DataTable convertListToDataTable(List<DefaultCompany> actual, String[] columnNames) {
+	public DataTable convertListToDataTable(List<?> actual, String[] columnNames) {
 		TableConverter tableConverter = createTableConverter();
 		return tableConverter.toTable(actual, columnNames);
 	}

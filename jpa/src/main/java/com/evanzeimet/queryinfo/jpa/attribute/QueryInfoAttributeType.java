@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it;
+package com.evanzeimet.queryinfo.jpa.attribute;
 
 /*
  * #%L
@@ -23,7 +23,7 @@ package com.evanzeimet.queryinfo.it;
  */
 
 
-
-public interface WTF {
-
+public enum QueryInfoAttributeType {
+	FIELD,
+	JOIN
 }

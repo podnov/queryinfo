@@ -1,10 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.field;
-
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,18 +23,44 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
 
-	Boolean getIsQueryable();
 
-	void setIsQueryable(Boolean isQueryable);
+public interface Organization {
 
-	Boolean getIsSelectable();
+	Boolean getActive();
 
-	void setIsSelectable(Boolean isSelectable);
+	void setActive(Boolean value);
 
-	Boolean getIsSortable();
+	String getAddress1();
 
-	void setIsSortable(Boolean isSortable);
+	void setAddress1(String address1);
+
+	String getAddress2();
+
+	void setAddress2(String address2);
+
+	String getCity();
+
+	void setCity(String city);
+
+	Integer getYearFounded();
+
+	void setYearFounded(Integer founded);
+
+	Long getId();
+
+	void setId(Long id);
+
+	String getName();
+
+	void setName(String name);
+
+	String getState();
+
+	void setState(String state);
+
+	String getZip();
+
+	void setZip(String zip);
 
 }

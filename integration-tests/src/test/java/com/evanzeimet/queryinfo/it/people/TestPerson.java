@@ -1,10 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.field;
-
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,18 +23,21 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
+import com.evanzeimet.queryinfo.it.people.DefaultPerson;
 
-	Boolean getIsQueryable();
+public class TestPerson extends DefaultPerson {
 
-	void setIsQueryable(Boolean isQueryable);
+	private String employerOrganizationName;
 
-	Boolean getIsSelectable();
+	public TestPerson() {
 
-	void setIsSelectable(Boolean isSelectable);
+	}
 
-	Boolean getIsSortable();
+	public String getEmployerOrganizationName() {
+		return employerOrganizationName;
+	}
 
-	void setIsSortable(Boolean isSortable);
-
+	public void setEmployerOrganizationName(String employerOrganizationName) {
+		this.employerOrganizationName = employerOrganizationName;
+	}
 }

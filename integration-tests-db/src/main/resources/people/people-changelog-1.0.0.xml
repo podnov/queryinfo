@@ -34,6 +34,7 @@
 			</column>
 			<column name="first_name" type="varchar(64)" />
 			<column name="last_name" type="varchar(128)" />
+			<column name="employer_organization_id" type="bigint" />
 		</createTable>
 	</changeSet>
 </databaseChangeLog>

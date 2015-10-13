@@ -2,7 +2,7 @@ package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-integration-tests-pu
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,30 +23,37 @@ package com.evanzeimet.queryinfo.it.people;
  */
 
 
+public class TestPersonToCompany {
 
+	private String company;
+	private String personFirstName;
+	private String personLastName;
 
-import com.evanzeimet.queryinfo.it.organizations.Organization;
+	public TestPersonToCompany() {
 
-public interface Person {
+	}
 
-	Organization getEmployer();
+	public String getCompany() {
+		return company;
+	}
 
-	void setEmployer(Organization employer);
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
-	Long getEmployerOrganizationId();
+	public String getPersonFirstName() {
+		return personFirstName;
+	}
 
-	void setEmployerOrganizationId(Long id);
+	public void setPersonFirstName(String personFirstName) {
+		this.personFirstName = personFirstName;
+	}
 
-	String getFirstName();
+	public String getPersonLastName() {
+		return personLastName;
+	}
 
-	void setFirstName(String firstName);
-
-	Long getId();
-
-	void setId(Long id);
-
-	String getLastName();
-
-	void setLastName(String lastName);
-
+	public void setPersonLastName(String personLastName) {
+		this.personLastName = personLastName;
+	}
 }

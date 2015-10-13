@@ -1,6 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.field;
-
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+package com.evanzeimet.queryinfo.jpa.attribute;
 
 /*
  * #%L
@@ -25,18 +23,10 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
+public interface QueryInfoUniqueAttributeExtractor<T> {
 
-	Boolean getIsQueryable();
+	String getAttributeType();
 
-	void setIsQueryable(Boolean isQueryable);
-
-	Boolean getIsSelectable();
-
-	void setIsSelectable(Boolean isSelectable);
-
-	Boolean getIsSortable();
-
-	void setIsSortable(Boolean isSortable);
+	String getUniqueValue();
 
 }

@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.it.companies;
+package com.evanzeimet.queryinfo.jpa.join;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,21 +23,8 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
 
-import com.evanzeimet.queryinfo.DefaultQueryInfo;
-
-@Path("companies")
-public interface CompaniesResource {
-
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	Response query(DefaultQueryInfo queryInfo);
+public interface QueryInfoJoinInfo extends QueryInfoAttributeInfo {
 
 }

@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.it.companies;
+package com.evanzeimet.queryinfo.jpa.attribute;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,50 +23,16 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import java.util.List;
+public interface QueryInfoAttributeInfo {
 
-import com.evanzeimet.queryinfo.it.people.Person;
+	QueryInfoAttributeType getAttributeType();
 
-public interface Company {
+	String getJpaAttributeName();
 
-	Boolean getActive();
-
-	void setActive(Boolean value);
-
-	String getAddress1();
-
-	void setAddress1(String address1);
-
-	String getAddress2();
-
-	void setAddress2(String address2);
-
-	String getCity();
-
-	void setCity(String city);
-
-	List<Person> getEmployees();
-
-	void setEmployees(List<Person> employees);
-
-	Integer getYearFounded();
-
-	void setYearFounded(Integer founded);
-
-	Long getId();
-
-	void setId(Long id);
+	void setJpaAttributeName(String jpaAttributeName);
 
 	String getName();
 
 	void setName(String name);
-
-	String getState();
-
-	void setState(String state);
-
-	String getZip();
-
-	void setZip(String zip);
 
 }

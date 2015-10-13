@@ -40,7 +40,7 @@ public class QueryInfoFieldUtils {
 		List<String> result = new ArrayList<>(fields.size());
 
 		for (QueryInfoFieldInfo field : fields) {
-			result.add(field.getFieldName());
+			result.add(field.getName());
 		}
 
 		return result;

@@ -1,10 +1,9 @@
-package com.evanzeimet.queryinfo.jpa.field;
+package com.evanzeimet.queryinfo.it.organizations;
 
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,18 +24,9 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
+import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 
-	Boolean getIsQueryable();
-
-	void setIsQueryable(Boolean isQueryable);
-
-	Boolean getIsSelectable();
-
-	void setIsSelectable(Boolean isSelectable);
-
-	Boolean getIsSortable();
-
-	void setIsSortable(Boolean isSortable);
+public interface OrganizationQueryInfoBeanContext
+		extends QueryInfoBeanContext<OrganizationEntity, OrganizationEntity, OrganizationEntity> {
 
 }

@@ -32,9 +32,9 @@ import javax.persistence.criteria.Root;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.sort.Sort;
@@ -104,6 +104,6 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 		return pathFactory.getPathForField(jpaContext,
 				root,
 				fieldName,
-				QueryInfoFieldPurpose.ORDER);
+				QueryInfoAttributePurpose.ORDER);
 	}
 }

@@ -1,5 +1,4 @@
-package com.evanzeimet.queryinfo.it.companies;
-
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
@@ -24,19 +23,29 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
-import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
+import javax.persistence.EntityManager;
+import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
+import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
 
 @Stateless
-public class CompanyQueryInfoBean extends AbstractEntityQueryInfoBean<CompanyEntity> {
+public class DefaultCompanyQueryInfoBeanContext
+		extends AbstractEntityQueryInfoBeanContext<OrganizationEntity>
+		implements OrganizationQueryInfoBeanContext {
 
 	@Inject
-	@PostConstruct
-	protected void postConstruct(CompanyQueryInfoBeanContext context) {
-		setBeanContext(context);
+	@QueryInfoEntityManager
+	private EntityManager entityManager;
+
+	@Override
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	@Override
+	public Class<OrganizationEntity> getRootEntityClass() {
+		return OrganizationEntity.class;
 	}
 
 }

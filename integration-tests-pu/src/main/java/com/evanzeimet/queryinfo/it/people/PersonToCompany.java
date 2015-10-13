@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.field;
+package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests-pu
  * $Id:$
  * $HeadURL:$
  * %%
@@ -23,9 +23,17 @@ package com.evanzeimet.queryinfo.jpa.field;
  */
 
 
+public interface PersonToCompany {
 
-public enum QueryInfoFieldPurpose {
-	ORDER,
-	PREDICATE,
-	SELECT;
+	Long getCompanyId();
+
+	void setCompanyId(Long companyId);
+
+	Long getId();
+
+	void setId(Long id);
+
+	Long getPersonId();
+
+	void setPersonId(Long personId);
 }

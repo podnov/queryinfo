@@ -1,10 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.field;
-
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,18 +23,16 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
+import com.evanzeimet.queryinfo.it.organizations.Organization;
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
+import com.evanzeimet.testidmapper.AbstractTestIdMapper;
 
-	Boolean getIsQueryable();
 
-	void setIsQueryable(Boolean isQueryable);
+public class PersonToEmployerOrganizationIdMapper extends
+		AbstractTestIdMapper<TestPerson, OrganizationEntity, Organization, Long> {
 
-	Boolean getIsSelectable();
-
-	void setIsSelectable(Boolean isSelectable);
-
-	Boolean getIsSortable();
-
-	void setIsSortable(Boolean isSortable);
+	public PersonToEmployerOrganizationIdMapper() {
+		super(new PersonToEmployerOrganizationIdProducer());
+	}
 
 }

@@ -1,9 +1,8 @@
-package com.evanzeimet.queryinfo.it.companies;
-
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
- * queryinfo-integration-tests-war
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -24,9 +23,21 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-public interface CompanyQueryInfoBeanContext
-		extends QueryInfoBeanContext<CompanyEntity, CompanyEntity, CompanyEntity> {
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
+
+@Path("organizations")
+public interface OrganizationsResource {
+
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response query(DefaultQueryInfo queryInfo);
 
 }

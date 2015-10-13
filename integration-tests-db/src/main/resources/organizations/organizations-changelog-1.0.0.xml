@@ -28,14 +28,18 @@
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 		
 	<changeSet id="1" author="podnov">
-		<createTable tableName="people_to_companies">
-			<column name="person_id" type="bigint" />
-			<column name="company_id" type="bigint" />
+		<createTable tableName="organizations">
+			<column name="id" type="bigint" autoIncrement="true" >
+				<constraints primaryKey="true" />
+			</column>
+			<column name="name" type="varchar(128)" />
+			<column name="active" type="boolean" defaultValueBoolean="true" />
+			<column name="address1" type="varchar(128)" />
+			<column name="address2" type="varchar(128)" />
+			<column name="city" type="varchar(128)" />
+			<column name="state" type="varchar(64)" />
+			<column name="zip" type="varchar(128)" />
+			<column name="year_founded" type="int" />
 		</createTable>
-	</changeSet>
-	
-	<changeSet id="2" author="podnov">
-		<addPrimaryKey tableName="people_to_companies" 
-			columnNames="person_id, company_id" />
 	</changeSet>
 </databaseChangeLog>

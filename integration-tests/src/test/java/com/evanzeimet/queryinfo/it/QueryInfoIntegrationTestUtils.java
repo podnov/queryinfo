@@ -43,19 +43,19 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class TestUtils {
+public class QueryInfoIntegrationTestUtils {
 
 	private EntityManager entityManager;
 	private ObjectMapper objectMapper;
 
-	public TestUtils(EntityManager entityManager) {
+	public QueryInfoIntegrationTestUtils(EntityManager entityManager) {
 		this.entityManager = entityManager;
 		this.objectMapper = createObjectMapper();
 	}
 
-	public static TestUtils create() {
+	public static QueryInfoIntegrationTestUtils create() {
 		EntityManager entityManager = createEntityManager();
-		return new TestUtils(entityManager);
+		return new QueryInfoIntegrationTestUtils(entityManager);
 	}
 
 	public static EntityManager createEntityManager() {

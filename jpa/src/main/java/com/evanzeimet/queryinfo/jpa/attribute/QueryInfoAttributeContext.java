@@ -1,6 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.field;
-
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+package com.evanzeimet.queryinfo.jpa.attribute;
 
 /*
  * #%L
@@ -25,18 +23,19 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
+import java.util.Map;
 
-	Boolean getIsQueryable();
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
-	void setIsQueryable(Boolean isQueryable);
+public interface QueryInfoAttributeContext {
 
-	Boolean getIsSelectable();
+	Map<String, QueryInfoFieldInfo> getFields();
 
-	void setIsSelectable(Boolean isSelectable);
+	void setFields(Map<String, QueryInfoFieldInfo> fields);
 
-	Boolean getIsSortable();
+	Map<String, QueryInfoJoinInfo> getJoins();
 
-	void setIsSortable(Boolean isSortable);
+	void setJoins(Map<String, QueryInfoJoinInfo> joins);
 
 }

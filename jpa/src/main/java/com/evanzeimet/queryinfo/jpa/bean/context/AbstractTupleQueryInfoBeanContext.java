@@ -23,13 +23,11 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
  */
 
 
-import java.util.Map;
-
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 
@@ -52,7 +50,7 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	}
 
 	@Override
-	public Map<String, QueryInfoFieldInfo> getFieldInfos() throws QueryInfoException {
+	public QueryInfoAttributeContext getQueryInfoAttributeContext() throws QueryInfoException {
 		// TODO Walk all joins? Enum-based definitions?
 		return null;
 	}

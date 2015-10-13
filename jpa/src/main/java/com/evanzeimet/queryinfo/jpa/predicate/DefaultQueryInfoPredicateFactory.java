@@ -38,9 +38,9 @@ import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
@@ -69,7 +69,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		Expression<?> path = pathFactory.getPathForField(jpaContext,
 				root,
 				fieldName,
-				QueryInfoFieldPurpose.PREDICATE);
+				QueryInfoAttributePurpose.PREDICATE);
 
 		Object parsedFieldValue = fieldValueParser.parse(path, fieldValue);
 

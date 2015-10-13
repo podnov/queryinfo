@@ -1,10 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.field;
-
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests-pu
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,18 +23,45 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  */
 
 
-public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
 
-	Boolean getIsQueryable();
+public class DefaultPersonToCompany implements PersonToCompany {
 
-	void setIsQueryable(Boolean isQueryable);
+	private Long companyId;
+	private Long id;
+	private Long personId;
 
-	Boolean getIsSelectable();
+	public DefaultPersonToCompany() {
 
-	void setIsSelectable(Boolean isSelectable);
+	}
 
-	Boolean getIsSortable();
+	@Override
+	public Long getCompanyId() {
+		return companyId;
+	}
 
-	void setIsSortable(Boolean isSortable);
+	@Override
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
+	}
+
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public Long getPersonId() {
+		return personId;
+	}
+
+	@Override
+	public void setPersonId(Long personId) {
+		this.personId = personId;
+	}
 
 }

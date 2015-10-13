@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.companies;
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
@@ -35,23 +35,23 @@ import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.it.QueryInfoITUtils;
 
 @Stateless
-public class CompaniesResourceBean implements CompaniesResource {
+public class OrganizationsResourceBean implements OrganizationsResource {
 
 	@Inject
 	private Logger logger;
 
 	@Inject
-	private CompanyQueryInfoBean queryInfoBean;
+	private OrganizationsQueryInfoBean organizationQueryInfoBean;
 
 	@Override
 	public Response query(DefaultQueryInfo queryInfo) {
 		Response result;
 
 		try {
-			List<CompanyEntity> companies = queryInfoBean.query(queryInfo);
-			result = Response.ok(companies).build();
+			List<OrganizationEntity> organizations = organizationQueryInfoBean.query(queryInfo);
+			result = Response.ok(organizations).build();
 		} catch (QueryInfoException e) {
-			logger.error("Could not retrieve companies", e);
+			logger.error("Could not retrieve organizations", e);
 			result = QueryInfoITUtils.createUnprocessableEntityResponse();
 		}
 
