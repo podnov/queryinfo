@@ -53,7 +53,8 @@ public class ConditionsSteps {
 			"city",
 			"state",
 			"zip",
-			"yearFounded"
+			"yearFounded",
+			"active"
 	};
 
 	private static final Type COMPANIES_LIST_RESULT_TYPE = new TypeReference<List<DefaultCompany>>() {

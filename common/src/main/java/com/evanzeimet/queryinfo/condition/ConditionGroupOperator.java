@@ -34,7 +34,7 @@ public enum ConditionGroupOperator {
 		ConditionGroupOperator result = null;
 
 		for (ConditionGroupOperator operator : ConditionGroupOperator.values()) {
-			if (operator.getText().equals(operator)) {
+			if (operator.getText().equals(text)) {
 				result = operator;
 				break;
 			}

@@ -32,4 +32,10 @@
 			<column name="year_founded" type="int" />
 		</addColumn>
 	</changeSet>
+
+	<changeSet id="2" author="podnov">
+		<addColumn tableName="companies">
+			<column name="active" type="boolean" defaultValueBoolean="true" />
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

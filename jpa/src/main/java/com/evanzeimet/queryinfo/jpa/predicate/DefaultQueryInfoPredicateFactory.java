@@ -24,6 +24,7 @@ package com.evanzeimet.queryinfo.jpa.predicate;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
@@ -46,13 +47,14 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPredicateFactory<RootEntity> {
 
 	private QueryInfoBeanContextRegistry beanContextRegistry;
+	private FieldValueParser fieldValueParser = new FieldValueParser();
 
 	public DefaultQueryInfoPredicateFactory(QueryInfoBeanContextRegistry beanContextRegistry) {
 		this.beanContextRegistry = beanContextRegistry;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Predicate cretePredicate(QueryInfoJPAContext jpaContext,
+	protected Predicate createPredicate(QueryInfoJPAContext jpaContext,
 			String fieldName,
 			ConditionOperator conditionOperator,
 			String fieldValue) throws QueryInfoException {
@@ -69,20 +71,21 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				fieldName,
 				QueryInfoFieldPurpose.PREDICATE);
 
-		// TODO date parsing
+		Object parsedFieldValue = fieldValueParser.parse(path, fieldValue);
 
 		switch (conditionOperator) {
 			case EQUAL_TO:
-				result = criteriaBuilder.equal(path, fieldValue);
+				result = criteriaBuilder.equal(path, parsedFieldValue);
 				break;
 
 			case GREATER_THAN:
-				result = criteriaBuilder.greaterThan((Expression<Comparable>) path, fieldValue);
+				result = criteriaBuilder.greaterThan((Expression<Comparable>) path,
+						(Comparable<?>) parsedFieldValue);
 				break;
 
 			case GREATER_THAN_OR_EQUAL_TO:
 				result = criteriaBuilder.greaterThanOrEqualTo((Expression<Comparable>) path,
-						fieldValue);
+						(Comparable<?>) parsedFieldValue);
 				break;
 
 			case IN:
@@ -90,16 +93,18 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				break;
 
 			case LESS_THAN:
-				result = criteriaBuilder.lessThan((Expression<Comparable>) path, fieldValue);
+				result = criteriaBuilder.lessThan((Expression<Comparable>) path,
+						(Comparable<?>) parsedFieldValue);
 				break;
 
 			case LESS_THAN_OR_EQUAL_TO:
 				result = criteriaBuilder.lessThanOrEqualTo((Expression<Comparable>) path,
-						fieldValue);
+						(Comparable<?>) parsedFieldValue);
 				break;
 
 			case LIKE:
-				result = criteriaBuilder.like((Expression<String>) path, fieldValue);
+				result = criteriaBuilder.like((Expression<String>) path,
+						fieldValue);
 				break;
 
 			case NOT_EQUAL_TO:
@@ -139,7 +144,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		boolean hasOperator = (conditionOperator != null);
 
 		if (hasFieldName && hasOperator) {
-			result = cretePredicate(jpaContext,
+			result = createPredicate(jpaContext,
 					fieldName,
 					conditionOperator,
 					fieldValue);

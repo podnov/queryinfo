@@ -29,6 +29,10 @@ import com.evanzeimet.queryinfo.it.people.Person;
 
 public interface Company {
 
+	Boolean getActive();
+
+	void setActive(Boolean value);
+
 	String getAddress1();
 
 	void setAddress1(String address1);

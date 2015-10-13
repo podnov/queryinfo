@@ -47,6 +47,13 @@ public class CompanyEntity extends DefaultCompany {
 
 	@Override
 	@QueryInfoField
+	@Column(name = "active")
+	public Boolean getActive() {
+		return super.getActive();
+	}
+
+	@Override
+	@QueryInfoField
 	@Column(name = "address1")
 	public String getAddress1() {
 		return super.getAddress1();

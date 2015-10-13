@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class DefaultCompany implements Company {
 
+	private Boolean active;
 	private String address1;
 	private String address2;
 	private String city;
@@ -45,6 +46,16 @@ public class DefaultCompany implements Company {
 
 	public DefaultCompany() {
 
+	}
+
+	@Override
+	public Boolean getActive() {
+		return active;
+	}
+
+	@Override
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	@Override

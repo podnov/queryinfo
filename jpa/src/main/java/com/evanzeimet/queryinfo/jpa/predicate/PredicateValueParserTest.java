@@ -1,9 +1,8 @@
-package com.evanzeimet.queryinfo.it.companies;
-
+package com.evanzeimet.queryinfo.jpa.predicate;
 
 /*
  * #%L
- * queryinfo-integration-tests-war
+ * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
@@ -24,9 +23,7 @@ package com.evanzeimet.queryinfo.it.companies;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 
-public interface CompanyQueryInfoBeanContext
-		extends QueryInfoBeanContext<CompanyEntity, CompanyEntity, CompanyEntity> {
+public class PredicateValueParserTest {
 
 }
