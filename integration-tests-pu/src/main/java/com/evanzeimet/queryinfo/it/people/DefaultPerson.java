@@ -2,7 +2,7 @@ package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-pu
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,33 +22,42 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-import java.util.List;
-
-import com.evanzeimet.queryinfo.it.companies.Company;
-import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
+import com.evanzeimet.queryinfo.it.organizations.DefaultOrganization;
+import com.evanzeimet.queryinfo.it.organizations.Organization;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class DefaultPerson implements Person {
 
+	private Long employerOrganizationId;
 	private String firstName;
 	private Long id;
 	private String lastName;
 
-	@JsonDeserialize(contentAs = DefaultCompany.class)
-	private List<Company> employers;
+	@JsonDeserialize(as = DefaultOrganization.class)
+	private Organization employer;
 
 	public DefaultPerson() {
 
 	}
 
 	@Override
-	public List<Company> getEmployers() {
-		return employers;
+	public Organization getEmployer() {
+		return employer;
 	}
 
 	@Override
-	public void setEmployers(List<Company> employers) {
-		this.employers = employers;
+	public void setEmployer(Organization employer) {
+		this.employer = employer;
+	}
+
+	@Override
+	public Long getEmployerOrganizationId() {
+		return employerOrganizationId;
+	}
+
+	@Override
+	public void setEmployerOrganizationId(Long employerOrganizationId) {
+		this.employerOrganizationId = employerOrganizationId;
 	}
 
 	@Override

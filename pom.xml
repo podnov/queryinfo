@@ -116,6 +116,13 @@
 			</dependency>
 
 			<dependency>
+				<groupId>com.github.podnov</groupId>
+				<artifactId>test-id-mapper</artifactId>
+				<version>RELEASE-TAG-0.0.3</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
 				<groupId>com.jayway.restassured</groupId>
 				<artifactId>rest-assured</artifactId>
 				<version>${version.com.jayway.restassured.rest-assured}</version>
@@ -283,6 +290,13 @@
 							<version>${version.mysql.mysql-connector-java}</version>
 						</dependency>
 					</dependencies>
+					<configuration>
+						<changeLogFile>${queryinfo.db.changeLogFile}</changeLogFile>
+						<driver>${queryinfo.db.driver.class}</driver>
+						<url>${queryinfo.db.url}</url>
+						<username>${queryinfo.db.username}</username>
+						<password>${queryinfo.db.password}</password>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.cargo</groupId>
@@ -307,6 +321,11 @@
 			<id>jboss</id>
 			<name>JBoss</name>
 			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 </project>

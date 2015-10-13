@@ -26,14 +26,22 @@ package com.evanzeimet.queryinfo.it.conditions;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.beanutils.PropertyUtils;
+
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.it.TestUtils;
-import com.evanzeimet.queryinfo.it.companies.CompanyEntity;
-import com.evanzeimet.queryinfo.it.companies.DefaultCompany;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
+import com.evanzeimet.queryinfo.it.QueryInfoIntegrationTestUtils;
+import com.evanzeimet.queryinfo.it.organizations.DefaultOrganization;
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.it.cucumber.CucumberUtils;
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.it.people.PersonToEmployerOrganizationIdMapper;
+import com.evanzeimet.queryinfo.it.people.TestPerson;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -46,47 +54,65 @@ import cucumber.api.java.en.When;
 
 public class ConditionsSteps {
 
-	private static final String[] COMPANIES_FIELDS = new String[] {
+	private static final String[] ORGANIZATION_FIELDS = new String[] {
 			"name",
 			"address1",
 			"address2",
 			"city",
 			"state",
 			"zip",
-			"yearFounded"
+			"yearFounded",
+			"active"
 	};
 
-	private static final Type COMPANIES_LIST_RESULT_TYPE = new TypeReference<List<DefaultCompany>>() {
+	private static final Type ORGANIZATION_LIST_RESULT_TYPE = new TypeReference<List<DefaultOrganization>>() {
 	}.getType();
 
-	private static boolean needToPersistCompanies = true;
+	private static boolean needToPersistOrganizations = true;
+	private static boolean needToPersistPeople = true;
 
 	private Response actualResponse;
 	private CucumberUtils cucumberUtils;
-	private TestUtils testUtils;
+	private String path;
+	private PersonToEmployerOrganizationIdMapper personToEmployerOrganizationIdMapper = new PersonToEmployerOrganizationIdMapper();
+	private QueryInfoIntegrationTestUtils testUtils;
 
 	public ConditionsSteps() {
 		setUpRestAssured();
 		cucumberUtils = new CucumberUtils();
-		testUtils = TestUtils.create();
+		testUtils = QueryInfoIntegrationTestUtils.create();
 	}
 
 	protected void setUpRestAssured() {
 		RestAssured.basePath = "queryinfo-it";
 	}
 
-	@Given("^these companies:$")
-	public void Given_these_companies(List<CompanyEntity> companies) {
-		if (needToPersistCompanies) {
-			needToPersistCompanies = false;
-			testUtils.truncateTable(CompanyEntity.class);
-			testUtils.persistEntities(companies);
+	@Given("^these organizations:$")
+	public void Given_these_organizations(List<OrganizationEntity> organizations) {
+		if (needToPersistOrganizations) {
+			needToPersistOrganizations = false;
+			testUtils.truncateTable(OrganizationEntity.class);
+			testUtils.persistEntities(organizations);
+
+			personToEmployerOrganizationIdMapper.mapReferenceIds(organizations, organizations);
 		}
 	}
 
-	@Given("^the companies query info web service$")
-	public void Given_the_companies_query_info_web_service() {
-		// no-op
+	@Given("^these people:$")
+	public void Given_these_people(List<TestPerson> people) {
+		if (needToPersistPeople) {
+			needToPersistPeople = false;
+
+			List<PersonEntity> personEntities = createPersonEntities(people);
+
+			testUtils.truncateTable(PersonEntity.class);
+			testUtils.persistEntities(personEntities);
+		}
+	}
+
+	@Given("^the organizations query info web service$")
+	public void Given_the_organizations_query_info_web_service() {
+		path = "/organizations";
 	}
 
 	@When("^I send the query:$")
@@ -95,7 +121,7 @@ public class ConditionsSteps {
 				.contentType(ContentType.JSON)
 				.body(rawQueryInfo)
 				.when()
-				.post("/companies");
+				.post(path);
 
 	}
 
@@ -106,14 +132,34 @@ public class ConditionsSteps {
 		assertEquals(expected, actual);
 	}
 
-	@Then("^I should receive these companies:$")
-	public void Then_I_should_receive_these_companies(DataTable expected)
+	@Then("^I should receive these organizations:$")
+	public void Then_I_should_receive_these_organizations(DataTable expected)
 			throws QueryInfoException {
 		String actualReponseJson = actualResponse.getBody().asString();
 
-		List<DefaultCompany> actual = testUtils.objectify(actualReponseJson,
-				COMPANIES_LIST_RESULT_TYPE);
+		List<DefaultOrganization> actual = testUtils.objectify(actualReponseJson,
+				ORGANIZATION_LIST_RESULT_TYPE);
 
-		cucumberUtils.assertEquals(expected, actual, COMPANIES_FIELDS);
+		cucumberUtils.assertEquals(expected, actual, ORGANIZATION_FIELDS);
+	}
+
+	protected List<PersonEntity> createPersonEntities(List<TestPerson> testPeople) {
+		personToEmployerOrganizationIdMapper.setReferrerReferencePersistenceIdsForTestIds(
+				testPeople);
+		int personCount = testPeople.size();
+
+		List<PersonEntity> result = new ArrayList<>(personCount);
+
+		for (TestPerson person : testPeople) {
+			PersonEntity personEntity = new PersonEntity();
+			try {
+				PropertyUtils.copyProperties(personEntity, person);
+			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+				throw new QueryInfoRuntimeException(e);
+			}
+			result.add(personEntity);
+		}
+
+		return result;
 	}
 }

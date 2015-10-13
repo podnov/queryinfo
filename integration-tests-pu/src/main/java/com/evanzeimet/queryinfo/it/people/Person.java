@@ -2,7 +2,7 @@ package com.evanzeimet.queryinfo.it.people;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-pu
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,15 +22,20 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-import java.util.List;
 
-import com.evanzeimet.queryinfo.it.companies.Company;
+
+
+import com.evanzeimet.queryinfo.it.organizations.Organization;
 
 public interface Person {
 
-	List<Company> getEmployers();
+	Organization getEmployer();
 
-	void setEmployers(List<Company> employers);
+	void setEmployer(Organization employer);
+
+	Long getEmployerOrganizationId();
+
+	void setEmployerOrganizationId(Long id);
 
 	String getFirstName();
 

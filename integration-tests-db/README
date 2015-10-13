@@ -10,5 +10,4 @@ grant all on queryinfo_test.* to 'queryinfo_test'@'%';
 
 Run liquibase-update:
 
-# use liquibase-update profile in concunction with an environment profile
-mvn verify -pl integration-tests-db -Pliquibase-update,local liquibase:update
+mvn verify -pl integration-tests-db -Plocal liquibase:update

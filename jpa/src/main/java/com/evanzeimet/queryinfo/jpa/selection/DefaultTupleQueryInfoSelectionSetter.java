@@ -35,10 +35,11 @@ import javax.persistence.criteria.Selection;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
@@ -57,15 +58,16 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 				throws QueryInfoException {
 		QueryInfoBeanContext<RootEntity, ?, ?> queryInfoBeanContext = beanContextRegistry.getContextForRoot(jpaContext);
 
-		Map<String, QueryInfoFieldInfo> fieldInfos = queryInfoBeanContext.getFieldInfos();
-		Iterator<QueryInfoFieldInfo> iterator = fieldInfos.values().iterator();
+		QueryInfoAttributeContext queryInfoAttributeContext = queryInfoBeanContext.getQueryInfoAttributeContext();
+		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
+		Iterator<QueryInfoFieldInfo> iterator = fields.values().iterator();
 
-		int selectionCount = fieldInfos.size();
+		int selectionCount = fields.size();
 		List<String> fieldNames = new ArrayList<>(selectionCount);
 
 		while (iterator.hasNext()) {
 			QueryInfoFieldInfo fieldInfo = iterator.next();
-			String fieldName = fieldInfo.getFieldName();
+			String fieldName = fieldInfo.getName();
 			fieldNames.add(fieldName);
 		}
 
@@ -86,7 +88,7 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 			Expression<?> path = pathFactory.getPathForField(jpaContext,
 					root,
 					requestedField,
-					QueryInfoFieldPurpose.SELECT);
+					QueryInfoAttributePurpose.SELECT);
 			selections.add(path);
 		}
 

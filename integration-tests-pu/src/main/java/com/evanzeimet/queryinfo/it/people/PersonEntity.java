@@ -23,22 +23,17 @@ package com.evanzeimet.queryinfo.it.people;
  */
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
 
-import com.evanzeimet.queryinfo.it.companies.Company;
-import com.evanzeimet.queryinfo.it.companies.CompanyEntity;
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -46,21 +41,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "people")
 public class PersonEntity extends DefaultPerson {
 
-	private List<CompanyEntity> employerEntities;
+	private OrganizationEntity employerEntity;
 
 	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "people_to_companies",
-			joinColumns = { @JoinColumn(name = "person_id",
-					referencedColumnName = "id") },
-			inverseJoinColumns = { @JoinColumn(name = "company_id",
-					referencedColumnName = "id") })
-	public List<CompanyEntity> getEmployerEntities() {
-		return employerEntities;
+	@ManyToOne
+	@JoinColumn(name = "employer_organization_id",
+			referencedColumnName = "id",
+			insertable = false,
+			updatable = false)
+	public OrganizationEntity getEmployerEntity() {
+		return employerEntity;
 	}
 
-	public void setEmployerEntities(List<CompanyEntity> employerEntities) {
-		this.employerEntities = employerEntities;
+	public void setEmployerEntity(OrganizationEntity employerEntity) {
+		this.employerEntity = employerEntity;
+	}
+
+	@Override
+	@Column(name = "employer_organization_id")
+	public Long getEmployerOrganizationId() {
+		return super.getEmployerOrganizationId();
 	}
 
 	@Override
@@ -88,17 +88,10 @@ public class PersonEntity extends DefaultPerson {
 
 	@PostLoad
 	protected void postLoad() {
-		postLoadEmployers();
+		postLoadEmployer();
 	}
 
-	protected void postLoadEmployers() {
-		if (employerEntities != null) {
-			int employerCount = employerEntities.size();
-
-			List<Company> employers = new ArrayList<>(employerCount);
-			employers.addAll(employerEntities);
-
-			setEmployers(employers);
-		}
+	protected void postLoadEmployer() {
+		setEmployer(getEmployerEntity());
 	}
 }

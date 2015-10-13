@@ -30,12 +30,11 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.it.WTF;
 import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
 
 @Stateless
 public class DefaultPeopleQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<PersonEntity>
-		implements PeopleQueryInfoBeanContext, WTF {
+		implements PeopleQueryInfoBeanContext {
 
 	@Inject
 	@QueryInfoEntityManager

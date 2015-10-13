@@ -22,12 +22,10 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
  * #L%
  */
 
-import java.util.Map;
-
 import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
@@ -41,8 +39,6 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 
 	EntityManager getEntityManager();
 
-	Map<String /* fieldName */, QueryInfoFieldInfo> getFieldInfos() throws QueryInfoException;
-
 	QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory();
 
 	QueryInfoOrderFactory<RootEntity> getOrderFactory();
@@ -50,6 +46,8 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 	QueryInfoPathFactory<RootEntity> getPathFactory();
 
 	QueryInfoPredicateFactory<RootEntity> getPredicateFactory();
+
+	QueryInfoAttributeContext getQueryInfoAttributeContext() throws QueryInfoException;
 
 	QueryInfoResultConverter<CriteriaQueryResult, QueryInfoResult> getResultConverter();
 

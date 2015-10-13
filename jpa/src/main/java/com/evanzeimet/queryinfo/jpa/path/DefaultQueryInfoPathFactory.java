@@ -11,9 +11,9 @@ package com.evanzeimet.queryinfo.jpa.path;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,11 +29,13 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPathParts;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultQueryInfoPathFactory<RootEntity>
@@ -57,7 +59,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	protected <T> Expression<T> getEntityPath(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String fieldName,
-			QueryInfoFieldPurpose purpose) throws QueryInfoException {
+			QueryInfoAttributePurpose purpose) throws QueryInfoException {
 		Expression<T> result = null;
 
 		validateFieldInfo(jpaContext, fieldName, purpose);
@@ -78,7 +80,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	protected <T, JoinedEntity> Expression<T> getJoinPath(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			QueryInfoFieldPathParts pathParts,
-			QueryInfoFieldPurpose purpose) throws QueryInfoException {
+			QueryInfoAttributePurpose purpose) throws QueryInfoException {
 		String joinAttributeName = pathParts.consumeJoin();
 		Join<RootEntity, JoinedEntity> join = jpaContext.getJoin(from, joinAttributeName);
 
@@ -99,13 +101,12 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	public <T> Expression<T> getPathForField(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String fieldName,
-			QueryInfoFieldPurpose purpose) throws QueryInfoException {
+			QueryInfoAttributePurpose purpose) throws QueryInfoException {
 		Expression<T> result = null;
 
 		QueryInfoFieldPathParts pathParts = QueryInfoFieldPathParts.fromFullPath(fieldName);
 
 		if (pathParts.hasJoins()) {
-			// TODO need to validate that joins are supposed to be walked w/ their own annotation
 			result = getJoinPath(jpaContext, from, pathParts, purpose);
 		} else {
 			result = getEntityPath(jpaContext, from, fieldName, purpose);
@@ -116,12 +117,13 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 	protected void validateFieldInfo(QueryInfoJPAContext<?> jpaContext,
 			String fieldName,
-			QueryInfoFieldPurpose purpose)
+			QueryInfoAttributePurpose purpose)
 			throws QueryInfoException {
 		QueryInfoBeanContext<?, ?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
-		Map<String /* fieldName */, QueryInfoFieldInfo> fieldInfos = beanContext.getFieldInfos();
+		QueryInfoAttributeContext queryInfoAttributeContext = beanContext.getQueryInfoAttributeContext();
+		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
 
-		QueryInfoFieldInfo fieldInfo = fieldInfos.get(fieldName);
+		QueryInfoFieldInfo fieldInfo = fields.get(fieldName);
 
 		if (fieldInfo == null) {
 			String message = String.format("Field not defined for name [%s]", fieldName);
@@ -146,6 +148,21 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 		if (!valid) {
 			String message = String.format("Field [%s] not valid for [%s]", fieldName, purpose);
+			throw new QueryInfoException(message);
+		}
+	}
+
+	protected void validateJoinInfo(QueryInfoJPAContext<?> jpaContext,
+			String joinName)
+			throws QueryInfoException {
+		QueryInfoBeanContext<?, ?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoAttributeContext queryInfoAttributeContext = beanContext.getQueryInfoAttributeContext();
+		Map<String, QueryInfoJoinInfo> joins = queryInfoAttributeContext.getJoins();
+
+		QueryInfoJoinInfo joinInfo = joins.get(joinName);
+
+		if (joinInfo == null) {
+			String message = String.format("Field not defined for name [%s]", joinName);
 			throw new QueryInfoException(message);
 		}
 	}

@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.field;
 
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -23,15 +25,7 @@ package com.evanzeimet.queryinfo.jpa.field;
  */
 
 
-public interface QueryInfoFieldInfo {
-
-	String getEntityAttributeName();
-
-	void setEntityAttributeName(String entityAttributeName);
-
-	String getFieldName();
-
-	void setFieldName(String fieldName);
+public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
 
 	Boolean getIsQueryable();
 

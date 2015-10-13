@@ -17,7 +17,7 @@
 	<persistence-unit name="queryinfo_test_it">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-		<class>com.evanzeimet.queryinfo.it.companies.CompanyEntity</class>
+		<class>com.evanzeimet.queryinfo.it.organizations.OrganizationEntity</class>
 		<class>com.evanzeimet.queryinfo.it.people.PersonEntity</class>
 
 		<properties>

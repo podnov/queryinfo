@@ -32,9 +32,9 @@ import javax.persistence.criteria.Selection;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPurpose;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
@@ -74,7 +74,7 @@ public class DefaultEntityQueryInfoSelectionSetter<RootEntity>
 			Expression<?> path = pathFactory.getPathForField(jpaContext,
 					root,
 					requestedField,
-					QueryInfoFieldPurpose.SELECT);
+					QueryInfoAttributePurpose.SELECT);
 			selections.add(path);
 		}
 

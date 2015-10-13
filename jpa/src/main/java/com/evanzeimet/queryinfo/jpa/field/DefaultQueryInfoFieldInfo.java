@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.field;
 
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeType;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -25,33 +27,19 @@ package com.evanzeimet.queryinfo.jpa.field;
 
 public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 
-	private String entityAttributeName;
-	private String fieldName;
+	private String jpaAttributeName;
 	private Boolean isQueryable;
 	private Boolean isSelectable;
 	private Boolean isSortable;
+	private String name;
 
 	public DefaultQueryInfoFieldInfo() {
+
 	}
 
 	@Override
-	public String getEntityAttributeName() {
-		return entityAttributeName;
-	}
-
-	@Override
-	public void setEntityAttributeName(String entityAttributeName) {
-		this.entityAttributeName = entityAttributeName;
-	}
-
-	@Override
-	public String getFieldName() {
-		return fieldName;
-	}
-
-	@Override
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public QueryInfoAttributeType getAttributeType() {
+		return QueryInfoAttributeType.FIELD;
 	}
 
 	@Override
@@ -82,5 +70,25 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	@Override
 	public void setIsSortable(Boolean isSortable) {
 		this.isSortable = isSortable;
+	}
+
+	@Override
+	public String getJpaAttributeName() {
+		return jpaAttributeName;
+	}
+
+	@Override
+	public void setJpaAttributeName(String entityAttributeName) {
+		this.jpaAttributeName = entityAttributeName;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 }
