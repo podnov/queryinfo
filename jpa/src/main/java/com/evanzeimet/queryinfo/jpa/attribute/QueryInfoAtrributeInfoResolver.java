@@ -25,12 +25,12 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  */
 
 
-import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public interface QueryInfoAtrributeInfoResolver<T> {
 
 	QueryInfoAttributeContext resolve(QueryInfoPathFactory<T> pathFactory)
-			throws QueryInfoException;
+			throws QueryInfoRuntimeException;
 
 }

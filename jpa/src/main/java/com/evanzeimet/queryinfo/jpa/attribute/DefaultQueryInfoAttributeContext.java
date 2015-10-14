@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-
 import java.util.Map;
 
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
@@ -38,6 +37,19 @@ public class DefaultQueryInfoAttributeContext implements QueryInfoAttributeConte
 	}
 
 	@Override
+	public QueryInfoFieldInfo getField(String queryInfoFieldAttributeName) {
+		QueryInfoFieldInfo result;
+
+		if (fields == null) {
+			result = null;
+		} else {
+			result = fields.get(queryInfoFieldAttributeName);
+		}
+
+		return result;
+	}
+
+	@Override
 	public Map<String, QueryInfoFieldInfo> getFields() {
 		return fields;
 	}
@@ -48,9 +60,23 @@ public class DefaultQueryInfoAttributeContext implements QueryInfoAttributeConte
 	}
 
 	@Override
+	public QueryInfoJoinInfo getJoin(String queryInfoJoinAttributeName) {
+		QueryInfoJoinInfo result;
+
+		if (fields == null) {
+			result = null;
+		} else {
+			result = joins.get(queryInfoJoinAttributeName);
+		}
+
+		return result;
+	}
+
+	@Override
 	public Map<String, QueryInfoJoinInfo> getJoins() {
 		return joins;
 	}
+
 	@Override
 	public void setJoins(Map<String, QueryInfoJoinInfo> joins) {
 		this.joins = joins;

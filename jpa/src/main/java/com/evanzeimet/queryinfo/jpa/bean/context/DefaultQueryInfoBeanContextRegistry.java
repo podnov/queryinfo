@@ -25,6 +25,8 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.criteria.From;
+
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContextRegistry {
@@ -35,9 +37,15 @@ public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContext
 		this.beanContexts = beanContexts;
 	}
 
+	@Override
+	public <T> QueryInfoBeanContext<T, ?, ?> getContext(From<?, T> from) {
+		Class<T> entityClass = from.getModel().getBindableJavaType();
+		return getContext(entityClass);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public <RootEntity, CriteriaQueryResultType, QueryInfoResultType> QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType> getContext(
-			Class<RootEntity> rootEntityClass) {
+	public <RootEntity, CriteriaQueryResultType, QueryInfoResultType> QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType> getContext(Class<RootEntity> rootEntityClass) {
 		QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType> result = null;
 
 		Iterator<QueryInfoBeanContext<?, ?, ?>> iterator = beanContexts.iterator();
@@ -56,6 +64,7 @@ public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContext
 		return result;
 	}
 
+	@Override
 	public <T> QueryInfoBeanContext<T, ?, ?> getContextForRoot(QueryInfoJPAContext<T> jpaContext) {
 		Class<T> rootEntityClass = jpaContext.getRoot().getModel().getBindableJavaType();
 		return getContext(rootEntityClass);

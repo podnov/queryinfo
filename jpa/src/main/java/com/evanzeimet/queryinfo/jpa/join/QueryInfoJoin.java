@@ -29,9 +29,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import javax.persistence.criteria.JoinType;
+
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface QueryInfoJoin {
+
+	/**
+	 * Default set per JPA CriteriaQuery join method default.
+	 *
+	 * @return
+	 */
+	public JoinType joinType() default JoinType.INNER;
 
 	public String name() default "";
 

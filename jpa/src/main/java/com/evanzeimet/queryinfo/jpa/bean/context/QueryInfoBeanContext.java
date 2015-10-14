@@ -24,7 +24,6 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
 
 import javax.persistence.EntityManager;
 
-import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
@@ -47,7 +46,7 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 
 	QueryInfoPredicateFactory<RootEntity> getPredicateFactory();
 
-	QueryInfoAttributeContext getQueryInfoAttributeContext() throws QueryInfoException;
+	QueryInfoAttributeContext getQueryInfoAttributeContext();
 
 	QueryInfoResultConverter<CriteriaQueryResult, QueryInfoResult> getResultConverter();
 

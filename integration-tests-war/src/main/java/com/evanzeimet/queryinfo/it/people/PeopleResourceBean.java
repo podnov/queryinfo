@@ -1,5 +1,10 @@
 package com.evanzeimet.queryinfo.it.people;
 
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -24,13 +29,32 @@ package com.evanzeimet.queryinfo.it.people;
 
 import javax.ws.rs.core.Response;
 
-import com.evanzeimet.queryinfo.DefaultQueryInfo;
+import org.slf4j.Logger;
 
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.it.QueryInfoITUtils;
+
+@Stateless
 public class PeopleResourceBean implements PeopleResource {
+
+	@Inject
+	private Logger logger;
+
+	@Inject
+	private PeopleQueryInfoBean peopleQueryInfoBean;
 
 	@Override
 	public Response query(DefaultQueryInfo queryInfo) {
-		Response result = null;
+		Response result;
+
+		try {
+			List<PersonEntity> people = peopleQueryInfoBean.query(queryInfo);
+			result = Response.ok(people).build();
+		} catch (QueryInfoException e) {
+			logger.error("Could not retrieve people", e);
+			result = QueryInfoITUtils.createUnprocessableEntityResponse();
+		}
 
 		return result;
 	}

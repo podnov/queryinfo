@@ -39,6 +39,7 @@ import com.evanzeimet.queryinfo.it.QueryInfoIntegrationTestUtils;
 import com.evanzeimet.queryinfo.it.organizations.DefaultOrganization;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.it.cucumber.CucumberUtils;
+import com.evanzeimet.queryinfo.it.people.DefaultPerson;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.it.people.PersonToEmployerOrganizationIdMapper;
 import com.evanzeimet.queryinfo.it.people.TestPerson;
@@ -65,7 +66,15 @@ public class ConditionsSteps {
 			"active"
 	};
 
+	private static final String[] PERSON_FIELDS = new String[] {
+			"firstName",
+			"lastName"
+	};
+
 	private static final Type ORGANIZATION_LIST_RESULT_TYPE = new TypeReference<List<DefaultOrganization>>() {
+	}.getType();
+
+	private static final Type PERSON_LIST_RESULT_TYPE = new TypeReference<List<DefaultPerson>>() {
 	}.getType();
 
 	private static boolean needToPersistOrganizations = true;
@@ -115,6 +124,11 @@ public class ConditionsSteps {
 		path = "/organizations";
 	}
 
+	@Given("^the people query info web service$")
+	public void Given_the_people_query_info_web_service() {
+		path = "/people";
+	}
+
 	@When("^I send the query:$")
 	public void When_I_send_the_query(String rawQueryInfo) throws QueryInfoException {
 		actualResponse = given()
@@ -141,6 +155,17 @@ public class ConditionsSteps {
 				ORGANIZATION_LIST_RESULT_TYPE);
 
 		cucumberUtils.assertEquals(expected, actual, ORGANIZATION_FIELDS);
+	}
+
+	@Then("^I should receive these people:$")
+	public void Then_I_should_receive_these_people(DataTable expected)
+			throws QueryInfoException {
+		String actualReponseJson = actualResponse.getBody().asString();
+
+		List<DefaultPerson> actual = testUtils.objectify(actualReponseJson,
+				PERSON_LIST_RESULT_TYPE);
+
+		cucumberUtils.assertEquals(expected, actual, PERSON_FIELDS);
 	}
 
 	protected List<PersonEntity> createPersonEntities(List<TestPerson> testPeople) {

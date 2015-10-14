@@ -30,9 +30,13 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
 public interface QueryInfoAttributeContext {
 
+	QueryInfoFieldInfo getField(String queryInfoFieldAttributeName);
+
 	Map<String, QueryInfoFieldInfo> getFields();
 
 	void setFields(Map<String, QueryInfoFieldInfo> fields);
+
+	QueryInfoJoinInfo getJoin(String queryInfoJoinAttributeName);
 
 	Map<String, QueryInfoJoinInfo> getJoins();
 
