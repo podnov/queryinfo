@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +34,7 @@ import javax.persistence.Table;
 
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -44,6 +44,7 @@ public class PersonEntity extends DefaultPerson {
 	private OrganizationEntity employerEntity;
 
 	@JsonIgnore
+	@QueryInfoJoin(name = "employer")
 	@ManyToOne
 	@JoinColumn(name = "employer_organization_id",
 			referencedColumnName = "id",

@@ -29,7 +29,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
+
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
 public class QueryInfoJPAContext<RootEntity> {
 
@@ -68,26 +71,36 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	protected QueryInfoJoinKey createJoinKey(From<?, ?> joinParent,
-			String joinAttributeName) {
+			QueryInfoJoinInfo joinInfo) {
 		QueryInfoJoinKey result = new QueryInfoJoinKey();
 
 		result.setJoinParent(joinParent);
-		result.setParentAttributeName(joinAttributeName);
+
+		String jpaAttributeName = joinInfo.getJpaAttributeName();
+		result.setParentAttributeName(jpaAttributeName);
 
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <L, R> Join<L, R> getJoin(From<?, ?> joinParent,
-			String joinAttributeName) {
+			QueryInfoJoinInfo joinInfo) {
 
 		QueryInfoJoinKey joinKey = createJoinKey(joinParent,
-				joinAttributeName);
+				joinInfo);
 
 		Join<?, ?> result = joins.get(joinKey);
 
 		if (result == null) {
-			result = joinParent.join(joinAttributeName);
+			String jpaAttributeName = joinInfo.getJpaAttributeName();
+			JoinType joinType = joinInfo.getJoinType();
+
+			if (joinType == null) {
+				result = joinParent.join(jpaAttributeName);
+			} else {
+				result = joinParent.join(jpaAttributeName, joinType);
+			}
+
 			putJoin(joinKey, result);
 		}
 
@@ -95,27 +108,14 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	public QueryInfoJoinKey putJoin(From<?, ?> joinParent,
-			String attributeName,
+			QueryInfoJoinInfo joinInfo,
 			Join<?, ?> join) {
-		QueryInfoJoinKey joinKey = createJoinKey(joinParent, attributeName);
+		QueryInfoJoinKey joinKey = createJoinKey(joinParent, joinInfo);
 		putJoin(joinKey, join);
 		return joinKey;
 	}
 
 	public void putJoin(QueryInfoJoinKey joinKey, Join<?, ?> join) {
 		joins.put(joinKey, join);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <L, R> Join<L, R> resolveJoin(From<?, ?> joinParent,
-			String joinAttributeName) {
-		Join<?, ?> result = getJoin(joinParent, joinAttributeName);
-
-		if (result == null) {
-			result = joinParent.join(joinAttributeName);
-			putJoin(joinParent, joinAttributeName, result);
-		}
-
-		return (Join<L, R>) result;
 	}
 }

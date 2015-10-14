@@ -9,13 +9,41 @@ Background:
 	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
 	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
 	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 	And these people:
-	| firstName | lastName | employerOrganizationName |
-	| Evan      | Zeimet   | CDW                      |
-	| Larry     | Page     | Google                   |
-	| Judith    | Faulkner | Epic                     |
-	| Jeff      | Bezos    | Amazon                   |
+	| firstName | lastName   | employerOrganizationName |
+	| Evan      | Zeimet     | CDW                      |
+	| Larry     | Page       | Google                   |
+	| Judith    | Faulkner   | Epic                     |
+	| Jeff      | Bezos      | Amazon                   |
+	| Mark      | Zuckerberg | Facebook                 |
+	#| Pete      | Mitchell   | U.S. Navy                |
+
+
+Scenario: Condition for joined field
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "employer.state",
+					"operator": "=",
+					"rightHandSide": "CA"
+				}
+			],
+			"operator": "and"
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Larry     | Page       |
+	| Mark      | Zuckerberg |
 
 Scenario: Nested conditions
 
@@ -57,7 +85,7 @@ Scenario: Nested conditions
 	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
 	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
 	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
-
+	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Multiple conditions with or
 
@@ -185,6 +213,7 @@ Scenario: Basic greater than or equal to query
 	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
 	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
 	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Basic greater than query
 
@@ -210,6 +239,7 @@ Scenario: Basic greater than query
 	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
 	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
 	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Basic like query
 
@@ -234,6 +264,7 @@ Scenario: Basic like query
 	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
 	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
 	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
+	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Basic equality query
 

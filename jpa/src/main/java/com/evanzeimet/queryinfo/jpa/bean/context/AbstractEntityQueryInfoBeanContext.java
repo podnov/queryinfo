@@ -1,5 +1,8 @@
 package com.evanzeimet.queryinfo.jpa.bean.context;
 
+import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -23,9 +26,6 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
  */
 
 
-import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
@@ -55,15 +55,7 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 	}
 
 	@Override
-	public QueryInfoAttributeContext getQueryInfoAttributeContext() throws QueryInfoException {
-		if (attributeContext == null) {
-			Class<RootEntity> rootEntityClass = getRootEntityClass();
-			QueryInfoPathFactory<RootEntity> pathFactory = getPathFactory();
-
-			QueryInfoAtrributeInfoResolver<RootEntity> attribiteResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
-			attributeContext = attribiteResolver.resolve(pathFactory);
-		}
-
+	public QueryInfoAttributeContext getQueryInfoAttributeContext()  {
 		return attributeContext;
 	}
 
@@ -81,5 +73,14 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
 		super.setBeanContextRegistry(beanContextRegistry);
 		selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>(beanContextRegistry);
+		createAttributeContext();  // TODO I don't like this, seems non-obvious
+	}
+
+	protected void createAttributeContext() {
+		Class<RootEntity> rootEntityClass = getRootEntityClass();
+		QueryInfoPathFactory<RootEntity> pathFactory = getPathFactory();
+
+		QueryInfoAtrributeInfoResolver<RootEntity> attribiteResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
+		attributeContext = attribiteResolver.resolve(pathFactory);
 	}
 }

@@ -37,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
 import com.evanzeimet.queryinfo.jpa.field.DefaultQueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
@@ -186,11 +187,11 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 			joinInfos.add(joinInfo);
 		}
 
-		QueryInfoException actualException = null;
+		QueryInfoRuntimeException actualException = null;
 
 		try {
 			resolver.validateAttributeNameUniqueness(fieldInfos, joinInfos);
-		} catch (QueryInfoException e) {
+		} catch (QueryInfoRuntimeException e) {
 			actualException = e;
 		}
 
@@ -251,11 +252,11 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 			joinInfos.add(joinInfo);
 		}
 
-		QueryInfoException actualException = null;
+		QueryInfoRuntimeException actualException = null;
 
 		try {
 			resolver.validateAttributeNameUniqueness(fieldInfos, joinInfos);
-		} catch (QueryInfoException e) {
+		} catch (QueryInfoRuntimeException e) {
 			actualException = e;
 		}
 

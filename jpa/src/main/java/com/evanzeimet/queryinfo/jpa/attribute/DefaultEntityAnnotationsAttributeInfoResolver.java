@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfoBuilder;
@@ -66,7 +66,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 				.build();
 	}
 
-	protected String createJpaAttributeName(Method annotatedMethod) throws QueryInfoException {
+	protected String createJpaAttributeName(Method annotatedMethod) {
 		String result;
 		String methodName = annotatedMethod.getName();
 		Matcher matcher = accessorFieldNamePattern.matcher(methodName);
@@ -82,13 +82,13 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 			String message = String.format("Could not match [%s] with pattern [%s]",
 					methodName,
 					accessorFieldNamePattern);
-			throw new QueryInfoException(message);
+			throw new QueryInfoRuntimeException(message);
 		}
 
 		return result;
 	}
 
-	protected QueryInfoFieldInfo createFieldInfo(Method annotatedMethod) throws QueryInfoException {
+	protected QueryInfoFieldInfo createFieldInfo(Method annotatedMethod) {
 		QueryInfoField annotation = annotatedMethod.getAnnotation(QueryInfoField.class);
 
 		String jpaAttributeName = createJpaAttributeName(annotatedMethod);
@@ -105,7 +105,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 				.build();
 	}
 
-	protected List<QueryInfoFieldInfo> createFields() throws QueryInfoException {
+	protected List<QueryInfoFieldInfo> createFields() {
 		List<Method> annotatedMethods = findAnnotatedMethods(entityClass, QueryInfoField.class);
 
 		int annotatedMethodCount = annotatedMethods.size();
@@ -119,19 +119,18 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 		return result;
 	}
 
-	protected QueryInfoJoinInfo createJoinInfo(Method annotatedMethod) throws QueryInfoException {
+	protected QueryInfoJoinInfo createJoinInfo(Method annotatedMethod) {
 		QueryInfoJoin annotation = annotatedMethod.getAnnotation(QueryInfoJoin.class);
 
 		String jpaAttributeName = createJpaAttributeName(annotatedMethod);
-		String name = annotation.name();
 
 		return QueryInfoJoinInfoBuilder.create()
+				.annotation(annotation)
 				.jpaAttributeName(jpaAttributeName)
-				.name(name)
 				.build();
 	}
 
-	protected List<QueryInfoJoinInfo> createJoins() throws QueryInfoException {
+	protected List<QueryInfoJoinInfo> createJoins() {
 		List<Method> annotatedMethods = findAnnotatedMethods(entityClass, QueryInfoJoin.class);
 
 		int annotatedMethodCount = annotatedMethods.size();
@@ -202,8 +201,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 	}
 
 	@Override
-	public QueryInfoAttributeContext resolve(QueryInfoPathFactory<T> pathFactory)
-			throws QueryInfoException {
+	public QueryInfoAttributeContext resolve(QueryInfoPathFactory<T> pathFactory) {
 		List<QueryInfoFieldInfo> fields = createFields();
 		List<QueryInfoJoinInfo> joins = createJoins();
 
@@ -212,8 +210,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 		return createAttributeInfo(fields, joins);
 	}
 
-	protected void validateAttributeNameUniqueness(List<QueryInfoFieldInfo> fields, List<QueryInfoJoinInfo> joins)
-			throws QueryInfoException {
+	protected void validateAttributeNameUniqueness(List<QueryInfoFieldInfo> fields, List<QueryInfoJoinInfo> joins) {
 		int fieldCount = fields.size();
 		int joinCount = joins.size();
 
@@ -240,7 +237,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 					nonUniqueFieldNameCount,
 					entityName,
 					nonUniqueFieldsNamesText);
-			throw new QueryInfoException(message);
+			throw new QueryInfoRuntimeException(message);
 		}
 	}
 }
