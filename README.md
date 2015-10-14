@@ -1,5 +1,7 @@
 # QueryInfo
 
+![Build Status](https://travis-ci.org/podnov/query-info.svg?branch=master)
+
 The purpose of this code is to have a Java api for creating a serializable query structure. A JSON example of this structure looks like so:
 
 ```javascript
