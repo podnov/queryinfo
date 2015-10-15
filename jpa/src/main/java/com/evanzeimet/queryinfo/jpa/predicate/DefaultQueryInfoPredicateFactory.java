@@ -104,15 +104,16 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 
 			case LIKE:
 				result = criteriaBuilder.like((Expression<String>) path,
-						fieldValue);
+						(String) parsedFieldValue);
 				break;
 
 			case NOT_EQUAL_TO:
-				result = criteriaBuilder.notEqual(path, fieldValue);
+				result = criteriaBuilder.notEqual(path, parsedFieldValue);
 				break;
 
 			case NOT_LIKE:
-				result = criteriaBuilder.notLike((Expression<String>) path, fieldValue);
+				result = criteriaBuilder.notLike((Expression<String>) path,
+						(String) parsedFieldValue);
 				break;
 
 			case NOT_IN:

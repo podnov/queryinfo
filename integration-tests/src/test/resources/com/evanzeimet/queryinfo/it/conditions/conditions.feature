@@ -61,7 +61,7 @@ Scenario: Condition with not in operator
 				{
 					"leftHandSide": "employer.state",
 					"operator": "not in",
-					"rightHandSide": "[\"IL\",\"WI\"]"
+					"rightHandSide": ["IL","WI"]
 				}
 			],
 			"operator": "and"
@@ -90,7 +90,7 @@ Scenario: Condition with in operator
 				{
 					"leftHandSide": "employer.state",
 					"operator": "in",
-					"rightHandSide": "[\"IL\",\"WI\"]"
+					"rightHandSide": ["IL","WI"]
 				}
 			],
 			"operator": "and"
@@ -244,7 +244,7 @@ Scenario: Nested conditions, organization is active and ( is out of CA or WA )
 				{
 					"leftHandSide": "active",
 					"operator": "=",
-					"rightHandSide": "true"
+					"rightHandSide": true
 				}
 			],
 			"operator": "and"
