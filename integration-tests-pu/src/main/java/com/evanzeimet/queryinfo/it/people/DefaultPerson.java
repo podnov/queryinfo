@@ -24,8 +24,13 @@ package com.evanzeimet.queryinfo.it.people;
 
 import com.evanzeimet.queryinfo.it.organizations.DefaultOrganization;
 import com.evanzeimet.queryinfo.it.organizations.Organization;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DefaultPerson implements Person {
 
 	private Long employerOrganizationId;

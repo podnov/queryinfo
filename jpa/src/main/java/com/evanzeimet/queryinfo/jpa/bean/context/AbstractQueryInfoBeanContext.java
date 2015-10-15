@@ -1,9 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
-
+package com.evanzeimet.queryinfo.jpa.bean.context;
 
 /*
  * #%L
@@ -28,8 +23,9 @@ import javax.inject.Inject;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;

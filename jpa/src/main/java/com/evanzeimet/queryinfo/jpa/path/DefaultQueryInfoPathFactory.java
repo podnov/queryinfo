@@ -80,7 +80,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	protected <JoinedEntity> Join<RootEntity, JoinedEntity> getJoin(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String queryInfoJoinAttributeName) {
-		QueryInfoBeanContext<?, ?, ?> fromBeanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoBeanContext<?, ?, ?> fromBeanContext = beanContextRegistry.getContext(from);
 
 		QueryInfoAttributeContext queryInfoAttributeContext = fromBeanContext.getQueryInfoAttributeContext();
 		QueryInfoJoinInfo querInfoJoinInfo = queryInfoAttributeContext.getJoin(queryInfoJoinAttributeName);

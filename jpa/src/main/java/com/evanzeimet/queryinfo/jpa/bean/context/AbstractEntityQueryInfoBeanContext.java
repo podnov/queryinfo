@@ -27,7 +27,6 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
 
 
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
-import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.jpa.result.DefaultEntityQueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
