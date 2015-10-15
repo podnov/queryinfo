@@ -98,7 +98,7 @@ public class QueryInfoBuilder {
 	}
 
 	public QueryInfoBuilder requestedFields(List<String> requestedFields) {
-		builderReferenceInstance.setRequestedFieldNames(requestedFields);
+		builderReferenceInstance.setRequestedFields(requestedFields);
 		return this;
 	}
 

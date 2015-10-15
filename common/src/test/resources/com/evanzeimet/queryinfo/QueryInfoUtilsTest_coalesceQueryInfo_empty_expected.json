@@ -1,0 +1,12 @@
+{
+  "conditionGroup" : {
+    "conditionGroups" : [ ],
+    "conditions" : [ ],
+    "operator" : "and"
+  },
+  "paginationInfo" : {
+    "pageIndex" : 0,
+    "pageSize" : 42
+  },
+  "sorts" : [ ]
+}

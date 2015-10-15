@@ -71,7 +71,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				fieldName,
 				QueryInfoAttributePurpose.PREDICATE);
 
-		Object parsedFieldValue = fieldValueParser.parse(path, fieldValue);
+		Object parsedFieldValue = fieldValueParser.parse(path, conditionOperator, fieldValue);
 
 		switch (conditionOperator) {
 			case EQUAL_TO:
@@ -89,7 +89,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				break;
 
 			case IN:
-				// TODO
+				result = path.in(parsedFieldValue);
 				break;
 
 			case LESS_THAN:
@@ -116,7 +116,8 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				break;
 
 			case NOT_IN:
-				// TODO
+				result = path.in(parsedFieldValue);
+				result = result.not();
 				break;
 
 			case NOT_NULL:

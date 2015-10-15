@@ -40,7 +40,7 @@ public class DefaultQueryInfo implements QueryInfo {
 	private ConditionGroup conditionGroup;
 	@JsonDeserialize(as = DefaultPaginationInfo.class)
 	private PaginationInfo paginationInfo;
-	private List<String> requestedFieldNames;
+	private List<String> requestedFields;
 	@JsonDeserialize(contentAs = DefaultSort.class)
 	private List<Sort> sorts;
 
@@ -69,13 +69,13 @@ public class DefaultQueryInfo implements QueryInfo {
 	}
 
 	@Override
-	public List<String> getRequestedFieldNames() {
-		return requestedFieldNames;
+	public List<String> getRequestedFields() {
+		return requestedFields;
 	}
 
 	@Override
-	public void setRequestedFieldNames(List<String> requestedFieldNames) {
-		this.requestedFieldNames = requestedFieldNames;
+	public void setRequestedFields(List<String> requestedFields) {
+		this.requestedFields = requestedFields;
 	}
 
 	@Override

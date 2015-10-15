@@ -24,13 +24,10 @@ package com.evanzeimet.queryinfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 import org.apache.commons.io.FileUtils;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,20 +37,17 @@ public class QueryInfoTestUtils {
 
 	public static String createActualJson(Object actual)
 			throws JsonProcessingException {
-		ObjectWriter writer = createObjectWriter();
-		String json = writer.writeValueAsString(actual);
+		String json = stringify(actual);
 		return dosToUnix(json);
+	}
+
+	public static ObjectMapper createObjectMapper() {
+		return new QueryInfoUtils().createObjectMapper();
 	}
 
 	@SuppressWarnings("deprecation")
 	public static ObjectWriter createObjectWriter() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		objectMapper.setDateFormat(dateFormat);
-
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		ObjectMapper objectMapper = createObjectMapper();
 
 		DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
 		prettyPrinter.indentArraysWith(new DefaultPrettyPrinter.Lf2SpacesIndenter());
@@ -73,12 +67,25 @@ public class QueryInfoTestUtils {
 		return result;
 	}
 
-	public static String getExpectedJson(Class<?> clazz, String filename)
+	public static String getFormattedJson(Class<?> clazz, String filename)
 			throws IOException {
 		URL url = clazz.getResource(filename);
 		File file = new File(url.getPath());
 		String rawContents = FileUtils.readFileToString(file);
 
 		return dosToUnix(rawContents);
+	}
+
+	public static <T> T objectify(String json, Class<T> clazz) throws QueryInfoException {
+		return new QueryInfoUtils().objectify(json, clazz);
+	}
+
+	public static <T> T objectify(String json, Type typeOfT) throws QueryInfoException {
+		return new QueryInfoUtils().objectify(json, typeOfT);
+	}
+
+	public static String stringify(Object actual) throws JsonProcessingException {
+		ObjectWriter writer = createObjectWriter();
+		return writer.writeValueAsString(actual);
 	}
 }

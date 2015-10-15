@@ -1,0 +1,20 @@
+{
+  "conditionGroup" : {
+    "conditionGroups" : [
+      {
+        "conditionGroups" : [
+          {
+            "conditions" : [
+              {
+                "leftHandSide" : "field3"
+              }
+            ],
+            "operator" : "and"
+          }
+        ],
+        "operator" : "and"
+      }
+    ],
+    "operator" : "and"
+  }
+}

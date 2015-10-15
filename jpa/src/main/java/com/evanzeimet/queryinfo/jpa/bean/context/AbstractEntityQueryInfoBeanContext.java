@@ -1,5 +1,8 @@
 package com.evanzeimet.queryinfo.jpa.bean.context;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
 
@@ -68,18 +71,25 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		return selectionSetter;
 	}
 
-	@Override
-	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
-		super.setBeanContextRegistry(beanContextRegistry);
-		selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>(beanContextRegistry);
-		createAttributeContext();  // TODO I don't like this, seems non-obvious
-	}
-
 	protected void createAttributeContext() {
 		Class<RootEntity> rootEntityClass = getRootEntityClass();
 		QueryInfoPathFactory<RootEntity> pathFactory = getPathFactory();
 
 		QueryInfoAtrributeInfoResolver<RootEntity> attribiteResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
 		attributeContext = attribiteResolver.resolve(pathFactory);
+	}
+
+	@Override
+	@PostConstruct
+	@Inject
+	protected void postConstruct(QueryInfoBeanContextRegistry beanContextRegistry) {
+		super.postConstruct(beanContextRegistry);
+		createAttributeContext();
+	}
+
+	@Override
+	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
+		super.setBeanContextRegistry(beanContextRegistry);
+		selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
 	}
 }

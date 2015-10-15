@@ -1,0 +1,44 @@
+{
+	"conditionGroup": {
+		"conditionGroups": [
+			{
+				"conditions": [
+					{
+						"leftHandSide": "state",
+						"operator": "=",
+						"rightHandSide": "CA"
+					},
+					{
+						"leftHandSide": "state",
+						"operator": "=",
+						"rightHandSide": "WA"
+					}
+				],
+				"operator": "or"
+			}
+		],
+		"conditions": [
+			{
+				"leftHandSide": "active",
+				"operator": "=",
+				"rightHandSide": "true"
+			}
+		],
+		"operator": "and"
+	},
+	"paginationInfo": {
+		"pageIndex": 24,
+		"pageSize": 42
+	},
+	"requestedFields": [
+		"a",
+		"b",
+		"c"
+	],
+	"sorts": [
+		{
+			"direction": "asc",
+			"fieldName": "sortField"
+		}
+	]
+}

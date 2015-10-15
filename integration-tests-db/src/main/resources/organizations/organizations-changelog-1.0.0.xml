@@ -42,4 +42,10 @@
 			<column name="year_founded" type="int" />
 		</createTable>
 	</changeSet>
+	
+	<changeSet id="2" author="podnov">
+		<addColumn tableName="organizations">
+			<column name="date_created" type="datetime"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

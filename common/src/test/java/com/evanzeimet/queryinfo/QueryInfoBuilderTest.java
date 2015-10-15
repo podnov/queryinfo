@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.builder;
+package com.evanzeimet.queryinfo;
 
 /*
  * #%L
@@ -24,7 +24,6 @@ package com.evanzeimet.queryinfo.builder;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoBuilder;
-import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionBuilder;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
@@ -108,7 +107,7 @@ public class QueryInfoBuilderTest {
 				.sorts(givenSorts)
 				.build();
 
-		String expectedJson = QueryInfoTestUtils.getExpectedJson(getClass(),
+		String expectedJson = QueryInfoTestUtils.getFormattedJson(getClass(),
 				"QueryInfoBuilderTest_build_expected.json");
 		String actualJson = QueryInfoTestUtils.createActualJson(actualQueryInfo);
 

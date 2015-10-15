@@ -30,7 +30,7 @@
     "pageIndex" : 0,
     "pageSize" : 2147483647
   },
-  "requestedFieldNames" : [
+  "requestedFields" : [
     "a",
     "b",
     "c"

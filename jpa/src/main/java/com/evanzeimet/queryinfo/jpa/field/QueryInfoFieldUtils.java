@@ -27,7 +27,7 @@ public class QueryInfoFieldUtils {
 	}
 
 	public List<String> coalesceRequestedFields(QueryInfo queryInfo) {
-		List<String> result = queryInfo.getRequestedFieldNames();
+		List<String> result = queryInfo.getRequestedFields();
 
 		if (result == null) {
 			result = Collections.emptyList();
@@ -114,13 +114,13 @@ public class QueryInfoFieldUtils {
 	}
 
 	public boolean hasAnyRequestedFieldName(QueryInfo queryInfo, List<String> fieldNames) {
-		List<String> requestedFieldNames = queryInfo.getRequestedFieldNames();
+		List<String> requestedFields = queryInfo.getRequestedFields();
 		boolean result;
 
-		if (requestedFieldNames == null) {
+		if (requestedFields == null) {
 			result = false;
 		} else {
-			boolean disjoint = Collections.disjoint(requestedFieldNames, fieldNames);
+			boolean disjoint = Collections.disjoint(requestedFields, fieldNames);
 			result = !disjoint;
 		}
 
@@ -157,8 +157,8 @@ public class QueryInfoFieldUtils {
 	}
 
 	public boolean hasRequestedAllFields(QueryInfo queryInfo) {
-		List<String> requestedFieldNames = queryInfo.getRequestedFieldNames();
-		return (requestedFieldNames == null);
+		List<String> requestedFields = queryInfo.getRequestedFields();
+		return (requestedFields == null);
 	}
 
 	public boolean requiresAllFields(QueryInfo queryInfo, List<String> fieldNames) {
