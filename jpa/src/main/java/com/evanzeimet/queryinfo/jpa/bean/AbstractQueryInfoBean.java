@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.bean;
 
+
+
 /*
  * #%L
  * queryinfo-jpa
@@ -30,8 +32,10 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
+
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
@@ -51,6 +55,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	protected QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext;
 	protected CriteriaBuilder criteriaBuilder;
 	protected EntityManager entityManager;
+	private QueryInfoUtils queryInfoUtils;
 
 	public AbstractQueryInfoBean() {
 		super();
@@ -64,6 +69,10 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		this.beanContext = beanContext;
 	}
 
+	protected QueryInfo coalesceQueryInfo(QueryInfo queryInfo) {
+		return queryInfoUtils.coalesceQueryInfo(queryInfo);
+	}
+
 	public Long count(QueryInfo queryInfo) throws QueryInfoException {
 		Boolean useDistinctSelections = beanContext.getUseDistinctSelections();
 
@@ -71,6 +80,8 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 			String message = "Distinct selections cannot be used with count queries because the count result will always be distinct";
 			throw new QueryInfoException(message);
 		}
+
+		queryInfo = coalesceQueryInfo(queryInfo);
 
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 
@@ -93,10 +104,11 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	protected void postConstruct() {
 		entityManager = beanContext.getEntityManager();
 		criteriaBuilder = entityManager.getCriteriaBuilder();
+		queryInfoUtils = new QueryInfoUtils();
 	}
 
 	public List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException {
-		// TODO queryinfo coalesce parts?
+		queryInfo = coalesceQueryInfo(queryInfo);
 
 		Class<CriteriaQueryResult> resultClass = beanContext.getCriteriaQueryResultClass();
 		CriteriaQuery<CriteriaQueryResult> criteriaQuery = criteriaBuilder.createQuery(resultClass);

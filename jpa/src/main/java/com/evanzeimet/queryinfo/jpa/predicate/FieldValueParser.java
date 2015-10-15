@@ -1,5 +1,12 @@
 package com.evanzeimet.queryinfo.jpa.predicate;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -33,16 +40,43 @@ package com.evanzeimet.queryinfo.jpa.predicate;
  */
 import javax.persistence.criteria.Expression;
 
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
+import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+
 public class FieldValueParser {
 
-	// TODO datetime parsing
+	private ObjectMapper objectMapper;
 
-	public Object parse(Expression<?> path, String fieldValue) {
+	public FieldValueParser() {
+		objectMapper = new QueryInfoUtils().createObjectMapper();
+	}
+
+	public ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+
+	public void setObjectMapper(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
+
+	public Object parse(Expression<?> path,
+			ConditionOperator conditionOperator,
+			String fieldValue) throws QueryInfoException {
 		Object result;
 		Class<?> javaType = path.getJavaType();
 
-		if (Boolean.class.isAssignableFrom(javaType)) {
+		boolean isEitherInOperator = ConditionOperator.isEitherInOperator(conditionOperator);
+
+		if (isEitherInOperator) {
+			result = parseIn(path, fieldValue);
+		} else if (Boolean.class.isAssignableFrom(javaType)) {
 			result = parseBoolean(fieldValue);
+		} else if (Date.class.isAssignableFrom(javaType)) {
+			result = parseDate(fieldValue);
 		} else {
 			result = fieldValue;
 		}
@@ -54,4 +88,36 @@ public class FieldValueParser {
 		return Boolean.valueOf(fieldValue);
 	}
 
+	protected Date parseDate(String fieldValue) throws QueryInfoException {
+		Date result;
+
+		try {
+			DateFormat dateFormat = objectMapper.getDateFormat();
+			result = dateFormat.parse(fieldValue);
+		} catch (ParseException e) {
+			throw new QueryInfoException(e);
+		}
+
+		return result;
+	}
+
+	protected <T> List<T> parseIn(Expression<?> path,
+			String fieldValue) throws QueryInfoException {
+		Class<?> javaType = path.getJavaType();
+
+		TypeFactory typeFactory = objectMapper.getTypeFactory();
+		CollectionType collectionType = typeFactory.constructCollectionType(ArrayList.class,
+				javaType);
+
+		List<T> result;
+
+		try {
+			result = objectMapper.readValue(fieldValue, collectionType);
+		} catch (IOException e) {
+			String message = String.format("Could not parse [%s] as list of [%s]", fieldValue, javaType);
+			throw new QueryInfoException(message, e);
+		}
+
+		return result;
+	}
 }

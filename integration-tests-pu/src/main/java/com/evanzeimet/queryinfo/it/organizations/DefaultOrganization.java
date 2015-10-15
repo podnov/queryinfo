@@ -1,5 +1,6 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
+import java.util.Date;
 import java.util.List;
 
 import com.evanzeimet.queryinfo.it.people.DefaultPerson;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * #L%
  */
 
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DefaultOrganization implements Organization {
 
@@ -39,6 +40,7 @@ public class DefaultOrganization implements Organization {
 	private String address1;
 	private String address2;
 	private String city;
+	private Date dateCreated;
 	private Long id;
 	private String name;
 	private String state;
@@ -100,6 +102,16 @@ public class DefaultOrganization implements Organization {
 	@Override
 	public void setEmployees(List<Person> employees) {
 		this.employees = employees;
+	}
+
+	@Override
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	@Override
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	@Override

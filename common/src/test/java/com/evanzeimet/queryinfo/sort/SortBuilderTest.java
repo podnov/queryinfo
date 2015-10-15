@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.builder;
+package com.evanzeimet.queryinfo.sort;
 
 /*
  * #%L

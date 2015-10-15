@@ -3,14 +3,14 @@ Feature: Query with conditions
 Background:
 
 	Given these organizations:
-	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
-	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
-	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
-	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
-	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
-	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active | dateCreated         |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   | 2015-10-09T00:00:00 |
+	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   | 2015-10-10T00:00:00 |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   | 2015-10-11T00:00:00 |
+	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  | 2015-10-12T00:00:00 |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   | 2015-10-13T00:00:00 |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   | 2015-10-14T00:00:00 |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   | 2015-10-15T00:00:00 |
 
 	And these people:
 	| firstName | lastName   | employerOrganizationName |
@@ -24,6 +24,104 @@ Background:
 	| Tom       | Kazanski   | U.S. Navy                |
 	| Mike      | Metcalf    | U.S. Navy                |
 
+Scenario: Condition for date field
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "dateCreated",
+					"operator": ">",
+					"rightHandSide": "2015-10-12T00:00:00"
+				}
+			],
+			"operator": "and"
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these organizations:
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
+
+
+Scenario: Condition with not in operator
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "employer.state",
+					"operator": "not in",
+					"rightHandSide": "[\"IL\",\"WI\"]"
+				}
+			],
+			"operator": "and"
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Larry     | Page       |
+	| Jeff      | Bezos      |
+	| Mark      | Zuckerberg |
+	| Pete      | Mitchell   |
+	| Nick      | Bradshaw   |
+	| Tom       | Kazanski   |
+	| Mike      | Metcalf    |
+
+Scenario: Condition with in operator
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "employer.state",
+					"operator": "in",
+					"rightHandSide": "[\"IL\",\"WI\"]"
+				}
+			],
+			"operator": "and"
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Evan      | Zeimet     |
+	| Judith    | Faulkner   |
+
+Scenario: Empty query info
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Evan      | Zeimet     |
+	| Larry     | Page       |
+	| Judith    | Faulkner   |
+	| Jeff      | Bezos      |
+	| Mark      | Zuckerberg |
+	| Pete      | Mitchell   |
+	| Nick      | Bradshaw   |
+	| Tom       | Kazanski   |
+	| Mike      | Metcalf    |
 
 Scenario: Double joined field, people that aren't named Pete Mitchell that work for an employer that has an employee named Pete Mitchell
 

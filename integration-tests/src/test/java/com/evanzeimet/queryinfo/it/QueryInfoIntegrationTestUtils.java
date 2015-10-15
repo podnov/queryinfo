@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.it;
 
+import java.lang.reflect.Type;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -23,12 +25,7 @@ package com.evanzeimet.queryinfo.it;
  */
 
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimeZone;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -37,20 +34,14 @@ import javax.persistence.Table;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 
 public class QueryInfoIntegrationTestUtils {
 
 	private EntityManager entityManager;
-	private ObjectMapper objectMapper;
 
 	public QueryInfoIntegrationTestUtils(EntityManager entityManager) {
 		this.entityManager = entityManager;
-		this.objectMapper = createObjectMapper();
 	}
 
 	public static QueryInfoIntegrationTestUtils create() {
@@ -62,24 +53,6 @@ public class QueryInfoIntegrationTestUtils {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("queryinfo_test_it");
 		EntityManager entityManager = factory.createEntityManager();
 		return entityManager;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static ObjectMapper createObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		objectMapper.setDateFormat(dateFormat);
-
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-		DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
-		prettyPrinter.indentArraysWith(new DefaultPrettyPrinter.Lf2SpacesIndenter());
-
-		objectMapper.writer(prettyPrinter);
-
-		return objectMapper;
 	}
 
 	public String getEntityTable(Class<?> entityClass) {
@@ -97,29 +70,14 @@ public class QueryInfoIntegrationTestUtils {
 		return result;
 	}
 
-	public <T> T objectify(String json, Class<T> clazz) throws QueryInfoException {
-		T result;
-
-		try {
-			result = objectMapper.readValue(json, clazz);
-		} catch (IOException e) {
-			throw new QueryInfoException(e);
-		}
-
-		return result;
+	public <T> T objectify(String json, Class<T> clazz)
+			throws QueryInfoException {
+		return QueryInfoTestUtils.objectify(json, clazz);
 	}
 
-	public <T> T objectify(String json, Type typeOfT) throws QueryInfoException {
-		T result;
-
-		try {
-			JavaType javaType = objectMapper.constructType(typeOfT);
-			result = objectMapper.readValue(json, javaType);
-		} catch (IOException e) {
-			throw new QueryInfoException(e);
-		}
-
-		return result;
+	public <T> T objectify(String json, Type typeOfT)
+			throws QueryInfoException {
+		return QueryInfoTestUtils.objectify(json, typeOfT);
 	}
 
 	public void persistEntities(List<?> entities) {
@@ -133,18 +91,6 @@ public class QueryInfoIntegrationTestUtils {
 
 			transaction.commit();
 		}
-	}
-
-	public String stringify(Object object) throws QueryInfoException {
-		String result;
-
-		try {
-			result = objectMapper.writeValueAsString(object);
-		} catch (JsonProcessingException e) {
-			throw new QueryInfoException(e);
-		}
-
-		return result;
 	}
 
 	public void truncateTable(Class<?> entityClass) {
@@ -162,4 +108,5 @@ public class QueryInfoIntegrationTestUtils {
 
 		transaction.commit();
 	}
+
 }
