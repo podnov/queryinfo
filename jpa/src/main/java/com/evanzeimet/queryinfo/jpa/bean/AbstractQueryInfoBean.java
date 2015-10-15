@@ -31,6 +31,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 
 import com.evanzeimet.queryinfo.QueryInfo;
@@ -180,7 +181,11 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	protected void setQueryOrders(QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoOrderFactory<RootEntity> orderFactory = beanContext.getOrderFactory();
-		orderFactory.createOrders(jpaContext, queryInfo);
+		List<Order> orders = orderFactory.createOrders(jpaContext, queryInfo);
+
+		CriteriaQuery<?> criteriaQuery = jpaContext.getCriteriaQuery();
+
+		criteriaQuery.orderBy(orders);
 	}
 
 	protected void setQueryPredicates(QueryInfoJPAContext<RootEntity> jpaContext,

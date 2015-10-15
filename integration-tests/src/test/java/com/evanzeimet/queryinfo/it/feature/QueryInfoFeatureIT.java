@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.conditions;
+package com.evanzeimet.queryinfo.it.feature;
 
 /*
  * #%L
@@ -30,6 +30,6 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = { "pretty", "html:target/cucumber" })
-public class ConditionsFeatureIT {
+public class QueryInfoFeatureIT {
 
 }

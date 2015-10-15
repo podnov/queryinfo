@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.conditions;
+package com.evanzeimet.queryinfo.it.feature;
 
 /*
  * #%L
@@ -54,7 +54,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class ConditionsSteps {
+public class QueryInfoSteps {
 
 	private static final String[] ORGANIZATION_FIELDS = new String[] {
 			"name",
@@ -87,7 +87,7 @@ public class ConditionsSteps {
 	private PersonToEmployerOrganizationIdMapper personToEmployerOrganizationIdMapper = new PersonToEmployerOrganizationIdMapper();
 	private QueryInfoIntegrationTestUtils testUtils;
 
-	public ConditionsSteps() {
+	public QueryInfoSteps() {
 		setUpRestAssured();
 		cucumberUtils = new CucumberUtils();
 		testUtils = QueryInfoIntegrationTestUtils.create();
