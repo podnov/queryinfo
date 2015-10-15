@@ -26,7 +26,6 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
-import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 

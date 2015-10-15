@@ -96,8 +96,7 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 
 	protected Expression<?> getPathForField(QueryInfoJPAContext<RootEntity> jpaContext,
 			String fieldName) throws QueryInfoException {
-		QueryInfoBeanContext<RootEntity, ?, ?> beanContext = beanContextRegistry.getContextForRoot(
-				jpaContext);
+		QueryInfoBeanContext<RootEntity, ?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoPathFactory<RootEntity> pathFactory = beanContext.getPathFactory();
 		Root<RootEntity> root = jpaContext.getRoot();
 

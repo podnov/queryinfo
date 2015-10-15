@@ -1,5 +1,8 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -27,13 +30,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 
+import com.evanzeimet.queryinfo.it.people.Person;
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 @Entity
 @Table(name = "organizations")
 public class OrganizationEntity extends DefaultOrganization {
+
+	private List<PersonEntity> employeeEntities;
 
 	@Override
 	@QueryInfoField
@@ -61,6 +75,17 @@ public class OrganizationEntity extends DefaultOrganization {
 	@Column(name = "city")
 	public String getCity() {
 		return super.getCity();
+	}
+
+	@JsonIgnore
+	@QueryInfoJoin(name = "employees")
+	@OneToMany(mappedBy = "employerEntity")
+	public List<PersonEntity> getEmployeeEntities() {
+		return employeeEntities;
+	}
+
+	public void setEmployeeEntities(List<PersonEntity> employeeEntities) {
+		this.employeeEntities = employeeEntities;
 	}
 
 	@Override
@@ -98,5 +123,25 @@ public class OrganizationEntity extends DefaultOrganization {
 	@Column(name = "zip")
 	public String getZip() {
 		return super.getZip();
+	}
+
+	@PostLoad
+	protected void postLoad() {
+		postLoadEmployees();
+	}
+
+	protected void postLoadEmployees() {
+		List<Person> employees;
+
+		if (employeeEntities == null) {
+			employees = null;
+		} else {
+			int employeeCount = employeeEntities.size();
+
+			employees = new ArrayList<>(employeeCount);
+			employees.addAll(employeeEntities);
+		}
+
+		setEmployees(employees);
 	}
 }

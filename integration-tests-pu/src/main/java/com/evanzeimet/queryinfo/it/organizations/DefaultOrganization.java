@@ -1,5 +1,14 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
+import java.util.List;
+
+import com.evanzeimet.queryinfo.it.people.DefaultPerson;
+import com.evanzeimet.queryinfo.it.people.Person;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -22,7 +31,8 @@ package com.evanzeimet.queryinfo.it.organizations;
  * #L%
  */
 
-
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DefaultOrganization implements Organization {
 
 	private Boolean active;
@@ -34,6 +44,9 @@ public class DefaultOrganization implements Organization {
 	private String state;
 	private Integer yearFounded;
 	private String zip;
+
+	@JsonDeserialize(contentAs = DefaultPerson.class)
+	private List<Person> employees;
 
 	public DefaultOrganization() {
 
@@ -77,6 +90,16 @@ public class DefaultOrganization implements Organization {
 	@Override
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	@Override
+	public List<Person> getEmployees() {
+		return employees;
+	}
+
+	@Override
+	public void setEmployees(List<Person> employees) {
+		this.employees = employees;
 	}
 
 	@Override

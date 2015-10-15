@@ -35,8 +35,11 @@ import javax.persistence.Table;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 @Entity
 @Table(name = "people")
 public class PersonEntity extends DefaultPerson {

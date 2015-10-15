@@ -1,5 +1,9 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
+import java.util.List;
+
+import com.evanzeimet.queryinfo.it.people.Person;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -43,9 +47,9 @@ public interface Organization {
 
 	void setCity(String city);
 
-	Integer getYearFounded();
+	List<Person> getEmployees();
 
-	void setYearFounded(Integer founded);
+	void setEmployees(List<Person> employees);
 
 	Long getId();
 
@@ -58,6 +62,10 @@ public interface Organization {
 	String getState();
 
 	void setState(String state);
+
+	Integer getYearFounded();
+
+	void setYearFounded(Integer founded);
 
 	String getZip();
 

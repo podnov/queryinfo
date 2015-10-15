@@ -3,13 +3,14 @@ Feature: Query with conditions
 Background:
 
 	Given these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
-	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
-	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
-	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
-	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
 
 	And these people:
 	| firstName | lastName   | employerOrganizationName |
@@ -18,10 +19,81 @@ Background:
 	| Judith    | Faulkner   | Epic                     |
 	| Jeff      | Bezos      | Amazon                   |
 	| Mark      | Zuckerberg | Facebook                 |
-	#| Pete      | Mitchell   | U.S. Navy                |
+	| Pete      | Mitchell   | U.S. Navy                |
+	| Nick      | Bradshaw   | U.S. Navy                |
+	| Tom       | Kazanski   | U.S. Navy                |
+	| Mike      | Metcalf    | U.S. Navy                |
 
 
-Scenario: Condition for joined field
+Scenario: Double joined field, people that aren't named Pete Mitchell that work for an employer that has an employee named Pete Mitchell
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "employer.employees.firstName",
+					"operator": "=",
+					"rightHandSide": "Pete"
+				},
+				{
+					"leftHandSide": "employer.employees.lastName",
+					"operator": "=",
+					"rightHandSide": "Mitchell"
+				},
+				{
+					"leftHandSide": "firstName",
+					"operator": "<>",
+					"rightHandSide": "Pete"
+				},
+				{
+					"leftHandSide": "lastName",
+					"operator": "<>",
+					"rightHandSide": "Mitchell"
+				}
+			],
+			"operator": "and"
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Nick      | Bradshaw   |
+	| Tom       | Kazanski   |
+	| Mike      | Metcalf    |
+
+Scenario: Condition for joined field, employers that have an employee named Pete Mitchell
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "employees.firstName",
+					"operator": "=",
+					"rightHandSide": "Pete"
+				},
+				{
+					"leftHandSide": "employees.lastName",
+					"operator": "=",
+					"rightHandSide": "Mitchell"
+				}
+			],
+			"operator": "and"
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these organizations:
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
+
+Scenario: Condition for joined field, people who's employer is out of CA
 
 	Given the people query info web service
 	When I send the query:
@@ -45,7 +117,8 @@ Scenario: Condition for joined field
 	| Larry     | Page       |
 	| Mark      | Zuckerberg |
 
-Scenario: Nested conditions
+
+Scenario: Nested conditions, organization is active and ( is out of CA or WA )
 
 	Given the organizations query info web service
 	When I send the query:
@@ -82,10 +155,10 @@ Scenario: Nested conditions
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
-	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
-	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Multiple conditions with or
 
@@ -112,9 +185,9 @@ Scenario: Multiple conditions with or
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
 
 Scenario: Multiple conditions with and
 
@@ -141,8 +214,8 @@ Scenario: Multiple conditions with and
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
 
 Scenario: Basic less than or equal to query
 
@@ -163,9 +236,10 @@ Scenario: Basic less than or equal to query
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
 
 Scenario: Basic less than to query
 
@@ -186,8 +260,9 @@ Scenario: Basic less than to query
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
 
 Scenario: Basic greater than or equal to query
 
@@ -208,12 +283,12 @@ Scenario: Basic greater than or equal to query
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
-	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
-	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
-	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
+	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Basic greater than query
 
@@ -234,12 +309,12 @@ Scenario: Basic greater than query
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Google   | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
-	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
-	| Amazon   | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
-	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
+	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Basic like query
 
@@ -260,11 +335,11 @@ Scenario: Basic like query
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
-	| Epic     | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
-	| Pets.com |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
-	| Facebook | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
 
 Scenario: Basic equality query
 
@@ -285,5 +360,5 @@ Scenario: Basic equality query
 	"""
 	Then the http response code should be 200
 	And I should receive these organizations:
-	| name     | address1                  | address2 | city          | state | zip   | yearFounded | active |
-	| CDW      | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
