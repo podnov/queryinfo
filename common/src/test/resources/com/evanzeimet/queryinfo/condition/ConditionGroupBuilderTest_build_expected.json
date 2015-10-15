@@ -1,0 +1,22 @@
+{
+  "conditionGroups" : [
+    {
+      "conditions" : [
+        {
+          "leftHandSide" : "lhs1",
+          "operator" : "=",
+          "rightHandSide" : "rhs1"
+        }
+      ],
+      "operator" : "and"
+    }
+  ],
+  "conditions" : [
+    {
+      "leftHandSide" : "lhs2",
+      "operator" : "<>",
+      "rightHandSide" : "rhs2"
+    }
+  ],
+  "operator" : "and"
+}

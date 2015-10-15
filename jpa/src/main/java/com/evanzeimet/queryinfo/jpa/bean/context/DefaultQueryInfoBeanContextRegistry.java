@@ -45,8 +45,8 @@ public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContext
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <RootEntity, CriteriaQueryResultType, QueryInfoResultType> QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType> getContext(Class<RootEntity> rootEntityClass) {
-		QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType> result = null;
+	public <RootEntity> QueryInfoBeanContext<RootEntity, ?, ?> getContext(Class<RootEntity> rootEntityClass) {
+		QueryInfoBeanContext<RootEntity, ?, ?> result = null;
 
 		Iterator<QueryInfoBeanContext<?, ?, ?>> iterator = beanContexts.iterator();
 
@@ -56,7 +56,7 @@ public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContext
 			Class<?> beanContextRootEntityClass = currentBeanContext.getRootEntityClass();
 
 			if (rootEntityClass.equals(beanContextRootEntityClass)) {
-				result = (QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType>) currentBeanContext;
+				result = (QueryInfoBeanContext<RootEntity, ?, ?>) currentBeanContext;
 				break;
 			}
 		}

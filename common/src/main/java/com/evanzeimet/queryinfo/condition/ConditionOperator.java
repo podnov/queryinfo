@@ -44,9 +44,9 @@ public enum ConditionOperator {
 			"like"),
 	NOT_LIKE("not like",
 			"not like"),
-	IN("is in",
+	IN("in",
 			"is in"),
-	NOT_IN("is not in",
+	NOT_IN("not in",
 			"is not in");
 
 	private final String description;
@@ -75,6 +75,12 @@ public enum ConditionOperator {
 			}
 		}
 
+		return result;
+	}
+
+	public static boolean isEitherInOperator(ConditionOperator conditionOperator) {
+		boolean result = IN.equals(conditionOperator);
+		result = (result || NOT_IN.equals(conditionOperator));
 		return result;
 	}
 }

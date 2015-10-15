@@ -47,7 +47,6 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	public DefaultQueryInfoPathFactory(QueryInfoBeanContextRegistry beanContextRegistry,
 			Class<RootEntity> entityClass) {
 		this.beanContextRegistry = beanContextRegistry;
-		// TODO producer inspect annotation for constuctor argument?
 		this.entityClass = entityClass;
 	}
 

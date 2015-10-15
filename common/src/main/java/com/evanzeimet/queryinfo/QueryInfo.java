@@ -39,9 +39,9 @@ public interface QueryInfo extends Serializable {
 
 	void setPaginationInfo(PaginationInfo paginationInfo);
 
-	List<String> getRequestedFieldNames();
+	List<String> getRequestedFields();
 
-	void setRequestedFieldNames(List<String> requestedFieldNames);
+	void setRequestedFields(List<String> requestedFields);
 
 	List<Sort> getSorts();
 

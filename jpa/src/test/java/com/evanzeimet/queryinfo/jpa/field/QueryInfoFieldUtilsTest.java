@@ -26,6 +26,7 @@ package com.evanzeimet.queryinfo.jpa.field;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,19 +34,12 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.evanzeimet.queryinfo.condition.Condition;
-import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.DefaultQueryInfo;
 import com.evanzeimet.queryinfo.QueryInfo;
-import com.evanzeimet.queryinfo.sort.Sort;
-import com.evanzeimet.queryinfo.condition.ConditionBuilder;
-import com.evanzeimet.queryinfo.condition.ConditionGroupBuilder;
 import com.evanzeimet.queryinfo.QueryInfoBuilder;
-import com.evanzeimet.queryinfo.sort.SortBuilder;
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 
-/*
- * TODO refactor the given builders to be given json
- */
 public class QueryInfoFieldUtilsTest {
 
 	private QueryInfoFieldUtils utils;
@@ -54,49 +48,30 @@ public class QueryInfoFieldUtilsTest {
 	public void setUp() {
 		utils = new QueryInfoFieldUtils();
 	}
-	
+
 	@Test
-	public void hasAnyFieldName_nestedConditionGroup_false() {
-		Condition condition = ConditionBuilder.create()
-				.leftHandSide("field2")
-				.build();
-
-		ConditionGroup conditionGroup = ConditionGroupBuilder.createForCondition(condition)
-				.build();
-		conditionGroup = ConditionGroupBuilder.createForConditionGroup(conditionGroup).build();
-		conditionGroup = ConditionGroupBuilder.createForConditionGroup(conditionGroup).build();
-
-		QueryInfo queryInfo = QueryInfoBuilder.create()
-			.conditionGroup(conditionGroup)
-			.build();
+	public void hasAnyFieldName_nestedConditionGroup_false() throws IOException, QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoFieldUtilsTest_hasAnyFieldName_nestedConditionGroup_false_given.json");
+		DefaultQueryInfo givenQueryInfo = QueryInfoTestUtils.objectify(givenJson, DefaultQueryInfo.class);
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
 
-		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
+		boolean actual = utils.hasAnyFieldName(givenQueryInfo, fieldNames);
 
 		assertFalse(actual);
 	}
 
 	@Test
-	public void hasAnyFieldName_nestedConditionGroup_true() {
-		
-		Condition condition = ConditionBuilder.create()
-				.leftHandSide("field3")
-				.build();
-
-		ConditionGroup conditionGroup = ConditionGroupBuilder.createForCondition(condition)
-				.build();
-		conditionGroup = ConditionGroupBuilder.createForConditionGroup(conditionGroup).build();
-		conditionGroup = ConditionGroupBuilder.createForConditionGroup(conditionGroup).build();
-		
-		QueryInfo queryInfo = QueryInfoBuilder.create()
-			.conditionGroup(conditionGroup)
-			.build();
+	public void hasAnyFieldName_nestedConditionGroup_true() throws IOException, QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoFieldUtilsTest_hasAnyFieldName_nestedConditionGroup_true_given.json");
+		DefaultQueryInfo givenQueryInfo = QueryInfoTestUtils.objectify(givenJson, DefaultQueryInfo.class);
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
-		
-		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
-		
+
+		boolean actual = utils.hasAnyFieldName(givenQueryInfo, fieldNames);
+
 		assertTrue(actual);
 	}
 
@@ -109,7 +84,7 @@ public class QueryInfoFieldUtilsTest {
 			.build();
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
-		
+
 		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
 
 		assertTrue(actual);
@@ -131,120 +106,93 @@ public class QueryInfoFieldUtilsTest {
 	}
 
 	@Test
-	public void hasAnyFieldName_rootConditionGroup_false() {
-		Condition condition = ConditionBuilder.create()
-				.leftHandSide("field2")
-				.build();
-
-		ConditionGroup conditionGroup = ConditionGroupBuilder.createForCondition(condition)
-				.build();
-
-		QueryInfo queryInfo = QueryInfoBuilder.create()
-			.conditionGroup(conditionGroup)
-			.build();
+	public void hasAnyFieldName_rootConditionGroup_false() throws IOException, QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoFieldUtilsTest_hasAnyFieldName_rootConditionGroup_false_given.json");
+		DefaultQueryInfo givenQueryInfo = QueryInfoTestUtils.objectify(givenJson, DefaultQueryInfo.class);
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
 
-		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
+		boolean actual = utils.hasAnyFieldName(givenQueryInfo, fieldNames);
 
 		assertFalse(actual);
 	}
 
 	@Test
-	public void hasAnyFieldName_rootConditionGroup_true() {
-		
-		Condition condition = ConditionBuilder.create()
-				.leftHandSide("field3")
-				.build();
-
-		ConditionGroup conditionGroup = ConditionGroupBuilder.createForCondition(condition)
-				.build();
-		
-		QueryInfo queryInfo = QueryInfoBuilder.create()
-			.conditionGroup(conditionGroup)
-			.build();
+	public void hasAnyFieldName_rootConditionGroup_true() throws IOException, QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoFieldUtilsTest_hasAnyFieldName_rootConditionGroup_true_given.json");
+		DefaultQueryInfo givenQueryInfo = QueryInfoTestUtils.objectify(givenJson, DefaultQueryInfo.class);
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
-		
-		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
-		
+
+		boolean actual = utils.hasAnyFieldName(givenQueryInfo, fieldNames);
+
 		assertTrue(actual);
 	}
-	
+
 	@Test
-	public void hasAnyFieldName_sorts_false() {
-		Sort sort = SortBuilder.create()
-			.fieldName("field2")
-			.build();
-
-		List<Sort> sorts = Arrays.asList(sort);
-
-		QueryInfo queryInfo = QueryInfoBuilder.create()
-			.sorts(sorts)
-			.build();
+	public void hasAnyFieldName_sorts_false() throws IOException, QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoFieldUtilsTest_hasAnyFieldName_sorts_false_given.json");
+		DefaultQueryInfo givenQueryInfo = QueryInfoTestUtils.objectify(givenJson, DefaultQueryInfo.class);
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
 
-		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
+		boolean actual = utils.hasAnyFieldName(givenQueryInfo, fieldNames);
 
 		assertFalse(actual);
 	}
 
 	@Test
-	public void hasAnyFieldName_sorts_true() {
-		Sort sort = SortBuilder.create()
-				.fieldName("field3")
-				.build();
-
-		List<Sort> sorts = Arrays.asList(sort);
-
-		QueryInfo queryInfo = QueryInfoBuilder.create()
-			.sorts(sorts)
-			.build();
+	public void hasAnyFieldName_sorts_true() throws IOException, QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoFieldUtilsTest_hasAnyFieldName_sorts_true_given.json");
+		DefaultQueryInfo givenQueryInfo = QueryInfoTestUtils.objectify(givenJson, DefaultQueryInfo.class);
 
 		List<String> fieldNames = Arrays.asList("field1", "field3");
-		
-		boolean actual = utils.hasAnyFieldName(queryInfo, fieldNames);
-		
+
+		boolean actual = utils.hasAnyFieldName(givenQueryInfo, fieldNames);
+
 		assertTrue(actual);
 	}
-	
+
 	@Test
 	public void hasRequestedAllFields_emptyList() {
 		QueryInfo queryInfo = new DefaultQueryInfo();
-		
-		List<String> requestedFieldNames = Collections.emptyList();
-		
-		queryInfo.setRequestedFieldNames(requestedFieldNames);
-		
+
+		List<String> requestedFields = Collections.emptyList();
+
+		queryInfo.setRequestedFields(requestedFields);
+
 		boolean actual = utils.hasRequestedAllFields(queryInfo);
-		
+
 		assertFalse(actual);
 	}
-	
+
 	@Test
 	public void hasRequestedAllFields_notEmptyList() {
 		QueryInfo queryInfo = new DefaultQueryInfo();
-		
-		List<String> requestedFieldNames = Arrays.asList("field1");
-		
-		queryInfo.setRequestedFieldNames(requestedFieldNames);
-		
+
+		List<String> requestedFields = Arrays.asList("field1");
+
+		queryInfo.setRequestedFields(requestedFields);
+
 		boolean actual = utils.hasRequestedAllFields(queryInfo);
-		
+
 		assertFalse(actual);
 	}
-	
+
 	@Test
 	public void hasRequestedAllFields_null() {
 		QueryInfo queryInfo = new DefaultQueryInfo();
-		
-		List<String> requestedFieldNames = null;
-		
-		queryInfo.setRequestedFieldNames(requestedFieldNames);
-		
+
+		List<String> requestedFields = null;
+
+		queryInfo.setRequestedFields(requestedFields);
+
 		boolean actual = utils.hasRequestedAllFields(queryInfo);
-		
+
 		assertTrue(actual);
 	}
 }

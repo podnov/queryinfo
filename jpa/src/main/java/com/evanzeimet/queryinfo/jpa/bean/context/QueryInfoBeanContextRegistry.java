@@ -1,9 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.bean.context;
 
-import javax.persistence.criteria.From;
-
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
-
 /*
  * #%L
  * queryinfo-jpa
@@ -26,14 +22,15 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
  * #L%
  */
 
+import javax.persistence.criteria.From;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public interface QueryInfoBeanContextRegistry {
 
-	public <T> QueryInfoBeanContext<T, ?, ?> getContext(From<?, T> from);
+	public <Entity> QueryInfoBeanContext<Entity, ?, ?> getContext(From<?, Entity> from);
 
-	// TODO uhhhhh... standardize parameters?
-	public <RootEntity, CriteriaQueryResultType, QueryInfoResultType> QueryInfoBeanContext<RootEntity, CriteriaQueryResultType, QueryInfoResultType> getContext(Class<RootEntity> rootEntityClass);
+	public <Entity> QueryInfoBeanContext<Entity, ?, ?> getContext(Class<Entity> rootEntityClass);
 
-	public <T> QueryInfoBeanContext<T, ?, ?> getContextForRoot(QueryInfoJPAContext<T> jpaContext);
+	public <Entity> QueryInfoBeanContext<Entity, ?, ?> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
 
 }

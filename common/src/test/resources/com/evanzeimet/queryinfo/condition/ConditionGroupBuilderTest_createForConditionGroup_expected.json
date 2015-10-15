@@ -1,0 +1,15 @@
+{
+  "conditionGroups" : [
+    {
+      "conditions" : [
+        {
+          "leftHandSide" : "lhs1",
+          "operator" : "op1",
+          "rightHandSide" : "rhs1"
+        }
+      ],
+      "operator" : "and"
+    }
+  ],
+  "operator" : "and"
+}

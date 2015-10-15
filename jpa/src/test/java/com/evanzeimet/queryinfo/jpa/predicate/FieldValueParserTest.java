@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.predicate;
 
+import static org.junit.Assert.assertEquals;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -22,16 +24,22 @@ package com.evanzeimet.queryinfo.jpa.predicate;
  * #L%
  */
 
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.criteria.Expression;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.condition.ConditionOperator;
 
 public class FieldValueParserTest {
 
@@ -46,35 +54,87 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_boolean_false() {
+	public void parse_boolean_false() throws QueryInfoException {
 		String fieldValue = "false";
 
 		doReturn(Boolean.class).when(path).getJavaType();
 
-		Boolean actual = (Boolean) parser.parse(path, fieldValue);
+		Boolean actual = (Boolean) parser.parse(path,
+				ConditionOperator.EQUAL_TO,
+				fieldValue);
 
 		assertFalse(actual);
 	}
 
 	@Test
-	public void parse_boolean_somethingElse() {
+	public void parse_boolean_somethingElse() throws QueryInfoException {
 		String fieldValue = "somethingElse";
 
 		doReturn(Boolean.class).when(path).getJavaType();
 
-		Boolean actual = (Boolean) parser.parse(path, fieldValue);
+		Boolean actual = (Boolean) parser.parse(path,
+				ConditionOperator.EQUAL_TO,
+				fieldValue);
 
 		assertFalse(actual);
 	}
 
 	@Test
-	public void parse_boolean_true() {
+	public void parse_boolean_true() throws QueryInfoException {
 		String fieldValue = "true";
 
 		doReturn(Boolean.class).when(path).getJavaType();
 
-		Boolean actual = (Boolean) parser.parse(path, fieldValue);
+		Boolean actual = (Boolean) parser.parse(path,
+				ConditionOperator.EQUAL_TO,
+				fieldValue);
 
 		assertTrue(actual);
+	}
+
+	@Test
+	public void parse_date() throws QueryInfoException {
+		String fieldValue = "1982-05-09T00:00:00";
+
+		doReturn(Date.class).when(path).getJavaType();
+
+		Date actual = (Date) parser.parse(path,
+				ConditionOperator.EQUAL_TO,
+				fieldValue);
+
+		long actualMillis = actual.getTime();
+		assertEquals(389750400000L, actualMillis);
+	}
+
+	@Test
+	public void parse_in_integer() throws QueryInfoException {
+		String fieldValue = "[1,2,3]";
+
+		doReturn(Integer.class).when(path).getJavaType();
+
+		@SuppressWarnings("unchecked")
+		List<Integer> actual = (List<Integer>) parser.parse(path,
+				ConditionOperator.IN,
+				fieldValue);
+
+		List<Integer> expected = Arrays.asList(1, 2, 3);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void parse_notIn_String() throws QueryInfoException {
+		String fieldValue = "[\"a\",\"b\",\"c\"]";
+
+		doReturn(String.class).when(path).getJavaType();
+
+		@SuppressWarnings("unchecked")
+		List<String> actual = (List<String>) parser.parse(path,
+				ConditionOperator.NOT_IN,
+				fieldValue);
+
+		List<String> expected = Arrays.asList("a","b","c");
+
+		assertEquals(expected, actual);
 	}
 }

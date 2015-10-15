@@ -1,6 +1,7 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /*
@@ -75,6 +76,13 @@ public class OrganizationEntity extends DefaultOrganization {
 	@Column(name = "city")
 	public String getCity() {
 		return super.getCity();
+	}
+
+	@Override
+	@QueryInfoField
+	@Column(name = "date_created")
+	public Date getDateCreated() {
+		return super.getDateCreated();
 	}
 
 	@JsonIgnore

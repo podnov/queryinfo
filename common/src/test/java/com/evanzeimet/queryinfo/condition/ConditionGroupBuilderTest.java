@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.builder;
+package com.evanzeimet.queryinfo.condition;
 
 /*
  * #%L
@@ -22,19 +22,15 @@ package com.evanzeimet.queryinfo.builder;
  * #L%
  */
 
-import static com.evanzeimet.queryinfo.QueryInfoMatchers.equalsCondition;
-import static com.evanzeimet.queryinfo.QueryInfoMatchers.equalsJson;
-import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionBuilder;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
@@ -43,9 +39,6 @@ import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.evanzeimet.queryinfo.condition.DefaultCondition;
 
-/*
- * TODO Change these givens to json, check other tests too
- */
 public class ConditionGroupBuilderTest {
 
 	private ConditionGroupBuilder builder;
@@ -56,7 +49,7 @@ public class ConditionGroupBuilderTest {
 	}
 
 	@Test
-	public void build() {
+	public void build() throws IOException {
 		List<ConditionGroup> givenConditionGroups = new ArrayList<ConditionGroup>();
 
 		Condition givenCondition1 = ConditionBuilder.create()
@@ -85,45 +78,33 @@ public class ConditionGroupBuilderTest {
 				.operator(givenOperator)
 				.build();
 
-		List<ConditionGroup> actualConditionGroups = actualConditionGroup.getConditionGroups();
-		assertThat(givenConditionGroups, equalsJson(actualConditionGroups));
+		String actualJson = QueryInfoTestUtils.createActualJson(actualConditionGroup);
+		String expectedJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"ConditionGroupBuilderTest_build_expected.json");
 
-		List<Condition> actualConditions = actualConditionGroup.getConditions();
-		assertThat(givenConditions, equalsJson(actualConditions));
-
-		String actualOperator = actualConditionGroup.getOperator();
-		String expectedOperator = givenOperator.getText();
-		assertEquals(expectedOperator, actualOperator);
+		assertEquals(expectedJson, actualJson);
 	}
 
 	@Test
-	public void createForCondition() {
+	public void createForCondition() throws IOException {
 		Condition givenCondition = new DefaultCondition();
 
 		givenCondition.setLeftHandSide("lhs1");
 		givenCondition.setOperator("op1");
 		givenCondition.setRightHandSide("rhs1");
 
-		ConditionGroup actualConditionGroup = ConditionGroupBuilder.createForCondition(
-				givenCondition)
+		ConditionGroup actualConditionGroup = ConditionGroupBuilder.createForCondition(givenCondition)
 				.build();
 
-		List<ConditionGroup> actualConditionGroups = actualConditionGroup.getConditionGroups();
-		assertNull(actualConditionGroups);
+		String actualJson = QueryInfoTestUtils.createActualJson(actualConditionGroup);
+		String expectedJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"ConditionGroupBuilderTest_createForCondition_expected.json");
 
-		List<Condition> actualConditions = actualConditionGroup.getConditions();
-		assertThat(actualConditions, hasSize(1));
-
-		Condition actualCondition = actualConditions.get(0);
-		assertThat(actualCondition, equalsCondition(givenCondition));
-
-		String actualConditionGroupOperator = actualConditionGroup.getOperator();
-		String expectedConditionGroupOperator = ConditionGroupOperator.AND.getText();
-		assertEquals(expectedConditionGroupOperator, actualConditionGroupOperator);
+		assertEquals(expectedJson, actualJson);
 	}
 
 	@Test
-	public void createForConditionGroup() {
+	public void createForConditionGroup() throws IOException {
 		List<Condition> givenConditions = new ArrayList<Condition>();
 
 		Condition givenCondition = new DefaultCondition();
@@ -142,17 +123,10 @@ public class ConditionGroupBuilderTest {
 				givenConditionGroup)
 				.build();
 
-		List<ConditionGroup> actualNestedConditionGroups = actualConditionGroup.getConditionGroups();
-		assertThat(actualNestedConditionGroups, hasSize(1));
+		String actualJson = QueryInfoTestUtils.createActualJson(actualConditionGroup);
+		String expectedJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"ConditionGroupBuilderTest_createForConditionGroup_expected.json");
 
-		ConditionGroup actualNestedConditionGroup = actualNestedConditionGroups.get(0);
-		assertThat(actualNestedConditionGroup, equalsJson(givenConditionGroup));
-
-		List<Condition> actualNestedConditions = actualConditionGroup.getConditions();
-		assertNull(actualNestedConditions);
-
-		String actualConditionGroupOperator = actualConditionGroup.getOperator();
-		String expectedConditionGroupOperator = ConditionGroupOperator.AND.getText();
-		assertEquals(expectedConditionGroupOperator, actualConditionGroupOperator);
+		assertEquals(expectedJson, actualJson);
 	}
 }
