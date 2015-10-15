@@ -49,6 +49,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
 import cucumber.api.DataTable;
+import cucumber.api.Format;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -97,7 +98,7 @@ public class ConditionsSteps {
 	}
 
 	@Given("^these organizations:$")
-	public void Given_these_organizations(List<OrganizationEntity> organizations) {
+	public void Given_these_organizations(@Format(CucumberUtils.DATE_FORMAT) List<OrganizationEntity> organizations) {
 		if (needToPersistOrganizations) {
 			needToPersistOrganizations = false;
 			testUtils.truncateTable(OrganizationEntity.class);

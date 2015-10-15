@@ -1,5 +1,6 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
+import java.util.Date;
 import java.util.List;
 
 import com.evanzeimet.queryinfo.it.people.Person;
@@ -46,6 +47,10 @@ public interface Organization {
 	String getCity();
 
 	void setCity(String city);
+
+	Date getDateCreated();
+
+	void setDateCreated(Date dateCreated);
 
 	List<Person> getEmployees();
 
