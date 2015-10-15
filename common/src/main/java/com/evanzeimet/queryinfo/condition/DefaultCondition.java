@@ -22,12 +22,16 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
+import com.evanzeimet.queryinfo.util.JSONToStringDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class DefaultCondition implements Condition {
 
 	private static final long serialVersionUID = 3264149014277724710L;
 
 	private String leftHandSide;
 	private String operator;
+	@JsonDeserialize(using = JSONToStringDeserializer.class)
 	private String rightHandSide;
 
 	public DefaultCondition() {

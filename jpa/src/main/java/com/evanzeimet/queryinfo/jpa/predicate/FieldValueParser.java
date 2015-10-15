@@ -73,27 +73,37 @@ public class FieldValueParser {
 
 		if (isEitherInOperator) {
 			result = parseIn(path, fieldValue);
-		} else if (Boolean.class.isAssignableFrom(javaType)) {
-			result = parseBoolean(fieldValue);
 		} else if (Date.class.isAssignableFrom(javaType)) {
 			result = parseDate(fieldValue);
 		} else {
-			result = fieldValue;
+			result = parseType(fieldValue, javaType);
 		}
 
 		return result;
 	}
 
-	protected Boolean parseBoolean(String fieldValue) {
-		return Boolean.valueOf(fieldValue);
+	protected <T> T parseType(String fieldValue, Class<T> javaType) throws QueryInfoException {
+		T result;
+
+		try {
+			result = objectMapper.readValue(fieldValue, javaType);
+		} catch (IOException e) {
+			String message = String.format("Could not parse [%s] as [%s]",
+					fieldValue,
+					javaType);
+			throw new QueryInfoException(message, e);
+		}
+
+		return result;
 	}
 
 	protected Date parseDate(String fieldValue) throws QueryInfoException {
 		Date result;
+		String stringValue = parseType(fieldValue, String.class);
 
 		try {
 			DateFormat dateFormat = objectMapper.getDateFormat();
-			result = dateFormat.parse(fieldValue);
+			result = dateFormat.parse(stringValue);
 		} catch (ParseException e) {
 			throw new QueryInfoException(e);
 		}

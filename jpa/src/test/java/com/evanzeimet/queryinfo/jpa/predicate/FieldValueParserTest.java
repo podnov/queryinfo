@@ -13,9 +13,9 @@ import static org.junit.Assert.assertEquals;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -67,16 +68,27 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_boolean_somethingElse() throws QueryInfoException {
+	public void parse_boolean_somethingElse() {
 		String fieldValue = "somethingElse";
 
 		doReturn(Boolean.class).when(path).getJavaType();
 
-		Boolean actual = (Boolean) parser.parse(path,
-				ConditionOperator.EQUAL_TO,
-				fieldValue);
+		QueryInfoException actualException = null;
 
-		assertFalse(actual);
+		try {
+			parser.parse(path,
+					ConditionOperator.EQUAL_TO,
+					fieldValue);
+		} catch (QueryInfoException e) {
+			actualException = e;
+		}
+
+		assertNotNull(actualException);
+
+		String actualExceptionMessage = actualException.getMessage();
+		String expectedExceptionMessage = "Could not parse [somethingElse] as [class java.lang.Boolean]";
+
+		assertEquals(expectedExceptionMessage, actualExceptionMessage);
 	}
 
 	@Test
@@ -94,7 +106,7 @@ public class FieldValueParserTest {
 
 	@Test
 	public void parse_date() throws QueryInfoException {
-		String fieldValue = "1982-05-09T00:00:00";
+		String fieldValue = "\"1982-05-09T00:00:00\"";
 
 		doReturn(Date.class).when(path).getJavaType();
 
@@ -103,7 +115,9 @@ public class FieldValueParserTest {
 				fieldValue);
 
 		long actualMillis = actual.getTime();
-		assertEquals(389750400000L, actualMillis);
+		long expectedMillis = 389750400000L;
+
+		assertEquals(expectedMillis, actualMillis);
 	}
 
 	@Test
@@ -123,6 +137,21 @@ public class FieldValueParserTest {
 	}
 
 	@Test
+	public void parse_integer() throws QueryInfoException {
+		String fieldValue = "1";
+
+		doReturn(Integer.class).when(path).getJavaType();
+
+		Integer actual = (Integer) parser.parse(path,
+				ConditionOperator.EQUAL_TO,
+				fieldValue);
+
+		Integer expected = 1;
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
 	public void parse_notIn_String() throws QueryInfoException {
 		String fieldValue = "[\"a\",\"b\",\"c\"]";
 
@@ -134,6 +163,21 @@ public class FieldValueParserTest {
 				fieldValue);
 
 		List<String> expected = Arrays.asList("a","b","c");
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void parse_string() throws QueryInfoException {
+		String fieldValue = "\"abc\"";
+
+		doReturn(String.class).when(path).getJavaType();
+
+		String actual = (String) parser.parse(path,
+				ConditionOperator.EQUAL_TO,
+				fieldValue);
+
+		String expected = "abc";
 
 		assertEquals(expected, actual);
 	}
