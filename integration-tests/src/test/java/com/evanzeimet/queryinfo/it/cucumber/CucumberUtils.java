@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.it.cucumber;
 
+import java.io.IOException;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -27,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.evanzeimet.queryinfo.it.feature.DataTableUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import cucumber.api.DataTable;
 import cucumber.api.Transformer;
 import cucumber.deps.com.thoughtworks.xstream.XStream;
@@ -42,16 +47,19 @@ public class CucumberUtils {
 	public static final String DATA_TABLE_NULL = "[[NULL]]";
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
+	public CucumberUtils() {
+
+	}
+
 	public void assertEquals(DataTable expected,
 			List<?> actual,
 			String[] columnNames) {
 		DataTable actualDataTable = convertListToDataTable(actual, columnNames);
-		assertEquals(expected, actualDataTable, columnNames);
+		assertEquals(expected, actualDataTable);
 	}
 
 	public void assertEquals(DataTable expected,
-			DataTable actual,
-			String[] companiesFields) {
+			DataTable actual) {
 		new TableDiffer(expected, actual).calculateDiffs();
 	}
 
@@ -115,5 +123,22 @@ public class CucumberUtils {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Invoke {@link DataTableUtils#readJsonArray(String)} with default table converter.
+	 *
+	 * @param json
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IOException
+	 */
+	public DataTable readJsonArray(String json) throws JsonProcessingException, IOException {
+		TableConverter tableConverter = createTableConverter();
+
+		DataTableUtils dataTableUtils = new DataTableUtils();
+		dataTableUtils.setTableConverter(tableConverter);
+
+		return dataTableUtils.readJsonArray(json);
 	}
 }

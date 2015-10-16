@@ -25,6 +25,57 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 
 
+Scenario: Use nested requested fields
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"requestedFields": [
+			"firstName",
+			"lastName",
+			"employer.name",
+			"employer.state"
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people tuples:
+	| firstName | lastName   | employer.name | employer.state |
+	| Evan      | Zeimet     | CDW           | IL             |
+	| Larry     | Page       | Google        | CA             |
+	| Judith    | Faulkner   | Epic          | WI             |
+	| Jeff      | Bezos      | Amazon        | WA             |
+	| Mark      | Zuckerberg | Facebook      | CA             |
+	| Pete      | Mitchell   | U.S. Navy     | DC             |
+	| Nick      | Bradshaw   | U.S. Navy     | DC             |
+	| Tom       | Kazanski   | U.S. Navy     | DC             |
+	| Mike      | Metcalf    | U.S. Navy     | DC             |
+
+Scenario: Use requested fields
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"requestedFields": [
+			"firstName"
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people tuples:
+	| firstName |
+	| Evan      |
+	| Larry     |
+	| Judith    |
+	| Jeff      |
+	| Mark      |
+	| Pete      |
+	| Nick      |
+	| Tom       |
+	| Mike      |
+
 Scenario: Paginate some sorted stuff (page 2)
 
 	Given the organizations query info web service

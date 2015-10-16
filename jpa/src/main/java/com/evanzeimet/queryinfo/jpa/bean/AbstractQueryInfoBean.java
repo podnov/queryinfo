@@ -37,7 +37,6 @@ import javax.persistence.criteria.Predicate;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;

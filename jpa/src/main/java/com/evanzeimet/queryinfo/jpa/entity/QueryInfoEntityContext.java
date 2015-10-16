@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.jpa.entity;
 
 /*
  * #%L
@@ -23,17 +23,15 @@ package com.evanzeimet.queryinfo.jpa.bean;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
-public abstract class AbstractEntityQueryInfoBean<RootEntity>
-		extends AbstractQueryInfoBean<RootEntity, RootEntity, RootEntity> {
+public interface QueryInfoEntityContext<Entity> {
 
-	public AbstractEntityQueryInfoBean() {
-		super();
-	}
+	Class<Entity> getEntityClass();
 
-	public AbstractEntityQueryInfoBean(AbstractEntityQueryInfoBeanContext<RootEntity> context) {
-		super(context);
-	}
+	QueryInfoPathFactory<Entity> getPathFactory();
+
+	QueryInfoAttributeContext getQueryInfoAttributeContext();
 
 }

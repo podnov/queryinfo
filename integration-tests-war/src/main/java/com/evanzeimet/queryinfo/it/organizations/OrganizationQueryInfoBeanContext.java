@@ -1,5 +1,6 @@
 package com.evanzeimet.queryinfo.it.organizations;
 
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
 /*
  * #%L
@@ -23,8 +24,6 @@ package com.evanzeimet.queryinfo.it.organizations;
  * #L%
  */
 
-
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
 
 public interface OrganizationQueryInfoBeanContext
 		extends QueryInfoBeanContext<OrganizationEntity, OrganizationEntity, OrganizationEntity> {

@@ -27,15 +27,19 @@ import javax.persistence.criteria.From;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public interface QueryInfoPathFactory<RootEntity> {
 
 	Class<RootEntity> getEntityClass();
 
+	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
+
 	<T> Expression<T> getPathForField(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String fieldName,
 			QueryInfoAttributePurpose purpose) throws QueryInfoException;
+
 
 }

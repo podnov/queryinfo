@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.it.people.tuple;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,17 +25,11 @@ package com.evanzeimet.queryinfo.jpa.bean;
 
 import javax.persistence.Tuple;
 
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractTupleQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public abstract class AbstractTupleQueryInfoBean<RootEntity, QueryInfoResult>
-		extends AbstractQueryInfoBean<RootEntity, Tuple, QueryInfoResult> {
-
-	public AbstractTupleQueryInfoBean() {
-		super();
-	}
-
-	public AbstractTupleQueryInfoBean(AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> context) {
-		super(context);
-	}
+public interface PersonTupleQueryInfoBeanContext
+	extends QueryInfoBeanContext<PersonEntity, Tuple, ObjectNode>{
 
 }

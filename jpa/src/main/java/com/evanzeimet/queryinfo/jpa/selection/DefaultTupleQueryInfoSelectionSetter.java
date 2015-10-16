@@ -37,8 +37,8 @@ import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
@@ -47,18 +47,18 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 		implements QueryInfoSelectionSetter<RootEntity> {
 
-	protected QueryInfoBeanContextRegistry beanContextRegistry;
+	protected QueryInfoEntityContextRegistry entityContextRegistry;
 	protected QueryInfoFieldUtils fieldUtils = new QueryInfoFieldUtils();
 
-	public DefaultTupleQueryInfoSelectionSetter(QueryInfoBeanContextRegistry beanContextRegistry) {
-		this.beanContextRegistry = beanContextRegistry;
+	public DefaultTupleQueryInfoSelectionSetter(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	protected void setRequestAllSelection(QueryInfoJPAContext<RootEntity> jpaContext)
 				throws QueryInfoException {
-		QueryInfoBeanContext<RootEntity, ?, ?> queryInfoBeanContext = beanContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
 
-		QueryInfoAttributeContext queryInfoAttributeContext = queryInfoBeanContext.getQueryInfoAttributeContext();
 		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
 		Iterator<QueryInfoFieldInfo> iterator = fields.values().iterator();
 
@@ -76,8 +76,8 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 
 	protected void setFieldNamesSelection(QueryInfoJPAContext<RootEntity> jpaContext,
 			List<String> requestedFields) throws QueryInfoException {
-		QueryInfoBeanContext<RootEntity, ?, ?> queryInfoBeanContext = beanContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoPathFactory<RootEntity> pathFactory = queryInfoBeanContext.getPathFactory();
+		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
 
 		int selectionCount = requestedFields.size();
 
@@ -89,6 +89,7 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 					root,
 					requestedField,
 					QueryInfoAttributePurpose.SELECT);
+			path.alias(requestedField);
 			selections.add(path);
 		}
 

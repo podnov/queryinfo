@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.jpa.bean.tuple;
 
 /*
  * #%L
@@ -25,21 +25,23 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
 
 import javax.persistence.Tuple;
 
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 
 public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> {
 
-	private DefaultTupleQueryInfoSelectionSetter<RootEntity> selectionSetter;
+	private QueryInfoSelectionSetter<RootEntity> selectionSetter;
 
 	public AbstractTupleQueryInfoBeanContext() {
 		super();
 	}
 
-	public AbstractTupleQueryInfoBeanContext(DefaultQueryInfoBeanContextRegistry beanContextRegistry) {
-		super(beanContextRegistry);
+	public AbstractTupleQueryInfoBeanContext(DefaultQueryInfoEntityContextRegistry entityContextRegistry) {
+		super(entityContextRegistry);
 	}
 
 	@Override
@@ -48,20 +50,14 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	}
 
 	@Override
-	public QueryInfoAttributeContext getQueryInfoAttributeContext() {
-		// TODO Walk all joins? Enum-based definitions?
-		return null;
-	}
-
-	@Override
 	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
 		return selectionSetter;
 	}
 
 	@Override
-	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
-		super.setBeanContextRegistry(beanContextRegistry);
-		selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(beanContextRegistry);
+	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+		super.setEntityContextRegistry(entityContextRegistry);
+		selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(entityContextRegistry);
 	}
 
 }

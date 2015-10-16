@@ -1,5 +1,4 @@
-package com.evanzeimet.queryinfo.it.people;
-
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
@@ -24,9 +23,19 @@ package com.evanzeimet.queryinfo.it.people;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import javax.ejb.Stateless;
 
-public interface PeopleQueryInfoBeanContext
-		extends QueryInfoBeanContext<PersonEntity, PersonEntity, PersonEntity> {
+import com.evanzeimet.queryinfo.jpa.entity.AbstractQueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+
+@Stateless
+public class OrganizationEntityContext
+	extends AbstractQueryInfoEntityContext<OrganizationEntity>
+	implements QueryInfoEntityContext<OrganizationEntity> {
+
+	@Override
+	public Class<OrganizationEntity> getEntityClass() {
+		return OrganizationEntity.class;
+	}
 
 }

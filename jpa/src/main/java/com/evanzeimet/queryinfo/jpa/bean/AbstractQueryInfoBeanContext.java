@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.jpa.bean;
 
 /*
  * #%L
@@ -23,15 +23,12 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
  */
 
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.path.DefaultQueryInfoPathFactory;
-import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 
@@ -39,18 +36,23 @@ import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult>
 		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
+	private QueryInfoEntityContext<RootEntity> entityContext;
 	private QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
 	private QueryInfoOrderFactory<RootEntity> orderFactory;
-	private QueryInfoPathFactory<RootEntity> pathFactory;
 	private QueryInfoPredicateFactory<RootEntity> predicateFactory;
 
 	public AbstractQueryInfoBeanContext() {
 		super();
 	}
 
-	public AbstractQueryInfoBeanContext(QueryInfoBeanContextRegistry beanContextRegistry) {
+	public AbstractQueryInfoBeanContext(QueryInfoEntityContextRegistry entityContextRegistry) {
 		this();
-		setBeanContextRegistry(beanContextRegistry);
+		setEntityContextRegistry(entityContextRegistry);
+	}
+
+	@Override
+	public QueryInfoEntityContext<RootEntity> getEntityContext() {
+		return entityContext;
 	}
 
 	@Override
@@ -64,38 +66,26 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	}
 
 	@Override
-	public Boolean getUseDistinctSelections() {
-		return Boolean.FALSE;
-	}
-
-	@Override
-	public QueryInfoPathFactory<RootEntity> getPathFactory() {
-		return pathFactory;
-	}
-
-	@Override
 	public QueryInfoPredicateFactory<RootEntity> getPredicateFactory() {
 		return predicateFactory;
 	}
 
-	@PostConstruct
-	@Inject
-	protected void postConstruct(QueryInfoBeanContextRegistry beanContextRegistry) {
-		setBeanContextRegistry(beanContextRegistry);
+	@Override
+	public Boolean getUseDistinctSelections() {
+		return Boolean.FALSE;
 	}
 
-	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
+	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
 		if (orderFactory == null) {
-			orderFactory = new DefaultQueryInfoOrderFactory<>(beanContextRegistry);
-		}
-
-		if (pathFactory == null) {
-			Class<RootEntity> rootEntityClass = getRootEntityClass();
-			pathFactory = new DefaultQueryInfoPathFactory<>(beanContextRegistry, rootEntityClass);
+			orderFactory = new DefaultQueryInfoOrderFactory<>(entityContextRegistry);
+		} else {
+			orderFactory.setEntityContextRegistry(entityContextRegistry);
 		}
 
 		if (predicateFactory == null) {
-			predicateFactory = new DefaultQueryInfoPredicateFactory<>(beanContextRegistry);
+			predicateFactory = new DefaultQueryInfoPredicateFactory<>(entityContextRegistry);
+		} else {
+			predicateFactory.setEntityContextRegistry(entityContextRegistry);
 		}
 	}
 }

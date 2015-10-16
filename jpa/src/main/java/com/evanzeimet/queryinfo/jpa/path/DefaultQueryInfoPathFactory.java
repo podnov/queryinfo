@@ -31,8 +31,8 @@ import javax.persistence.criteria.Join;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPathParts;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
@@ -41,18 +41,23 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 public class DefaultQueryInfoPathFactory<RootEntity>
 		implements QueryInfoPathFactory<RootEntity> {
 
-	protected QueryInfoBeanContextRegistry beanContextRegistry;
+	protected QueryInfoEntityContextRegistry entityContextRegistry;
 	protected Class<RootEntity> entityClass;
 
-	public DefaultQueryInfoPathFactory(QueryInfoBeanContextRegistry beanContextRegistry,
+	public DefaultQueryInfoPathFactory(QueryInfoEntityContextRegistry entityContextRegistry,
 			Class<RootEntity> entityClass) {
-		this.beanContextRegistry = beanContextRegistry;
+		this.entityContextRegistry = entityContextRegistry;
 		this.entityClass = entityClass;
 	}
 
 	@Override
 	public Class<RootEntity> getEntityClass() {
 		return entityClass;
+	}
+
+	@Override
+	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	protected <T> Expression<T> getEntityPath(QueryInfoJPAContext<?> jpaContext,
@@ -79,7 +84,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	protected <JoinedEntity> Join<RootEntity, JoinedEntity> getJoin(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String queryInfoJoinAttributeName) {
-		QueryInfoBeanContext<?, ?, ?> fromBeanContext = beanContextRegistry.getContext(from);
+		QueryInfoEntityContext<?> fromBeanContext = entityContextRegistry.getContext(from);
 
 		QueryInfoAttributeContext queryInfoAttributeContext = fromBeanContext.getQueryInfoAttributeContext();
 		QueryInfoJoinInfo querInfoJoinInfo = queryInfoAttributeContext.getJoin(queryInfoJoinAttributeName);
@@ -106,7 +111,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(Join<RootEntity, JoinedEntity> join) {
 		Class<JoinedEntity> joinedClass = join.getModel().getBindableJavaType();
-		QueryInfoBeanContext<JoinedEntity, ?, ?> joinBeanContext = beanContextRegistry.getContext(joinedClass);
+		QueryInfoEntityContext<JoinedEntity> joinBeanContext = entityContextRegistry.getContext(joinedClass);
 
 		return joinBeanContext.getPathFactory();
 	}
@@ -133,8 +138,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 			String fieldName,
 			QueryInfoAttributePurpose purpose)
 			throws QueryInfoException {
-		QueryInfoBeanContext<?, ?, ?> beanContext = beanContextRegistry.getContext(from);
-		QueryInfoAttributeContext queryInfoAttributeContext = beanContext.getQueryInfoAttributeContext();
+		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(from);
+		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
 		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
 
 		QueryInfoFieldInfo fieldInfo = fields.get(fieldName);
@@ -169,8 +174,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	protected void validateJoinInfo(QueryInfoJPAContext<?> jpaContext,
 			String joinName)
 			throws QueryInfoException {
-		QueryInfoBeanContext<?, ?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoAttributeContext queryInfoAttributeContext = beanContext.getQueryInfoAttributeContext();
+		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
 		Map<String, QueryInfoJoinInfo> joins = queryInfoAttributeContext.getJoins();
 
 		QueryInfoJoinInfo joinInfo = joins.get(joinName);

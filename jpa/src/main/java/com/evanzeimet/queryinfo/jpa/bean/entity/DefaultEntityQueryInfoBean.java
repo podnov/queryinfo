@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.order;
+package com.evanzeimet.queryinfo.jpa.bean.entity;
 
 /*
  * #%L
@@ -22,19 +22,18 @@ package com.evanzeimet.queryinfo.jpa.order;
  * #L%
  */
 
-import java.util.List;
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
-import javax.persistence.criteria.Order;
-import com.evanzeimet.queryinfo.QueryInfo;
-import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
+public class DefaultEntityQueryInfoBean<RootEntity>
+		extends AbstractQueryInfoBean<RootEntity, RootEntity, RootEntity> {
 
-public interface QueryInfoOrderFactory<RootEntity> {
+	public DefaultEntityQueryInfoBean() {
+		super();
+	}
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
-
-	List<Order> createOrders(QueryInfoJPAContext<RootEntity> jpaContext,
-			QueryInfo queryInfo) throws QueryInfoException;
+	public DefaultEntityQueryInfoBean(QueryInfoBeanContext<RootEntity, RootEntity, RootEntity> context) {
+		super(context);
+	}
 
 }

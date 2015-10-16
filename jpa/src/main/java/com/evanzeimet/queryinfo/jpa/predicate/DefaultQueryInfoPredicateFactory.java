@@ -39,18 +39,23 @@ import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPredicateFactory<RootEntity> {
 
-	private QueryInfoBeanContextRegistry beanContextRegistry;
+	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private FieldValueParser fieldValueParser = new FieldValueParser();
 
-	public DefaultQueryInfoPredicateFactory(QueryInfoBeanContextRegistry beanContextRegistry) {
-		this.beanContextRegistry = beanContextRegistry;
+	public DefaultQueryInfoPredicateFactory(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
+	}
+
+	@Override
+	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -60,8 +65,8 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 			String fieldValue) throws QueryInfoException {
 		Predicate result = null;
 
-		QueryInfoBeanContext beanContext = beanContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoPathFactory pathFactory = beanContext.getPathFactory();
+		QueryInfoEntityContext entityContext = entityContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoPathFactory pathFactory = entityContext.getPathFactory();
 
 		CriteriaBuilder criteriaBuilder = jpaContext.getCriteriaBuilder();
 		Root<RootEntity> root = jpaContext.getRoot();

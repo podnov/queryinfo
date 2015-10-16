@@ -1,8 +1,11 @@
-package com.evanzeimet.queryinfo.it.people;
+package com.evanzeimet.queryinfo.it.people.entity;
+
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,19 +25,8 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 
-import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
-
-@Stateless
-public class PeopleQueryInfoBean extends AbstractEntityQueryInfoBean<PersonEntity> {
-
-	@Inject
-	@PostConstruct
-	protected void postConstruct(PeopleQueryInfoBeanContext context) {
-		setBeanContext(context);
-	}
+public interface PersonEntityQueryInfoBeanContext
+		extends QueryInfoBeanContext<PersonEntity, PersonEntity, PersonEntity> {
 
 }
