@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.organizations;
+package com.evanzeimet.queryinfo.it.organizations.entity;
 
 import javax.annotation.PostConstruct;
 
@@ -29,13 +29,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
 @Stateless
-public class DefaultOrganizationQueryInfoBeanContext
-		extends AbstractEntityQueryInfoBeanContext<OrganizationEntity>
-		implements OrganizationQueryInfoBeanContext {
+public class OrganizationEntityQueryInfoBeanContext
+		extends AbstractEntityQueryInfoBeanContext<OrganizationEntity> {
 
 	@Inject
 	@QueryInfoEntityManager

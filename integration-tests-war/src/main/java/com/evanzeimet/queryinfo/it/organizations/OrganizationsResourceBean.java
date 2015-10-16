@@ -41,14 +41,14 @@ public class OrganizationsResourceBean implements OrganizationsResource {
 	private Logger logger;
 
 	@Inject
-	private OrganizationsQueryInfoBean organizationQueryInfoBean;
+	private OrganizationQueryInfoBeanSelector organizationQueryInfoBean;
 
 	@Override
 	public Response query(DefaultQueryInfo queryInfo) {
 		Response result;
 
 		try {
-			List<OrganizationEntity> organizations = organizationQueryInfoBean.query(queryInfo);
+			List<?> organizations = organizationQueryInfoBean.query(queryInfo);
 			result = Response.ok(organizations).build();
 		} catch (QueryInfoException e) {
 			logger.error("Could not retrieve organizations", e);

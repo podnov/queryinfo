@@ -1,10 +1,8 @@
-package com.evanzeimet.queryinfo.it.people.entity;
-
-import javax.annotation.PostConstruct;
+package com.evanzeimet.queryinfo.it.organizations.tuple;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -25,19 +23,18 @@ import javax.annotation.PostConstruct;
  */
 
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.it.people.PersonEntity;
-import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
+import com.evanzeimet.queryinfo.jpa.bean.tuple.AbstractTupleToJSONQueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
 @Stateless
-public class DefaultPersonEntityQueryInfoBeanContext
-	extends AbstractEntityQueryInfoBeanContext<PersonEntity>
-	implements PersonEntityQueryInfoBeanContext {
+public class OrganizationTupleQueryInfoBeanContext extends AbstractTupleToJSONQueryInfoBeanContext<OrganizationEntity> {
 
 	@Inject
 	@QueryInfoEntityManager
@@ -49,8 +46,8 @@ public class DefaultPersonEntityQueryInfoBeanContext
 	}
 
 	@Override
-	public Class<PersonEntity> getRootEntityClass() {
-		return PersonEntity.class;
+	public Class<OrganizationEntity> getRootEntityClass() {
+		return OrganizationEntity.class;
 	}
 
 	@PostConstruct

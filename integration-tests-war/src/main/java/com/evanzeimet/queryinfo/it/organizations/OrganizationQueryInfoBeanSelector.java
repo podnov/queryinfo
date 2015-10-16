@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it;
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
@@ -29,18 +29,18 @@ import javax.inject.Inject;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.it.people.entity.PersonEntityQueryInfoBean;
-import com.evanzeimet.queryinfo.it.people.tuple.PersonTupleQueryInfoBean;
+import com.evanzeimet.queryinfo.it.organizations.entity.OrganizationEntityQueryInfoBean;
+import com.evanzeimet.queryinfo.it.organizations.tuple.OrganizationTupleQueryInfoBean;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
 
 @Stateless
-public class PeopleQueryInfoBeanSelector {
+public class OrganizationQueryInfoBeanSelector {
 
 	@Inject
-	private PersonEntityQueryInfoBean entityQueryInfoBean;
+	private OrganizationEntityQueryInfoBean entityQueryInfoBean;
 
 	@Inject
-	private PersonTupleQueryInfoBean tupleQueryInfoBean;
+	private OrganizationTupleQueryInfoBean tupleQueryInfoBean;
 
 	private QueryInfoFieldUtils queryInfoFieldUtils;
 

@@ -1,5 +1,8 @@
 package com.evanzeimet.queryinfo.it.people.tuple;
 
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+
 /*
  * #%L
  * queryinfo-integration-tests-war
@@ -23,13 +26,34 @@ package com.evanzeimet.queryinfo.it.people.tuple;
  */
 
 
-import javax.persistence.Tuple;
-
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.evanzeimet.queryinfo.jpa.bean.tuple.AbstractTupleToJSONQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
-public interface PersonTupleQueryInfoBeanContext
-	extends QueryInfoBeanContext<PersonEntity, Tuple, ObjectNode>{
+@Stateless
+public class PersonTupleQueryInfoBeanContext
+	extends AbstractTupleToJSONQueryInfoBeanContext<PersonEntity> {
 
+	@Inject
+	@QueryInfoEntityManager
+	private EntityManager entityManager;
+
+	@Override
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	@Override
+	public Class<PersonEntity> getRootEntityClass() {
+		return PersonEntity.class;
+	}
+
+	@PostConstruct
+	@Inject
+	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
+		setEntityContextRegistry(entityContextRegistry);
+	}
 }

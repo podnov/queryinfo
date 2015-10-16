@@ -1,4 +1,4 @@
-Feature: Query with conditions
+Feature: Query with QueryInfo
 
 Background:
 
@@ -25,7 +25,34 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 
 
-Scenario: Use nested requested fields
+Scenario: Use nested requested fields, one-to-many join
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"requestedFields": [
+			"name",
+			"state",
+			"employees.firstName",
+			"employees.lastName"
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| name          | state   | employees.firstName | employees.lastName |
+	| CDW           | IL      | Evan                | Zeimet             |
+	| Google        | CA      | Larry               | Page               |
+	| Epic          | WI      | Judith              | Faulkner           |
+	| Amazon        | WA      | Jeff                | Bezos              |
+	| Facebook      | CA      | Mark                | Zuckerberg         |
+	| U.S. Navy     | DC      | Pete                | Mitchell           |
+	| U.S. Navy     | DC      | Nick                | Bradshaw           |
+	| U.S. Navy     | DC      | Tom                 | Kazanski           |
+	| U.S. Navy     | DC      | Mike                | Metcalf            |
+
+Scenario: Use nested requested fields, one-to-one join
 
 	Given the people query info web service
 	When I send the query:
@@ -40,7 +67,7 @@ Scenario: Use nested requested fields
 	}
 	"""
 	Then the http response code should be 200
-	And I should receive these people tuples:
+	And I should receive these tuples:
 	| firstName | lastName   | employer.name | employer.state |
 	| Evan      | Zeimet     | CDW           | IL             |
 	| Larry     | Page       | Google        | CA             |
@@ -64,7 +91,7 @@ Scenario: Use requested fields
 	}
 	"""
 	Then the http response code should be 200
-	And I should receive these people tuples:
+	And I should receive these tuples:
 	| firstName |
 	| Evan      |
 	| Larry     |

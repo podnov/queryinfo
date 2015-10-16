@@ -1,11 +1,10 @@
 package com.evanzeimet.queryinfo.it.people.entity;
 
-import com.evanzeimet.queryinfo.it.people.PersonEntity;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+import javax.annotation.PostConstruct;
 
 /*
  * #%L
- * queryinfo-integration-tests-war
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -26,7 +25,36 @@ import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
  */
 
 
-public interface PersonEntityQueryInfoBeanContext
-		extends QueryInfoBeanContext<PersonEntity, PersonEntity, PersonEntity> {
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
+import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+
+@Stateless
+public class PersonEntityQueryInfoBeanContext
+	extends AbstractEntityQueryInfoBeanContext<PersonEntity> {
+
+	@Inject
+	@QueryInfoEntityManager
+	private EntityManager entityManager;
+
+	@Override
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	@Override
+	public Class<PersonEntity> getRootEntityClass() {
+		return PersonEntity.class;
+	}
+
+	@PostConstruct
+	@Inject
+	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
+		setEntityContextRegistry(entityContextRegistry);
+	}
 }
