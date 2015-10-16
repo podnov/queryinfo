@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.jpa.bean;
 
 /*
  * #%L

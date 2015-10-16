@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.jpa.bean.tuple;
 
 /*
  * #%L
@@ -25,17 +25,19 @@ package com.evanzeimet.queryinfo.jpa.bean;
 
 import javax.persistence.Tuple;
 
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractTupleQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
+import com.evanzeimet.queryinfo.jpa.result.TupleToObjectNodeQueryInfoResultConverter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public abstract class AbstractTupleQueryInfoBean<RootEntity, QueryInfoResult>
-		extends AbstractQueryInfoBean<RootEntity, Tuple, QueryInfoResult> {
+public abstract class AbstractTupleToJSONQueryInfoBeanContext<RootEntity>
+		extends AbstractTupleQueryInfoBeanContext<RootEntity, ObjectNode> {
 
-	public AbstractTupleQueryInfoBean() {
-		super();
-	}
+	private QueryInfoResultConverter<Tuple, ObjectNode> resultConverter = new TupleToObjectNodeQueryInfoResultConverter();
 
-	public AbstractTupleQueryInfoBean(AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> context) {
-		super(context);
+
+	@Override
+	public QueryInfoResultConverter<Tuple, ObjectNode> getResultConverter() {
+		return resultConverter;
 	}
 
 }

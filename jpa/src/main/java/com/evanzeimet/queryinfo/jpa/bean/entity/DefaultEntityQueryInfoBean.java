@@ -1,10 +1,8 @@
-package com.evanzeimet.queryinfo.it.people;
-
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+package com.evanzeimet.queryinfo.jpa.bean.entity;
 
 /*
  * #%L
- * queryinfo-integration-tests-war
+ * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
@@ -24,8 +22,18 @@ import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
  * #L%
  */
 
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
-public interface PeopleQueryInfoBeanContext
-		extends QueryInfoBeanContext<PersonEntity, PersonEntity, PersonEntity> {
+public class DefaultEntityQueryInfoBean<RootEntity>
+		extends AbstractQueryInfoBean<RootEntity, RootEntity, RootEntity> {
+
+	public DefaultEntityQueryInfoBean() {
+		super();
+	}
+
+	public DefaultEntityQueryInfoBean(QueryInfoBeanContext<RootEntity, RootEntity, RootEntity> context) {
+		super(context);
+	}
 
 }

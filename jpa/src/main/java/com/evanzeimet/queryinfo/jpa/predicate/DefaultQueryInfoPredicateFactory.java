@@ -39,8 +39,8 @@ import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 

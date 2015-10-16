@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.it.people;
 
-
-
 /*
  * #%L
  * queryinfo-integration-tests
@@ -30,7 +28,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
 
 @Stateless
 public class DefaultPeopleQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<PersonEntity>

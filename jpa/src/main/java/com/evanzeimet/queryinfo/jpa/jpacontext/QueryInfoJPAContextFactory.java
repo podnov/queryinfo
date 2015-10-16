@@ -25,7 +25,7 @@ package com.evanzeimet.queryinfo.jpa.jpacontext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 
-import com.evanzeimet.queryinfo.jpa.bean.context.QueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
 public interface QueryInfoJPAContextFactory<RootEntity> {
 

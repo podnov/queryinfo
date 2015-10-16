@@ -26,10 +26,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
 
 @Stateless
-public class PeopleQueryInfoBean extends AbstractEntityQueryInfoBean<PersonEntity> {
+public class PeopleQueryInfoBean extends DefaultEntityQueryInfoBean<PersonEntity> {
 
 	@Inject
 	@PostConstruct

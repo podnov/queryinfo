@@ -27,7 +27,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
-import com.evanzeimet.queryinfo.jpa.bean.context.AbstractEntityQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
 
 @Stateless
 public class DefaultCompanyQueryInfoBeanContext

@@ -28,10 +28,11 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.evanzeimet.queryinfo.jpa.bean.AbstractEntityQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
+
 
 @Stateless
-public class OrganizationsQueryInfoBean extends AbstractEntityQueryInfoBean<OrganizationEntity> {
+public class OrganizationsQueryInfoBean extends DefaultEntityQueryInfoBean<OrganizationEntity> {
 
 	@Inject
 	@PostConstruct

@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.jpa.bean.tuple;
 
 /*
  * #%L
@@ -25,7 +25,9 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
 
 import javax.persistence.Tuple;
 
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContextRegistry;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 
@@ -45,12 +47,6 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	@Override
 	public Class<Tuple> getCriteriaQueryResultClass() {
 		return Tuple.class;
-	}
-
-	@Override
-	public QueryInfoAttributeContext getQueryInfoAttributeContext() {
-		// TODO Walk all joins? Enum-based definitions?
-		return null;
 	}
 
 	@Override

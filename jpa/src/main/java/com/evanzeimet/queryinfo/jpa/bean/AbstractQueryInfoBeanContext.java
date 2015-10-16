@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.jpa.bean;
 
 /*
  * #%L
@@ -26,6 +26,9 @@ package com.evanzeimet.queryinfo.jpa.bean.context;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
@@ -39,6 +42,7 @@ import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult>
 		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
+	private QueryInfoAttributeContext queryInfoAttributeContext;
 	private QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
 	private QueryInfoOrderFactory<RootEntity> orderFactory;
 	private QueryInfoPathFactory<RootEntity> pathFactory;
@@ -64,8 +68,8 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	}
 
 	@Override
-	public Boolean getUseDistinctSelections() {
-		return Boolean.FALSE;
+	public QueryInfoAttributeContext getQueryInfoAttributeContext()  {
+		return queryInfoAttributeContext;
 	}
 
 	@Override
@@ -78,10 +82,24 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		return predicateFactory;
 	}
 
+	@Override
+	public Boolean getUseDistinctSelections() {
+		return Boolean.FALSE;
+	}
+
+	protected void createAttributeContext() {
+		Class<RootEntity> rootEntityClass = getRootEntityClass();
+		QueryInfoPathFactory<RootEntity> pathFactory = getPathFactory();
+
+		QueryInfoAtrributeInfoResolver<RootEntity> attribiteResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
+		queryInfoAttributeContext = attribiteResolver.resolve(pathFactory);
+	}
+
 	@PostConstruct
 	@Inject
 	protected void postConstruct(QueryInfoBeanContextRegistry beanContextRegistry) {
 		setBeanContextRegistry(beanContextRegistry);
+		createAttributeContext();
 	}
 
 	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {

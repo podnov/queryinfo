@@ -1,10 +1,10 @@
-package com.evanzeimet.queryinfo.jpa.bean.context;
+package com.evanzeimet.queryinfo.jpa.bean.entity;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
-import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
+
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContextRegistry;
 
 /*
  * #%L
@@ -29,8 +29,6 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
-import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.jpa.result.DefaultEntityQueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultEntityQueryInfoSelectionSetter;
@@ -39,7 +37,6 @@ import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		extends AbstractQueryInfoBeanContext<RootEntity, RootEntity, RootEntity> {
 
-	private QueryInfoAttributeContext attributeContext;
 	private QueryInfoResultConverter<RootEntity, RootEntity> resultConveter = new DefaultEntityQueryInfoResultConverter<>();
 	private QueryInfoSelectionSetter<RootEntity> selectionSetter;
 
@@ -57,11 +54,6 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 	}
 
 	@Override
-	public QueryInfoAttributeContext getQueryInfoAttributeContext()  {
-		return attributeContext;
-	}
-
-	@Override
 	public QueryInfoResultConverter<RootEntity, RootEntity> getResultConverter() {
 		return resultConveter;
 	}
@@ -69,22 +61,6 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 	@Override
 	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
 		return selectionSetter;
-	}
-
-	protected void createAttributeContext() {
-		Class<RootEntity> rootEntityClass = getRootEntityClass();
-		QueryInfoPathFactory<RootEntity> pathFactory = getPathFactory();
-
-		QueryInfoAtrributeInfoResolver<RootEntity> attribiteResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
-		attributeContext = attribiteResolver.resolve(pathFactory);
-	}
-
-	@Override
-	@PostConstruct
-	@Inject
-	protected void postConstruct(QueryInfoBeanContextRegistry beanContextRegistry) {
-		super.postConstruct(beanContextRegistry);
-		createAttributeContext();
 	}
 
 	@Override
