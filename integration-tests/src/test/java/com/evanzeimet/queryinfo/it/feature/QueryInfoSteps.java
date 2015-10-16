@@ -171,8 +171,8 @@ public class QueryInfoSteps {
 		cucumberUtils.assertEquals(expected, actual, PERSON_FIELDS);
 	}
 
-	@Then("^I should receive these people tuples:$")
-	public void Then_I_should_receive_these_people_tuples(DataTable expected)
+	@Then("^I should receive these tuples:$")
+	public void Then_I_should_receive_these_tuples(DataTable expected)
 			throws QueryInfoException, JsonProcessingException, IOException {
 		String actualReponseJson = actualResponse.getBody().asString();
 

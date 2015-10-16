@@ -1,6 +1,4 @@
-package com.evanzeimet.queryinfo.it.organizations;
-
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+package com.evanzeimet.queryinfo.it.organizations.entity;
 
 /*
  * #%L
@@ -25,7 +23,20 @@ import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
  */
 
 
-public interface OrganizationQueryInfoBeanContext
-		extends QueryInfoBeanContext<OrganizationEntity, OrganizationEntity, OrganizationEntity> {
+import javax.ejb.Stateless;
+
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
+import com.evanzeimet.queryinfo.jpa.entity.AbstractQueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+
+@Stateless
+public class OrganizationEntityContext
+	extends AbstractQueryInfoEntityContext<OrganizationEntity>
+	implements QueryInfoEntityContext<OrganizationEntity> {
+
+	@Override
+	public Class<OrganizationEntity> getEntityClass() {
+		return OrganizationEntity.class;
+	}
 
 }

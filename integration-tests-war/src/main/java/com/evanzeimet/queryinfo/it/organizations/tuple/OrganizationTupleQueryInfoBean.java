@@ -1,9 +1,8 @@
-package com.evanzeimet.queryinfo.it.organizations;
-
+package com.evanzeimet.queryinfo.it.organizations.tuple;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -28,16 +27,16 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
-
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
+import com.evanzeimet.queryinfo.jpa.bean.DefaultTupleQueryInfoBean;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Stateless
-public class OrganizationsQueryInfoBean extends DefaultEntityQueryInfoBean<OrganizationEntity> {
+public class OrganizationTupleQueryInfoBean extends DefaultTupleQueryInfoBean<OrganizationEntity, ObjectNode> {
 
 	@Inject
 	@PostConstruct
-	protected void postConstruct(OrganizationQueryInfoBeanContext context) {
+	protected void postConstruct(OrganizationTupleQueryInfoBeanContext context) {
 		setBeanContext(context);
 	}
-
 }

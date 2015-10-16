@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 
 import com.evanzeimet.queryinfo.DefaultQueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.it.PeopleQueryInfoBeanSelector;
 import com.evanzeimet.queryinfo.it.QueryInfoITUtils;
 
 @Stateless
