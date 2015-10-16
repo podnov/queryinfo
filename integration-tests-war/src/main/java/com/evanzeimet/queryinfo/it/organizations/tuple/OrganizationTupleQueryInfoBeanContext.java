@@ -23,7 +23,6 @@ package com.evanzeimet.queryinfo.it.organizations.tuple;
  */
 
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -31,7 +30,6 @@ import javax.persistence.EntityManager;
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.bean.tuple.AbstractTupleToJSONQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
 @Stateless
 public class OrganizationTupleQueryInfoBeanContext extends AbstractTupleToJSONQueryInfoBeanContext<OrganizationEntity> {
@@ -50,9 +48,4 @@ public class OrganizationTupleQueryInfoBeanContext extends AbstractTupleToJSONQu
 		return OrganizationEntity.class;
 	}
 
-	@PostConstruct
-	@Inject
-	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
-		setEntityContextRegistry(entityContextRegistry);
-	}
 }

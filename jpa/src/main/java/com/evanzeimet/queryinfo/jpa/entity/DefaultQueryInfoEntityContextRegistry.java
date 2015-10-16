@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.jpa.entity;
 
 /*
  * #%L
@@ -27,8 +27,6 @@ import java.util.List;
 
 import javax.persistence.criteria.From;
 
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultQueryInfoEntityContextRegistry implements QueryInfoEntityContextRegistry {

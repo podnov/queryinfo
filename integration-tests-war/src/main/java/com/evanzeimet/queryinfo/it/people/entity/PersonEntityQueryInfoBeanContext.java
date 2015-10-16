@@ -1,6 +1,6 @@
 package com.evanzeimet.queryinfo.it.people.entity;
 
-import javax.annotation.PostConstruct;
+
 
 /*
  * #%L
@@ -32,7 +32,6 @@ import javax.persistence.EntityManager;
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
 @Stateless
 public class PersonEntityQueryInfoBeanContext
@@ -52,9 +51,4 @@ public class PersonEntityQueryInfoBeanContext
 		return PersonEntity.class;
 	}
 
-	@PostConstruct
-	@Inject
-	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
-		setEntityContextRegistry(entityContextRegistry);
-	}
 }

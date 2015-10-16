@@ -23,7 +23,7 @@ package com.evanzeimet.queryinfo.jpa.entity;
  */
 
 
-import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
@@ -55,16 +55,19 @@ public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInf
 		queryInfoAttributeContext = attribiteResolver.resolve(pathFactory);
 	}
 
-	@PostConstruct
 	@Inject
-	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
-		if (pathFactory == null) {
-			Class<Entity> rootEntityClass = getEntityClass();
-			pathFactory = new DefaultQueryInfoPathFactory<>(entityContextRegistry, rootEntityClass);
-		} else {
-			pathFactory.setEntityContextRegistry(entityContextRegistry);
-		}
+	protected void injectQueryInfoEntityContextFactory(@QueryInfoProvided Instance<QueryInfoEntityContextRegistry> contextRegistranceInstances) {
+		if (!contextRegistranceInstances.isUnsatisfied()) {
+			QueryInfoEntityContextRegistry entityContextRegistry = contextRegistranceInstances.iterator().next();
 
-		createAttributeContext();
+			if (pathFactory == null) {
+				Class<Entity> rootEntityClass = getEntityClass();
+				pathFactory = new DefaultQueryInfoPathFactory<>(entityContextRegistry, rootEntityClass);
+			} else {
+				pathFactory.setEntityContextRegistry(entityContextRegistry);
+			}
+
+			createAttributeContext();
+		}
 	}
 }

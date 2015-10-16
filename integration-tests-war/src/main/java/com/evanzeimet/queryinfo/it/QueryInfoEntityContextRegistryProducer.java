@@ -36,9 +36,10 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
-import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
 import com.google.common.collect.ImmutableList;
 
 @Singleton
@@ -77,6 +78,7 @@ public class QueryInfoEntityContextRegistryProducer {
 	}
 
 	@Produces
+	@QueryInfoProvided
 	public QueryInfoEntityContextRegistry produceBeanContextRegistry() {
 		return contextRegistry;
 	}
