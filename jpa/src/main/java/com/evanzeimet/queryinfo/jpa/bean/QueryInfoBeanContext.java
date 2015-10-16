@@ -24,10 +24,9 @@ package com.evanzeimet.queryinfo.jpa.bean;
 
 import javax.persistence.EntityManager;
 
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
@@ -36,17 +35,15 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 
 	Class<CriteriaQueryResult> getCriteriaQueryResultClass();
 
+	QueryInfoEntityContext<RootEntity> getEntityContext();
+
 	EntityManager getEntityManager();
 
 	QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory();
 
 	QueryInfoOrderFactory<RootEntity> getOrderFactory();
 
-	QueryInfoPathFactory<RootEntity> getPathFactory();
-
 	QueryInfoPredicateFactory<RootEntity> getPredicateFactory();
-
-	QueryInfoAttributeContext getQueryInfoAttributeContext();
 
 	QueryInfoResultConverter<CriteriaQueryResult, QueryInfoResult> getResultConverter();
 

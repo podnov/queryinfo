@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.it.people.tuple;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,15 +22,14 @@ package com.evanzeimet.queryinfo.jpa.bean;
  * #L%
  */
 
-import javax.persistence.criteria.From;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoBeanContextRegistry {
+import javax.persistence.Tuple;
 
-	public <Entity> QueryInfoBeanContext<Entity, ?, ?> getContext(From<?, Entity> from);
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-	public <Entity> QueryInfoBeanContext<Entity, ?, ?> getContext(Class<Entity> rootEntityClass);
-
-	public <Entity> QueryInfoBeanContext<Entity, ?, ?> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+public interface PersonTupleQueryInfoBeanContext
+	extends QueryInfoBeanContext<PersonEntity, Tuple, ObjectNode>{
 
 }

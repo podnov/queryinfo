@@ -33,8 +33,8 @@ import javax.persistence.criteria.Root;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.sort.Sort;
@@ -42,10 +42,15 @@ import com.evanzeimet.queryinfo.sort.SortDirection;
 
 public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderFactory<RootEntity> {
 
-	protected QueryInfoBeanContextRegistry beanContextRegistry;
+	protected QueryInfoEntityContextRegistry entityContextRegistry;
 
-	public DefaultQueryInfoOrderFactory(QueryInfoBeanContextRegistry beanContextRegistry) {
-		this.beanContextRegistry = beanContextRegistry;
+	public DefaultQueryInfoOrderFactory(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
+	}
+
+	@Override
+	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	protected Order createOrder(QueryInfoJPAContext<RootEntity> jpaContext,
@@ -96,8 +101,8 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 
 	protected Expression<?> getPathForField(QueryInfoJPAContext<RootEntity> jpaContext,
 			String fieldName) throws QueryInfoException {
-		QueryInfoBeanContext<RootEntity, ?, ?> beanContext = beanContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoPathFactory<RootEntity> pathFactory = beanContext.getPathFactory();
+		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
+		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
 		Root<RootEntity> root = jpaContext.getRoot();
 
 		return pathFactory.getPathForField(jpaContext,

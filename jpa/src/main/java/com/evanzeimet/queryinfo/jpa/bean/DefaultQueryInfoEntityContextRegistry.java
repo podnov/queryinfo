@@ -27,36 +27,38 @@ import java.util.List;
 
 import javax.persistence.criteria.From;
 
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContextRegistry {
+public class DefaultQueryInfoEntityContextRegistry implements QueryInfoEntityContextRegistry {
 
-	private List<QueryInfoBeanContext<?, ?, ?>> beanContexts;
+	private List<QueryInfoEntityContext<?>> entityContexts;
 
-	public DefaultQueryInfoBeanContextRegistry(List<QueryInfoBeanContext<?, ?, ?>> beanContexts) {
-		this.beanContexts = beanContexts;
+	public DefaultQueryInfoEntityContextRegistry(List<QueryInfoEntityContext<?>> entityContexts) {
+		this.entityContexts = entityContexts;
 	}
 
 	@Override
-	public <T> QueryInfoBeanContext<T, ?, ?> getContext(From<?, T> from) {
+	public <T> QueryInfoEntityContext<T> getContext(From<?, T> from) {
 		Class<T> entityClass = from.getModel().getBindableJavaType();
 		return getContext(entityClass);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <RootEntity> QueryInfoBeanContext<RootEntity, ?, ?> getContext(Class<RootEntity> rootEntityClass) {
-		QueryInfoBeanContext<RootEntity, ?, ?> result = null;
+	public <Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass) {
+		QueryInfoEntityContext<Entity> result = null;
 
-		Iterator<QueryInfoBeanContext<?, ?, ?>> iterator = beanContexts.iterator();
+		Iterator<QueryInfoEntityContext<?>> iterator = entityContexts.iterator();
 
 		while (iterator.hasNext()) {
-			QueryInfoBeanContext<?, ?, ?> currentBeanContext = iterator.next();
+			QueryInfoEntityContext<?> currentEntityContext = iterator.next();
 
-			Class<?> beanContextRootEntityClass = currentBeanContext.getRootEntityClass();
+			Class<?> currentEntityContextEntityClass = currentEntityContext.getEntityClass();
 
-			if (rootEntityClass.equals(beanContextRootEntityClass)) {
-				result = (QueryInfoBeanContext<RootEntity, ?, ?>) currentBeanContext;
+			if (entityClass.equals(currentEntityContextEntityClass)) {
+				result = (QueryInfoEntityContext<Entity>) currentEntityContext;
 				break;
 			}
 		}
@@ -65,7 +67,7 @@ public class DefaultQueryInfoBeanContextRegistry implements QueryInfoBeanContext
 	}
 
 	@Override
-	public <T> QueryInfoBeanContext<T, ?, ?> getContextForRoot(QueryInfoJPAContext<T> jpaContext) {
+	public <T> QueryInfoEntityContext<T> getContextForRoot(QueryInfoJPAContext<T> jpaContext) {
 		Class<T> rootEntityClass = jpaContext.getRoot().getModel().getBindableJavaType();
 		return getContext(rootEntityClass);
 	}

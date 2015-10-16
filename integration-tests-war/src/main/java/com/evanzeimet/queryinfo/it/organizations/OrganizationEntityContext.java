@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.it.people;
+package com.evanzeimet.queryinfo.it.organizations;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,19 +22,20 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 
-import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
+import javax.ejb.Stateless;
+
+import com.evanzeimet.queryinfo.jpa.entity.AbstractQueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 
 @Stateless
-public class PeopleQueryInfoBean extends DefaultEntityQueryInfoBean<PersonEntity> {
+public class OrganizationEntityContext
+	extends AbstractQueryInfoEntityContext<OrganizationEntity>
+	implements QueryInfoEntityContext<OrganizationEntity> {
 
-	@Inject
-	@PostConstruct
-	protected void postConstruct(PeopleQueryInfoBeanContext context) {
-		setBeanContext(context);
+	@Override
+	public Class<OrganizationEntity> getEntityClass() {
+		return OrganizationEntity.class;
 	}
 
 }

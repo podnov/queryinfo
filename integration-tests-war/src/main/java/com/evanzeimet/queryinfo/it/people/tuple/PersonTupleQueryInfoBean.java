@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.order;
+package com.evanzeimet.queryinfo.it.people.tuple;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,19 +22,21 @@ package com.evanzeimet.queryinfo.jpa.order;
  * #L%
  */
 
-import java.util.List;
 
-import javax.persistence.criteria.Order;
-import com.evanzeimet.queryinfo.QueryInfo;
-import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
-public interface QueryInfoOrderFactory<RootEntity> {
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.bean.DefaultTupleQueryInfoBean;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
+@Stateless
+public class PersonTupleQueryInfoBean extends DefaultTupleQueryInfoBean<PersonEntity, ObjectNode> {
 
-	List<Order> createOrders(QueryInfoJPAContext<RootEntity> jpaContext,
-			QueryInfo queryInfo) throws QueryInfoException;
-
+	@Inject
+	@PostConstruct
+	protected void postConstruct(PersonTupleQueryInfoBeanContext context) {
+		setBeanContext(context);
+	}
 }

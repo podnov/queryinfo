@@ -26,6 +26,7 @@ package com.evanzeimet.queryinfo.it.feature;
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import com.evanzeimet.queryinfo.it.people.DefaultPerson;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.it.people.PersonToEmployerOrganizationIdMapper;
 import com.evanzeimet.queryinfo.it.people.TestPerson;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -167,6 +169,16 @@ public class QueryInfoSteps {
 				PERSON_LIST_RESULT_TYPE);
 
 		cucumberUtils.assertEquals(expected, actual, PERSON_FIELDS);
+	}
+
+	@Then("^I should receive these people tuples:$")
+	public void Then_I_should_receive_these_people_tuples(DataTable expected)
+			throws QueryInfoException, JsonProcessingException, IOException {
+		String actualReponseJson = actualResponse.getBody().asString();
+
+		DataTable actual = cucumberUtils.readJsonArray(actualReponseJson);
+
+		cucumberUtils.assertEquals(expected, actual);
 	}
 
 	protected List<PersonEntity> createPersonEntities(List<TestPerson> testPeople) {

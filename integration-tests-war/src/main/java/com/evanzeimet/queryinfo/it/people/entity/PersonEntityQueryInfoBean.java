@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.order;
+package com.evanzeimet.queryinfo.it.people.entity;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,19 +22,20 @@ package com.evanzeimet.queryinfo.jpa.order;
  * #L%
  */
 
-import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
-import javax.persistence.criteria.Order;
-import com.evanzeimet.queryinfo.QueryInfo;
-import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
 
-public interface QueryInfoOrderFactory<RootEntity> {
+@Stateless
+public class PersonEntityQueryInfoBean extends DefaultEntityQueryInfoBean<PersonEntity> {
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
-
-	List<Order> createOrders(QueryInfoJPAContext<RootEntity> jpaContext,
-			QueryInfo queryInfo) throws QueryInfoException;
+	@Inject
+	@PostConstruct
+	protected void postConstruct(PersonEntityQueryInfoBeanContext context) {
+		setBeanContext(context);
+	}
 
 }

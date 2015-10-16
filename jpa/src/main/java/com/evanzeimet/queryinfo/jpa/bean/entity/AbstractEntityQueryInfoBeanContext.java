@@ -3,8 +3,8 @@ package com.evanzeimet.queryinfo.jpa.bean.entity;
 
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoBeanContextRegistry;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContextRegistry;
+import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoEntityContextRegistry;
+
 
 /*
  * #%L
@@ -38,14 +38,14 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		extends AbstractQueryInfoBeanContext<RootEntity, RootEntity, RootEntity> {
 
 	private QueryInfoResultConverter<RootEntity, RootEntity> resultConveter = new DefaultEntityQueryInfoResultConverter<>();
-	private QueryInfoSelectionSetter<RootEntity> selectionSetter;
+	private QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
 
 	public AbstractEntityQueryInfoBeanContext() {
 		super();
 	}
 
-	public AbstractEntityQueryInfoBeanContext(DefaultQueryInfoBeanContextRegistry beanContextRegistry) {
-		super(beanContextRegistry);
+	public AbstractEntityQueryInfoBeanContext(DefaultQueryInfoEntityContextRegistry entityContextRegistry) {
+		super(entityContextRegistry);
 	}
 
 	@Override
@@ -63,9 +63,4 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		return selectionSetter;
 	}
 
-	@Override
-	protected void setBeanContextRegistry(QueryInfoBeanContextRegistry beanContextRegistry) {
-		super.setBeanContextRegistry(beanContextRegistry);
-		selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
-	}
 }

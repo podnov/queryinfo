@@ -1,4 +1,6 @@
-package com.evanzeimet.queryinfo.it.people;
+package com.evanzeimet.queryinfo.it.organizations;
+
+import javax.annotation.PostConstruct;
 
 /*
  * #%L
@@ -26,13 +28,14 @@ package com.evanzeimet.queryinfo.it.people;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
 @Stateless
-public class DefaultPeopleQueryInfoBeanContext extends AbstractEntityQueryInfoBeanContext<PersonEntity>
-		implements PeopleQueryInfoBeanContext {
+public class DefaultOrganizationQueryInfoBeanContext
+		extends AbstractEntityQueryInfoBeanContext<OrganizationEntity>
+		implements OrganizationQueryInfoBeanContext {
 
 	@Inject
 	@QueryInfoEntityManager
@@ -44,7 +47,13 @@ public class DefaultPeopleQueryInfoBeanContext extends AbstractEntityQueryInfoBe
 	}
 
 	@Override
-	public Class<PersonEntity> getRootEntityClass() {
-		return PersonEntity.class;
+	public Class<OrganizationEntity> getRootEntityClass() {
+		return OrganizationEntity.class;
+	}
+
+	@PostConstruct
+	@Inject
+	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
+		setEntityContextRegistry(entityContextRegistry);
 	}
 }
