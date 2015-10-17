@@ -34,24 +34,24 @@ public class QueryInfoFieldInfoBuilder {
 
 	public QueryInfoFieldInfoBuilder annotation(QueryInfoField annotation) {
 		String fieldName = annotation.name();
-		boolean isQueryable = annotation.isQueryable();
+		boolean isPredicateable = annotation.isPredicateable();
 		boolean isSelectable = annotation.isSelectable();
-		boolean isSortable = annotation.isSortable();
+		boolean isOrderable = annotation.isOrderable();
 		QueryInfoJoinType joinType = annotation.joinType();
 
 		return name(fieldName)
-				.isQueryable(isQueryable)
+				.isOrderable(isOrderable)
+				.isPredicateable(isPredicateable)
 				.isSelectable(isSelectable)
-				.isSortable(isSortable)
 				.joinType(joinType);
 	}
 
 	public QueryInfoFieldInfo build() {
 		QueryInfoFieldInfo result = new DefaultQueryInfoFieldInfo();
 
-		result.setIsQueryable(builderReferenceInstance.getIsQueryable());
+		result.setIsOrderable(builderReferenceInstance.getIsOrderable());
+		result.setIsPredicateable(builderReferenceInstance.getIsPredicateable());
 		result.setIsSelectable(builderReferenceInstance.getIsSelectable());
-		result.setIsSortable(builderReferenceInstance.getIsSortable());
 		result.setJpaAttributeName(builderReferenceInstance.getJpaAttributeName());
 		result.setJoinType(builderReferenceInstance.getJoinType());
 		result.setName(builderReferenceInstance.getName());
@@ -63,18 +63,18 @@ public class QueryInfoFieldInfoBuilder {
 		return new QueryInfoFieldInfoBuilder();
 	}
 
-	public QueryInfoFieldInfoBuilder isQueryable(Boolean isQueryable) {
-		builderReferenceInstance.setIsQueryable(isQueryable);
+	public QueryInfoFieldInfoBuilder isOrderable(Boolean isOrderable) {
+		builderReferenceInstance.setIsOrderable(isOrderable);
+		return this;
+	}
+
+	public QueryInfoFieldInfoBuilder isPredicateable(Boolean isPredicateable) {
+		builderReferenceInstance.setIsPredicateable(isPredicateable);
 		return this;
 	}
 
 	public QueryInfoFieldInfoBuilder isSelectable(Boolean isSelectable) {
 		builderReferenceInstance.setIsSelectable(isSelectable);
-		return this;
-	}
-
-	public QueryInfoFieldInfoBuilder isSortable(Boolean isSortable) {
-		builderReferenceInstance.setIsSortable(isSortable);
 		return this;
 	}
 

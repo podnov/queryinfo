@@ -73,14 +73,14 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 		assertEquals(expectedFieldName, actualFieldName);
 
-		Boolean actualIsQueryable = actualFieldInfo.getIsQueryable();
-		assertTrue(actualIsQueryable);
+		Boolean actualIsPredicateable = actualFieldInfo.getIsPredicateable();
+		assertTrue(actualIsPredicateable);
 
 		Boolean actualIsSelectable = actualFieldInfo.getIsSelectable();
 		assertFalse(actualIsSelectable);
 
-		Boolean actualIsSortable = actualFieldInfo.getIsSortable();
-		assertTrue(actualIsSortable);
+		Boolean actualIsOrderable = actualFieldInfo.getIsOrderable();
+		assertTrue(actualIsOrderable);
 	}
 
 	@Test
@@ -318,9 +318,9 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 		private String stuffAndThings;
 
-		@QueryInfoField(isQueryable = true,
+		@QueryInfoField(isPredicateable = true,
 				isSelectable = false,
-				isSortable = true)
+				isOrderable = true)
 		public String getStuffAndThings() {
 			return stuffAndThings;
 		}

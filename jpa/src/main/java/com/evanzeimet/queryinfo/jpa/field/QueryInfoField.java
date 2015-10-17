@@ -34,11 +34,11 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 @Target(METHOD)
 public @interface QueryInfoField {
 
-	public boolean isQueryable() default true;
+	public boolean isOrderable() default true;
+
+	public boolean isPredicateable() default true;
 
 	public boolean isSelectable() default true;
-
-	public boolean isSortable() default true;
 
 	public QueryInfoJoinType joinType() default QueryInfoJoinType.UNSPECIFIED;
 

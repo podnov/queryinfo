@@ -48,8 +48,8 @@ public class PersonEntity extends DefaultPerson {
 
 	@JsonIgnore
 	@QueryInfoField(name = "employer",
-		isQueryable = false,
-		isSortable = false,
+		isOrderable = false,
+		isPredicateable = false,
 		joinType = QueryInfoJoinType.LEFT)
 	@QueryInfoJoin(name = "employer",
 		joinType = QueryInfoJoinType.LEFT)

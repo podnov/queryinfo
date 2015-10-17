@@ -27,16 +27,16 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
 
 public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
 
-	Boolean getIsQueryable();
+	Boolean getIsOrderable();
 
-	void setIsQueryable(Boolean isQueryable);
+	void setIsOrderable(Boolean isOrderable);
+
+	Boolean getIsPredicateable();
+
+	void setIsPredicateable(Boolean isPredicateable);
 
 	Boolean getIsSelectable();
 
 	void setIsSelectable(Boolean isSelectable);
-
-	Boolean getIsSortable();
-
-	void setIsSortable(Boolean isSortable);
 
 }
