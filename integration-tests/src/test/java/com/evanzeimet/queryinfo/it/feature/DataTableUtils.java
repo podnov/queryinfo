@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.feature;
  * #L%
  */
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,10 +40,15 @@ import gherkin.formatter.model.DataTableRow;
 
 public class DataTableUtils {
 
+	public static final String DATA_TABLE_NULL_PLACEHOLDER = "[[NULL]]";
+	public static final String DATA_TABLE_OBJECT_PLACEHOLDER = "[[ANY_OBJECT]]";
+
 	private static final Integer FAKE_DATA_TABLE_LINE_NUMBER = -1;
 	private static final List<Comment> FAKE_DATA_TABLE_ROW_COMMENTS = Collections.emptyList();
 
+
 	private ObjectMapper objectMapper = new ObjectMapper();
+	private Boolean stringifyNestedJsonObjects = false;
 	private TableConverter tableConverter;
 
 	public DataTableUtils() {
@@ -57,6 +61,14 @@ public class DataTableUtils {
 
 	public void setObjectMapper(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
+	}
+
+	public Boolean getStringifyNestedJsonObjects() {
+		return stringifyNestedJsonObjects;
+	}
+
+	public void setStringifyNestedJsonObjects(Boolean stringifyNestedJsonObjects) {
+		this.stringifyNestedJsonObjects = stringifyNestedJsonObjects;
 	}
 
 	public TableConverter getTableConverter() {
@@ -75,7 +87,7 @@ public class DataTableUtils {
 		List<String> result = new ArrayList<>();
 		Iterator<JsonNode> arrayElements = arrayNode.iterator();
 
-		if(arrayElements.hasNext()) {
+		if (arrayElements.hasNext()) {
 			JsonNode arrayElement = arrayElements.next();
 			Iterator<String> fieldNames = arrayElement.fieldNames();
 
@@ -88,20 +100,52 @@ public class DataTableUtils {
 		return result;
 	}
 
+	protected String createJsonNodeCell(JsonNode jsonNode, String columnName) {
+		String cell;
+		JsonNode columnNode = jsonNode.get(columnName);
+
+		if (columnNode.isObject()) {
+			if (stringifyNestedJsonObjects) {
+				cell = columnNode.toString();
+			} else {
+				cell = DATA_TABLE_OBJECT_PLACEHOLDER;
+			}
+		} else if (columnNode.isNull()) {
+			cell = DATA_TABLE_NULL_PLACEHOLDER;
+		} else {
+			cell = columnNode.asText();
+		}
+		return cell;
+	}
+
 	protected List<String> createJsonNodeCells(JsonNode jsonNode, List<String> columnNames) {
 		int columnCount = columnNames.size();
 		List<String> row = new ArrayList<>(columnCount);
+		String cell;
 
 		for (String columnName : columnNames) {
-			String cell = jsonNode.get(columnName).asText();
+			cell = createJsonNodeCell(jsonNode, columnName);
 			row.add(cell);
 		}
 
 		return row;
 	}
 
+	public boolean isDataTableNull(String value) {
+		boolean result;
+
+		if (DATA_TABLE_NULL_PLACEHOLDER.equalsIgnoreCase(value)) {
+			result = true;
+		} else {
+			result = false;
+		}
+
+		return result;
+	}
+
 	/**
-	 * Read json string as array. Use first row as reference for data table columns.
+	 * Read json string as array. Use first row as reference for data table
+	 * columns.
 	 */
 	public DataTable readJsonArray(String json) throws JsonProcessingException, IOException {
 		ArrayNode arrayNode = readJsonAsArrayNode(json);
@@ -111,9 +155,11 @@ public class DataTableUtils {
 	}
 
 	/**
-	 * Read json string as array. Use first row of reference data table for data table columns.
+	 * Read json string as array. Use first row of reference data table for data
+	 * table columns.
 	 */
-	public DataTable readJsonArray(String json, DataTable referenceDataTable) throws JsonProcessingException, IOException {
+	public DataTable readJsonArray(String json, DataTable referenceDataTable)
+			throws JsonProcessingException, IOException {
 		List<DataTableRow> dataTableRows = referenceDataTable.getGherkinRows();
 		List<String> columnNames;
 
@@ -141,7 +187,7 @@ public class DataTableUtils {
 		DataTableRow header = createDataTableRow(columnNames);
 		dataTableRows.add(header);
 
-		while(arrayElements.hasNext()) {
+		while (arrayElements.hasNext()) {
 			JsonNode arrayElement = arrayElements.next();
 
 			List<String> cells = createJsonNodeCells(arrayElement, columnNames);

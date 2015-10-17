@@ -25,6 +25,8 @@ package com.evanzeimet.queryinfo.it.cucumber;
 
 import java.text.DecimalFormat;
 
+import com.evanzeimet.queryinfo.it.feature.DataTableUtils;
+
 import cucumber.deps.com.thoughtworks.xstream.converters.Converter;
 import cucumber.deps.com.thoughtworks.xstream.converters.MarshallingContext;
 import cucumber.deps.com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -34,11 +36,11 @@ import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public abstract class AbstractDecimalFormatConverter implements Converter {
 
-	private CucumberUtils cucumberUtils;
+	private DataTableUtils dataTableUtils;
 	private DecimalFormat decimalFormat;
 
 	public AbstractDecimalFormatConverter(String pattern) {
-		cucumberUtils = new CucumberUtils();
+		dataTableUtils = new DataTableUtils();
 		decimalFormat = new DecimalFormat(pattern);
 	}
 
@@ -55,7 +57,7 @@ public abstract class AbstractDecimalFormatConverter implements Converter {
 		Object result;
 		String value = reader.getValue();
 
-		if (cucumberUtils.isDataTableNull(value)) {
+		if (dataTableUtils.isDataTableNull(value)) {
 			result = null;
 		} else {
 			result = unmarshalNonNull(reader, context);

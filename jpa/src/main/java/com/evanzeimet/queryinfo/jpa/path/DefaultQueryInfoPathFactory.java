@@ -22,12 +22,9 @@ package com.evanzeimet.queryinfo.jpa.path;
  * #L%
  */
 
-import java.util.Map;
-
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
-
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
@@ -36,6 +33,7 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldPathParts;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultQueryInfoPathFactory<RootEntity>
@@ -60,22 +58,37 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		this.entityContextRegistry = entityContextRegistry;
 	}
 
+	protected QueryInfoAttributeContext getAttributeContext(From<?, RootEntity> from) {
+		QueryInfoEntityContext<?> entityContext = getEntityContext(from);
+		return entityContext.getQueryInfoAttributeContext();
+	}
+
+	protected QueryInfoEntityContext<RootEntity> getEntityContext(From<?, RootEntity> from) {
+		return entityContextRegistry.getContext(from);
+	}
+
 	protected <T> Expression<T> getEntityPath(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
-			String fieldName,
+			String queryInfoFieldAttributeName,
 			QueryInfoAttributePurpose purpose) throws QueryInfoException {
 		Expression<T> result = null;
 
-		validateFieldInfo(from, fieldName, purpose);
+		QueryInfoFieldInfo fieldInfo = validateFieldInfo(jpaContext,
+				from,
+				queryInfoFieldAttributeName,
+				purpose);
+
+		String jpaFieldAttributeName = fieldInfo.getJpaAttributeName();
 
 		try {
-			result = from.get(fieldName);
+			result = from.get(jpaFieldAttributeName);
 		} catch (IllegalArgumentException e) {
 			String fromName = from.getModel().getBindableJavaType().getName();
-			String message = String.format("Could not find field [%s] in [%s]",
-					fieldName,
+			String message = String.format("Could not find jpa attribute [%s] for field [%s] in [%s]",
+					jpaFieldAttributeName,
+					queryInfoFieldAttributeName,
 					fromName);
-			throw new QueryInfoException(message);
+			throw new QueryInfoException(message, e);
 		}
 
 		return result;
@@ -83,11 +96,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 	protected <JoinedEntity> Join<RootEntity, JoinedEntity> getJoin(QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
-			String queryInfoJoinAttributeName) {
-		QueryInfoEntityContext<?> fromBeanContext = entityContextRegistry.getContext(from);
-
-		QueryInfoAttributeContext queryInfoAttributeContext = fromBeanContext.getQueryInfoAttributeContext();
-		QueryInfoJoinInfo querInfoJoinInfo = queryInfoAttributeContext.getJoin(queryInfoJoinAttributeName);
+			String queryInfoJoinAttributeName) throws QueryInfoException {
+		QueryInfoJoinInfo querInfoJoinInfo = validateJoinInfo(from, queryInfoJoinAttributeName);
 
 		return jpaContext.getJoin(from, querInfoJoinInfo);
 	}
@@ -109,7 +119,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 				purpose);
 	}
 
-	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(Join<RootEntity, JoinedEntity> join) {
+	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(
+			Join<RootEntity, JoinedEntity> join) {
 		Class<JoinedEntity> joinedClass = join.getModel().getBindableJavaType();
 		QueryInfoEntityContext<JoinedEntity> joinBeanContext = entityContextRegistry.getContext(joinedClass);
 
@@ -134,55 +145,71 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		return result;
 	}
 
-	protected void validateFieldInfo(From<?, RootEntity> from,
-			String fieldName,
+	protected QueryInfoFieldInfo validateFieldInfo(QueryInfoJPAContext<?> jpaContext,
+			From<?, RootEntity> from,
+			String queryInfoFieldAttributeName,
 			QueryInfoAttributePurpose purpose)
-			throws QueryInfoException {
-		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(from);
-		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
-		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
+					throws QueryInfoException {
 
-		QueryInfoFieldInfo fieldInfo = fields.get(fieldName);
-
-		if (fieldInfo == null) {
-			String message = String.format("Field not defined for name [%s]", fieldName);
+		if (purpose == null) {
+			String message = String.format("No purpose for field [%s] specified", queryInfoFieldAttributeName);
 			throw new QueryInfoException(message);
 		}
 
-		boolean valid = false;
+		QueryInfoAttributeContext queryInfoAttributeContext = getAttributeContext(from);
+
+		QueryInfoFieldInfo fieldInfo = queryInfoAttributeContext.getField(queryInfoFieldAttributeName);
+
+		if (fieldInfo == null) {
+			String message = String.format("Field not defined for name [%s]", queryInfoFieldAttributeName);
+			throw new QueryInfoException(message);
+		}
+
+		boolean validForPurpose = false;
 
 		switch (purpose) {
 			case ORDER:
-				valid = fieldInfo.getIsSortable();
+				validForPurpose = fieldInfo.getIsSortable();
 				break;
 
 			case PREDICATE:
-				valid = fieldInfo.getIsQueryable();
+				validForPurpose = fieldInfo.getIsQueryable();
 				break;
 
 			case SELECT:
-				valid = fieldInfo.getIsSelectable();
+				validForPurpose = fieldInfo.getIsSelectable();
 				break;
 		}
 
-		if (!valid) {
-			String message = String.format("Field [%s] not valid for [%s]", fieldName, purpose);
+		if (!validForPurpose) {
+			String message = String.format("Field [%s] not valid for [%s]", queryInfoFieldAttributeName, purpose);
 			throw new QueryInfoException(message);
 		}
+
+		QueryInfoJoinType queryInfoJoinType = fieldInfo.getJoinType();
+		boolean isSpecified = !QueryInfoJoinType.isUnspecified(queryInfoJoinType);
+
+		if (isSpecified) {
+			/*
+			 * Ensure the correct join type is applied. Without this, JPA will
+			 * add an inner join by default. This probably only applies to the SELECT purpose.
+			 */
+			jpaContext.getJoin(from, fieldInfo);
+		}
+
+		return fieldInfo;
 	}
 
-	protected void validateJoinInfo(QueryInfoJPAContext<?> jpaContext,
-			String joinName)
+	protected QueryInfoJoinInfo validateJoinInfo(From<?, RootEntity> from, String queryInfoJoinAttributeName)
 			throws QueryInfoException {
-		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
-		Map<String, QueryInfoJoinInfo> joins = queryInfoAttributeContext.getJoins();
+		QueryInfoAttributeContext queryInfoAttributeContext = getAttributeContext(from);
+		QueryInfoJoinInfo querInfoJoinInfo = queryInfoAttributeContext.getJoin(queryInfoJoinAttributeName);
 
-		QueryInfoJoinInfo joinInfo = joins.get(joinName);
-
-		if (joinInfo == null) {
-			String message = String.format("Field not defined for name [%s]", joinName);
+		if (querInfoJoinInfo == null) {
+			String message = String.format("Join not defined for name [%s]", queryInfoJoinAttributeName);
 			throw new QueryInfoException(message);
 		}
+
+		return querInfoJoinInfo;
 	}
 }

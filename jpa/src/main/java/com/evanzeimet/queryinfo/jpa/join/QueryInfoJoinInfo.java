@@ -1,6 +1,6 @@
 package com.evanzeimet.queryinfo.jpa.join;
 
-import javax.persistence.criteria.JoinType;
+
 
 /*
  * #%L
@@ -28,9 +28,5 @@ import javax.persistence.criteria.JoinType;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
 
 public interface QueryInfoJoinInfo extends QueryInfoAttributeInfo {
-
-	JoinType getJoinType();
-
-	void setJoinType(JoinType joinType);
 
 }

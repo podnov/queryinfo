@@ -28,6 +28,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface QueryInfoField {
@@ -37,6 +39,8 @@ public @interface QueryInfoField {
 	public boolean isSelectable() default true;
 
 	public boolean isSortable() default true;
+
+	public QueryInfoJoinType joinType() default QueryInfoJoinType.UNSPECIFIED;
 
 	public String name() default "";
 }

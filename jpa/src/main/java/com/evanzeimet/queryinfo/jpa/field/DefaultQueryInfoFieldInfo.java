@@ -1,6 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.field;
 
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeType;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 
 /*
  * #%L
@@ -31,6 +32,7 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	private Boolean isQueryable;
 	private Boolean isSelectable;
 	private Boolean isSortable;
+	private QueryInfoJoinType joinType;
 	private String name;
 
 	public DefaultQueryInfoFieldInfo() {
@@ -80,6 +82,16 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	@Override
 	public void setJpaAttributeName(String entityAttributeName) {
 		this.jpaAttributeName = entityAttributeName;
+	}
+
+	@Override
+	public QueryInfoJoinType getJoinType() {
+		return joinType;
+	}
+
+	@Override
+	public void setJoinType(QueryInfoJoinType joinType) {
+		this.joinType = joinType;
 	}
 
 	@Override

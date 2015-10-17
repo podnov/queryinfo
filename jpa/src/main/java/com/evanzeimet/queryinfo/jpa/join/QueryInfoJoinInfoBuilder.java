@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.join;
 
-import javax.persistence.criteria.JoinType;
-
 /*
  * #%L
  * queryinfo-jpa
@@ -44,7 +42,7 @@ public class QueryInfoJoinInfoBuilder {
 	}
 
 	public QueryInfoJoinInfoBuilder annotation(QueryInfoJoin annotation) {
-		JoinType joinType = annotation.joinType();
+		QueryInfoJoinType joinType = annotation.joinType();
 		String name = annotation.name();
 		return joinType(joinType)
 				.name(name);
@@ -59,7 +57,7 @@ public class QueryInfoJoinInfoBuilder {
 		return this;
 	}
 
-	public QueryInfoJoinInfoBuilder joinType(JoinType joinType) {
+	public QueryInfoJoinInfoBuilder joinType(QueryInfoJoinType joinType) {
 		builderReferenceInstance.setJoinType(joinType);
 		return this;
 	}

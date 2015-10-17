@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.field;
 
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -35,11 +37,13 @@ public class QueryInfoFieldInfoBuilder {
 		boolean isQueryable = annotation.isQueryable();
 		boolean isSelectable = annotation.isSelectable();
 		boolean isSortable = annotation.isSortable();
+		QueryInfoJoinType joinType = annotation.joinType();
 
 		return name(fieldName)
 				.isQueryable(isQueryable)
 				.isSelectable(isSelectable)
-				.isSortable(isSortable);
+				.isSortable(isSortable)
+				.joinType(joinType);
 	}
 
 	public QueryInfoFieldInfo build() {
@@ -49,6 +53,7 @@ public class QueryInfoFieldInfoBuilder {
 		result.setIsSelectable(builderReferenceInstance.getIsSelectable());
 		result.setIsSortable(builderReferenceInstance.getIsSortable());
 		result.setJpaAttributeName(builderReferenceInstance.getJpaAttributeName());
+		result.setJoinType(builderReferenceInstance.getJoinType());
 		result.setName(builderReferenceInstance.getName());
 
 		return result;
@@ -68,8 +73,13 @@ public class QueryInfoFieldInfoBuilder {
 		return this;
 	}
 
-	public QueryInfoFieldInfoBuilder isSortable(boolean isSortable) {
+	public QueryInfoFieldInfoBuilder isSortable(Boolean isSortable) {
 		builderReferenceInstance.setIsSortable(isSortable);
+		return this;
+	}
+
+	public QueryInfoFieldInfoBuilder joinType(QueryInfoJoinType joinType) {
+		builderReferenceInstance.setJoinType(joinType);
 		return this;
 	}
 

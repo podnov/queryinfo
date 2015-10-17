@@ -23,18 +23,39 @@ package com.evanzeimet.queryinfo.jpa.join;
  */
 
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.persistence.criteria.JoinType;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+public enum QueryInfoJoinType {
 
-@Retention(RUNTIME)
-@Target(METHOD)
-public @interface QueryInfoJoin {
+	INNER,
+	LEFT,
+	RIGHT,
+	UNSPECIFIED;
 
-	public QueryInfoJoinType joinType() default QueryInfoJoinType.UNSPECIFIED;
+	QueryInfoJoinType() {
 
-	public String name() default "";
+	}
+
+	public static boolean isUnspecified(QueryInfoJoinType joinType) {
+		boolean result = UNSPECIFIED.equals(joinType);
+		result = (result || (joinType == null));
+		return result;
+	}
+
+	public JoinType toJpaType() {
+		JoinType result;
+
+		if (UNSPECIFIED.equals(this)) {
+			/**
+			 * Default set per JPA CriteriaQuery join method default.
+			 */
+			result = JoinType.INNER;
+		} else {
+			String name = name();
+			result = JoinType.valueOf(name);
+		}
+
+		return result;
+	}
 
 }

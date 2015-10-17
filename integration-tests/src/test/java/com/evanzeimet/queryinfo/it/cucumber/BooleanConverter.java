@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.it.cucumber;
 
+import com.evanzeimet.queryinfo.it.feature.DataTableUtils;
+
 /*
  * #%L
  * queryinfo-integration-tests
@@ -32,10 +34,10 @@ import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class BooleanConverter implements Converter {
 
-	private CucumberUtils cucumberUtils;
+	private DataTableUtils dataTableUtils;
 
 	public BooleanConverter() {
-		cucumberUtils = new CucumberUtils();
+		dataTableUtils = new DataTableUtils();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -57,7 +59,7 @@ public class BooleanConverter implements Converter {
 		Object result;
 		String value = reader.getValue();
 
-		if (cucumberUtils.isDataTableNull(value)) {
+		if (dataTableUtils.isDataTableNull(value)) {
 			result = null;
 		} else {
 			result = Boolean.valueOf(value);

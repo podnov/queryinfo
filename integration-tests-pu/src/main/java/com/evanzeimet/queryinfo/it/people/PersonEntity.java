@@ -31,15 +31,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
-
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
 @Table(name = "people")
 public class PersonEntity extends DefaultPerson {
@@ -47,7 +47,12 @@ public class PersonEntity extends DefaultPerson {
 	private OrganizationEntity employerEntity;
 
 	@JsonIgnore
-	@QueryInfoJoin(name = "employer")
+	@QueryInfoField(name = "employer",
+		isQueryable = false,
+		isSortable = false,
+		joinType = QueryInfoJoinType.LEFT)
+	@QueryInfoJoin(name = "employer",
+		joinType = QueryInfoJoinType.LEFT)
 	@ManyToOne
 	@JoinColumn(name = "employer_organization_id",
 			referencedColumnName = "id",
