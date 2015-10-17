@@ -39,11 +39,12 @@ import com.evanzeimet.queryinfo.it.people.Person;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @Entity
 @Table(name = "organizations")
 public class OrganizationEntity extends DefaultOrganization {
@@ -86,7 +87,7 @@ public class OrganizationEntity extends DefaultOrganization {
 	}
 
 	@JsonIgnore
-	@QueryInfoJoin(name = "employees")
+	@QueryInfoJoin(name = "employees", joinType = QueryInfoJoinType.LEFT)
 	@OneToMany(mappedBy = "employerEntity")
 	public List<PersonEntity> getEmployeeEntities() {
 		return employeeEntities;

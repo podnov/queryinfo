@@ -1,5 +1,8 @@
 package com.evanzeimet.queryinfo.jpa.jpacontext;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -22,9 +25,6 @@ package com.evanzeimet.queryinfo.jpa.jpacontext;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
@@ -32,7 +32,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
 
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 
 public class QueryInfoJPAContext<RootEntity> {
 
@@ -71,12 +72,12 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	protected QueryInfoJoinKey createJoinKey(From<?, ?> joinParent,
-			QueryInfoJoinInfo joinInfo) {
+			QueryInfoAttributeInfo attributeInfo) {
 		QueryInfoJoinKey result = new QueryInfoJoinKey();
 
 		result.setJoinParent(joinParent);
 
-		String jpaAttributeName = joinInfo.getJpaAttributeName();
+		String jpaAttributeName = attributeInfo.getJpaAttributeName();
 		result.setParentAttributeName(jpaAttributeName);
 
 		return result;
@@ -84,21 +85,23 @@ public class QueryInfoJPAContext<RootEntity> {
 
 	@SuppressWarnings("unchecked")
 	public <L, R> Join<L, R> getJoin(From<?, ?> joinParent,
-			QueryInfoJoinInfo joinInfo) {
-
+			QueryInfoAttributeInfo attributeInfo) {
 		QueryInfoJoinKey joinKey = createJoinKey(joinParent,
-				joinInfo);
+				attributeInfo);
 
 		Join<?, ?> result = joins.get(joinKey);
 
 		if (result == null) {
-			String jpaAttributeName = joinInfo.getJpaAttributeName();
-			JoinType joinType = joinInfo.getJoinType();
+			String jpaAttributeName = attributeInfo.getJpaAttributeName();
+			QueryInfoJoinType queryInfoJoinType = attributeInfo.getJoinType();
 
-			if (joinType == null) {
+			boolean queryInfoJoinTypeIsUnspecified = QueryInfoJoinType.isUnspecified(queryInfoJoinType);
+
+			if (queryInfoJoinTypeIsUnspecified) {
 				result = joinParent.join(jpaAttributeName);
 			} else {
-				result = joinParent.join(jpaAttributeName, joinType);
+				JoinType jpaJoinType = queryInfoJoinType.toJpaType();
+				result = joinParent.join(jpaAttributeName, jpaJoinType);
 			}
 
 			putJoin(joinKey, result);
@@ -108,9 +111,9 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	public QueryInfoJoinKey putJoin(From<?, ?> joinParent,
-			QueryInfoJoinInfo joinInfo,
+			QueryInfoAttributeInfo attributeInfo,
 			Join<?, ?> join) {
-		QueryInfoJoinKey joinKey = createJoinKey(joinParent, joinInfo);
+		QueryInfoJoinKey joinKey = createJoinKey(joinParent, attributeInfo);
 		putJoin(joinKey, join);
 		return joinKey;
 	}

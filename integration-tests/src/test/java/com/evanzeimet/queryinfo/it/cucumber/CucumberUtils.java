@@ -44,7 +44,6 @@ import cucumber.runtime.xstream.LocalizedXStreams.LocalizedXStream;
 
 public class CucumberUtils {
 
-	public static final String DATA_TABLE_NULL = "[[NULL]]";
 	public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 	public CucumberUtils() {
@@ -109,18 +108,6 @@ public class CucumberUtils {
 		result.add(new DoubleConverter());
 		result.add(new IntegerConverter());
 		result.add(new LongConverter());
-
-		return result;
-	}
-
-	public boolean isDataTableNull(String value) {
-		boolean result;
-
-		if (DATA_TABLE_NULL.equalsIgnoreCase(value)) {
-			result = true;
-		} else {
-			result = false;
-		}
 
 		return result;
 	}

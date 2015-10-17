@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.attribute;
 
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -30,6 +32,10 @@ public interface QueryInfoAttributeInfo {
 	String getJpaAttributeName();
 
 	void setJpaAttributeName(String jpaAttributeName);
+
+	QueryInfoJoinType getJoinType();
+
+	void setJoinType(QueryInfoJoinType joinType);
 
 	String getName();
 

@@ -189,7 +189,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 		return nonUniqueFieldNameTexts;
 	}
 
-	protected ListMultimap<String, QueryInfoAttributeInfo> mapAttributesToNames(List<QueryInfoAttributeInfo> attributes) {
+	protected ListMultimap<String, QueryInfoAttributeInfo> mapAttributesToNames(List<? extends QueryInfoAttributeInfo> attributes) {
 		ListMultimap<String, QueryInfoAttributeInfo> result = ArrayListMultimap.create();
 
 		for (QueryInfoAttributeInfo attribute : attributes) {
@@ -211,18 +211,18 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 	}
 
 	protected void validateAttributeNameUniqueness(List<QueryInfoFieldInfo> fields, List<QueryInfoJoinInfo> joins) {
-		int fieldCount = fields.size();
-		int joinCount = joins.size();
+		ListMultimap<String, QueryInfoAttributeInfo> fieldNameMap = mapAttributesToNames(fields);
+		ListMultimap<String, QueryInfoAttributeInfo> joinNameMap = mapAttributesToNames(joins);
 
-		int attributeCount = (fieldCount + joinCount);
+		List<String> nonUniqueFieldNameMessages = generateNonUniqueAttributeNameMessages(fieldNameMap);
+		List<String> nonUniqueJoinNameMessages = generateNonUniqueAttributeNameMessages(joinNameMap);
 
-		List<QueryInfoAttributeInfo> attributes = new ArrayList<>(attributeCount);
+		int nonUniqueAttributeCount = (nonUniqueFieldNameMessages.size() + nonUniqueJoinNameMessages.size());
 
-		attributes.addAll(fields);
-		attributes.addAll(joins);
+		List<String> nonUniqueAttributeNameMessages = new ArrayList<>(nonUniqueAttributeCount);
 
-		ListMultimap<String, QueryInfoAttributeInfo> fieldNameMap = mapAttributesToNames(attributes);
-		List<String> nonUniqueAttributeNameMessages = generateNonUniqueAttributeNameMessages(fieldNameMap);
+		nonUniqueAttributeNameMessages.addAll(nonUniqueFieldNameMessages);
+		nonUniqueAttributeNameMessages.addAll(nonUniqueJoinNameMessages);
 
 		int nonUniqueFieldNameCount = nonUniqueAttributeNameMessages.size();
 

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -124,6 +123,45 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 	}
 
 	@Test
+	public void validateFieldNameUniqueness_allowFieldAndJoinNameCollision() throws QueryInfoException {
+		List<QueryInfoFieldInfo> fieldInfos = new ArrayList<>();
+
+		QueryInfoFieldInfo fieldInfo;
+
+		{
+			fieldInfo = new DefaultQueryInfoFieldInfo();
+
+			fieldInfo.setName("field1");
+			fieldInfo.setJpaAttributeName("field1");
+
+			fieldInfos.add(fieldInfo);
+		}
+
+		List<QueryInfoJoinInfo> joinInfos = new ArrayList<>();
+
+		QueryInfoJoinInfo joinInfo;
+
+		{
+			joinInfo = new DefaultQueryInfoJoinInfo();
+
+			joinInfo.setName("field1");
+			joinInfo.setJpaAttributeName("field1");
+
+			joinInfos.add(joinInfo);
+		}
+
+		QueryInfoRuntimeException actualException = null;
+
+		try {
+			resolver.validateAttributeNameUniqueness(fieldInfos, joinInfos);
+		} catch (QueryInfoRuntimeException e) {
+			actualException = e;
+		}
+
+		assertNull(actualException);
+	}
+
+	@Test
 	public void validateFieldNameUniqueness_notUnique() throws QueryInfoException {
 		List<QueryInfoFieldInfo> fieldInfos = new ArrayList<>();
 
@@ -198,10 +236,11 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		assertNotNull(actualException);
 
 		String actualExceptionMessage = actualException.getMessage();
-		String expectedExceptionMessage = String.format("Found [3] non-unique attribute names for entity [com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest.EmployeeEntity]:%n"
-				+ "Found [2] field infos for name [field1]: field1, fieldOne.%n"
-				+ "Found [2] field infos for name [field2]: field2, fieldTwo.%n"
-				+ "Found [2] field infos for name [join1]: join1, joinOne.");
+		String expectedExceptionMessage = String.format(
+				"Found [3] non-unique attribute names for entity [com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest.EmployeeEntity]:%n"
+						+ "Found [2] field infos for name [field1]: field1, fieldOne.%n"
+						+ "Found [2] field infos for name [field2]: field2, fieldTwo.%n"
+						+ "Found [2] field infos for name [join1]: join1, joinOne.");
 
 		assertEquals(expectedExceptionMessage, actualExceptionMessage);
 	}
@@ -301,6 +340,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 			return true;
 		}
 
+		@QueryInfoField(name = "employer")
 		@QueryInfoJoin(name = "employer")
 		public EmployerEntity getEmployerEntity() {
 			return null;

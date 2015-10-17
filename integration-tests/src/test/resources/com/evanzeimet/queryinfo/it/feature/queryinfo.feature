@@ -23,6 +23,7 @@ Background:
 	| Nick      | Bradshaw   | U.S. Navy                |
 	| Tom       | Kazanski   | U.S. Navy                |
 	| Mike      | Metcalf    | U.S. Navy                |
+	| I'm       | Unemployed |                          |
 
 
 Scenario: Use nested requested fields, one-to-many join
@@ -36,21 +37,59 @@ Scenario: Use nested requested fields, one-to-many join
 			"state",
 			"employees.firstName",
 			"employees.lastName"
+		],
+		"sorts":[
+			{
+				"fieldName": "name",
+				"direction": "desc"
+			},
+			{
+				"fieldName": "employees.lastName",
+				"direction": "asc"
+			}
 		]
 	}
 	"""
 	Then the http response code should be 200
 	And I should receive these tuples:
 	| name          | state   | employees.firstName | employees.lastName |
-	| CDW           | IL      | Evan                | Zeimet             |
-	| Google        | CA      | Larry               | Page               |
-	| Epic          | WI      | Judith              | Faulkner           |
-	| Amazon        | WA      | Jeff                | Bezos              |
-	| Facebook      | CA      | Mark                | Zuckerberg         |
-	| U.S. Navy     | DC      | Pete                | Mitchell           |
 	| U.S. Navy     | DC      | Nick                | Bradshaw           |
 	| U.S. Navy     | DC      | Tom                 | Kazanski           |
 	| U.S. Navy     | DC      | Mike                | Metcalf            |
+	| U.S. Navy     | DC      | Pete                | Mitchell           |
+	| Pets.com      | CA      | [[NULL]]            | [[NULL]]           |
+	| Google        | CA      | Larry               | Page               |
+	| Facebook      | CA      | Mark                | Zuckerberg         |
+	| Epic          | WI      | Judith              | Faulkner           |
+	| CDW           | IL      | Evan                | Zeimet             |
+	| Amazon        | WA      | Jeff                | Bezos              |
+
+Scenario: Use nested requested fields, one-to-one join
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"requestedFields": [
+			"firstName",
+			"lastName",
+			"employer"
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| firstName | lastName   | employer       |
+	| Evan      | Zeimet     | [[ANY_OBJECT]] |
+	| Larry     | Page       | [[ANY_OBJECT]] |
+	| Judith    | Faulkner   | [[ANY_OBJECT]] |
+	| Jeff      | Bezos      | [[ANY_OBJECT]] |
+	| Mark      | Zuckerberg | [[ANY_OBJECT]] |
+	| Pete      | Mitchell   | [[ANY_OBJECT]] |
+	| Nick      | Bradshaw   | [[ANY_OBJECT]] |
+	| Tom       | Kazanski   | [[ANY_OBJECT]] |
+	| Mike      | Metcalf    | [[ANY_OBJECT]] |
+	| I'm       | Unemployed | [[NULL]]       |
 
 Scenario: Use nested requested fields, one-to-one join
 
@@ -78,6 +117,7 @@ Scenario: Use nested requested fields, one-to-one join
 	| Nick      | Bradshaw   | U.S. Navy     | DC             |
 	| Tom       | Kazanski   | U.S. Navy     | DC             |
 	| Mike      | Metcalf    | U.S. Navy     | DC             |
+	| I'm       | Unemployed | [[NULL]]      | [[NULL]]       |
 
 Scenario: Use requested fields
 
@@ -102,6 +142,7 @@ Scenario: Use requested fields
 	| Nick      |
 	| Tom       |
 	| Mike      |
+	| I'm       |
 
 Scenario: Paginate some sorted stuff (page 2)
 
@@ -315,6 +356,7 @@ Scenario: Empty query info
 	| Nick      | Bradshaw   |
 	| Tom       | Kazanski   |
 	| Mike      | Metcalf    |
+	| I'm       | Unemployed |
 
 Scenario: Double joined field, people that aren't named Pete Mitchell that work for an employer that has an employee named Pete Mitchell
 
