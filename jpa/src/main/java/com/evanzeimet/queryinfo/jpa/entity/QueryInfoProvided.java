@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it;
+package com.evanzeimet.queryinfo.jpa.entity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,6 +27,6 @@ import java.lang.annotation.RetentionPolicy;
 
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface QueryInfoEntityManager {
+public @interface QueryInfoProvided {
 
 }

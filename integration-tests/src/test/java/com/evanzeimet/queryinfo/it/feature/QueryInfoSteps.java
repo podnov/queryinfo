@@ -139,7 +139,6 @@ public class QueryInfoSteps {
 				.body(rawQueryInfo)
 				.when()
 				.post(path);
-
 	}
 
 	@Then("^the http response code should be (\\d*)$")

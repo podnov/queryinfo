@@ -1,5 +1,10 @@
 package com.evanzeimet.queryinfo.jpa.bean;
 
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -73,6 +78,14 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	@Override
 	public Boolean getUseDistinctSelections() {
 		return Boolean.FALSE;
+	}
+
+	@Inject
+	protected void injectQueryInfoEntityContextFactory(@QueryInfoProvided Instance<QueryInfoEntityContextRegistry> contextRegistranceInstances) {
+		if (!contextRegistranceInstances.isUnsatisfied()) {
+			QueryInfoEntityContextRegistry entityContextRegistry = contextRegistranceInstances.iterator().next();
+			setEntityContextRegistry(entityContextRegistry);
+		}
 	}
 
 	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {

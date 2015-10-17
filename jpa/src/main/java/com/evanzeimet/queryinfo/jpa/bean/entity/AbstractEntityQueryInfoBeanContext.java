@@ -3,8 +3,7 @@ package com.evanzeimet.queryinfo.jpa.bean.entity;
 
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.bean.DefaultQueryInfoEntityContextRegistry;
-
+import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry;
 
 /*
  * #%L

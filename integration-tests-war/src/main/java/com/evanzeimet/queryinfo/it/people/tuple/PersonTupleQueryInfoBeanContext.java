@@ -1,6 +1,5 @@
 package com.evanzeimet.queryinfo.it.people.tuple;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 
 /*
@@ -31,7 +30,6 @@ import javax.persistence.EntityManager;
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.bean.tuple.AbstractTupleToJSONQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
 @Stateless
 public class PersonTupleQueryInfoBeanContext
@@ -51,9 +49,4 @@ public class PersonTupleQueryInfoBeanContext
 		return PersonEntity.class;
 	}
 
-	@PostConstruct
-	@Inject
-	protected void postConstruct(QueryInfoEntityContextRegistry entityContextRegistry) {
-		setEntityContextRegistry(entityContextRegistry);
-	}
 }
