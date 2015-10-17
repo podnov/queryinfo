@@ -2,37 +2,37 @@
 
 ![Build Status](https://travis-ci.org/podnov/query-info.svg?branch=master)
 
-The purpose of this code is to easily create and execute dynamic queries against arbitrary data. The queryinfo-common module includes the pojos that allow you create a serializable query structure. A JSON example of this structure looks like so:
+The purpose of this code is to easily create and execute dynamic queries against arbitrary data. The queryinfo-common module includes POJOs that allow you create a serializable query structure. A JSON example of this structure looks like so:
 
 ```javascript
 {
 	"conditionGroup": {
-			"conditionGroups": [
-				{
-					"conditions": [
-						{
-							"leftHandSide": "state",
-							"operator": "=",
-							"rightHandSide": "CA"
-						},
-						{
-							"leftHandSide": "state",
-							"operator": "=",
-							"rightHandSide": "WA"
-						}
-					],
-					"operator": "or"
-				}
-			],
-			"conditions": [
-				{
-					"leftHandSide": "active",
-					"operator": "=",
-					"rightHandSide": true
-				}
-			],
-			"operator": "and"
-		},
+		"conditionGroups": [
+			{
+				"conditions": [
+					{
+						"leftHandSide": "state",
+						"operator": "=",
+						"rightHandSide": "CA"
+					},
+					{
+						"leftHandSide": "state",
+						"operator": "=",
+						"rightHandSide": "WA"
+					}
+				],
+				"operator": "or"
+			}
+		],
+		"conditions": [
+			{
+				"leftHandSide": "active",
+				"operator": "=",
+				"rightHandSide": true
+			}
+		],
+		"operator": "and"
+	},
 	"paginationInfo" : {
 		"pageIndex" : 0,
 		"pageSize" : 9223372036854775807
@@ -54,9 +54,9 @@ The purpose of this code is to easily create and execute dynamic queries against
 
 Using the queryinfo-jpa module, you can map condition field names ("leftHandSide") to JPA entity attributes using custom annotations. The framework can create and execute a [JPA CriteriaQuery](http://docs.oracle.com/javaee/6/tutorial/doc/gjitv.html) based on your supplied QueryInfo structure.
 
-Given this PersonEntity:
-```java
+#### Given this PersonEntity:
 
+```java
 @Entity
 @Table(name = "people")
 public class PersonEntity extends DefaultPerson {
@@ -107,13 +107,11 @@ public class PersonEntity extends DefaultPerson {
 		return super.getLastName();
 	}
 }
-
 ```
 
-And this OrganizationEntity:
+#### And this OrganizationEntity:
 
 ```java
-
 @Entity
 @Table(name = "organizations")
 public class OrganizationEntity extends DefaultOrganization {
@@ -203,13 +201,11 @@ public class OrganizationEntity extends DefaultOrganization {
 		return super.getZip();
 	}
 }
-
 ```
 
-And these organizations:
+#### And these organizations:
 
 ```
-
 | name      | address1                  | address2 | city          | state | zip   | yearFounded | active | dateCreated         |
 | CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   | 2015-10-09T00:00:00 |
 | Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   | 2015-10-10T00:00:00 |
@@ -218,13 +214,11 @@ And these organizations:
 | Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   | 2015-10-13T00:00:00 |
 | Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   | 2015-10-14T00:00:00 |
 | U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   | 2015-10-15T00:00:00 |
-
 ```
 
-And these people:
+#### And these people:
 
 ```
-
 | firstName | lastName   | employerOrganizationName |
 | Evan      | Zeimet     | CDW                      |
 | Larry     | Page       | Google                   |
@@ -235,15 +229,21 @@ And these people:
 | Nick      | Bradshaw   | U.S. Navy                |
 | Tom       | Kazanski   | U.S. Navy                |
 | Mike      | Metcalf    | U.S. Navy                |
-| I'm       | Unemployed |                          |
-
 ```
 
-When I submit this query for organizations:
+#### When I submit this query for organization employees:
 
 ```
-
 {
+	"conditionGroup": {
+		"conditions": [
+			{
+				"leftHandSide": "state",
+				"operator": "not in",
+				"rightHandSide": ["WA","CA"]
+			}
+		]
+	},
 	"requestedFields": [
 		"name",
 		"state",
@@ -261,25 +261,18 @@ When I submit this query for organizations:
 		}
 	]
 }
-
 ```
 
-Then I should receive this results:
+#### Then I should receive this results:
 
 ```
-
 | name          | state   | employees.firstName | employees.lastName |
 | U.S. Navy     | DC      | Nick                | Bradshaw           |
 | U.S. Navy     | DC      | Tom                 | Kazanski           |
 | U.S. Navy     | DC      | Mike                | Metcalf            |
 | U.S. Navy     | DC      | Pete                | Mitchell           |
-| Pets.com      | CA      |                     |                    |
-| Google        | CA      | Larry               | Page               |
-| Facebook      | CA      | Mark                | Zuckerberg         |
 | Epic          | WI      | Judith              | Faulkner           |
 | CDW           | IL      | Evan                | Zeimet             |
-| Amazon        | WA      | Jeff                | Bezos              |
-
 ```
 
-In the integration-tests modules, see the [Cucumber Feature File](integration-tests/src/test/resources/com/evanzeimet/queryinfo/it/feature/queryinfo.feature) for more query examples.
+In the integration-tests module, see the [Cucumber Feature File](integration-tests/src/test/resources/com/evanzeimet/queryinfo/it/feature/queryinfo.feature) for more query examples.
