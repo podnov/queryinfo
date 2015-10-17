@@ -128,7 +128,7 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.ORDER;
 
 		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsSortable(false);
+		givenFieldInfo.setIsOrderable(false);
 
 		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenQueryInfoFieldAttributeName);
 
@@ -157,7 +157,7 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.PREDICATE;
 
 		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsQueryable(false);
+		givenFieldInfo.setIsPredicateable(false);
 
 		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenQueryInfoFieldAttributeName);
 
@@ -215,7 +215,7 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.ORDER;
 
 		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsSortable(true);
+		givenFieldInfo.setIsOrderable(true);
 
 		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenQueryInfoFieldAttributeName);
 
@@ -242,7 +242,7 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.PREDICATE;
 
 		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsQueryable(true);
+		givenFieldInfo.setIsPredicateable(true);
 
 		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenQueryInfoFieldAttributeName);
 

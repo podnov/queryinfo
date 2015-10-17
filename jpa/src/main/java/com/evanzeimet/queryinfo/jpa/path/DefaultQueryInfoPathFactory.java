@@ -169,11 +169,11 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 		switch (purpose) {
 			case ORDER:
-				validForPurpose = fieldInfo.getIsSortable();
+				validForPurpose = fieldInfo.getIsOrderable();
 				break;
 
 			case PREDICATE:
-				validForPurpose = fieldInfo.getIsQueryable();
+				validForPurpose = fieldInfo.getIsPredicateable();
 				break;
 
 			case SELECT:

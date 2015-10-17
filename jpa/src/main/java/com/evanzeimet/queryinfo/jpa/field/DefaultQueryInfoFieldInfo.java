@@ -29,9 +29,9 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 
 	private String jpaAttributeName;
-	private Boolean isQueryable;
+	private Boolean isOrderable;
+	private Boolean isPredicateable;
 	private Boolean isSelectable;
-	private Boolean isSortable;
 	private QueryInfoJoinType joinType;
 	private String name;
 
@@ -45,13 +45,23 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	}
 
 	@Override
-	public Boolean getIsQueryable() {
-		return isQueryable;
+	public Boolean getIsOrderable() {
+		return isOrderable;
 	}
 
 	@Override
-	public void setIsQueryable(Boolean isQueryable) {
-		this.isQueryable = isQueryable;
+	public void setIsOrderable(Boolean isOrderable) {
+		this.isOrderable = isOrderable;
+	}
+
+	@Override
+	public Boolean getIsPredicateable() {
+		return isPredicateable;
+	}
+
+	@Override
+	public void setIsPredicateable(Boolean isPredicateable) {
+		this.isPredicateable = isPredicateable;
 	}
 
 	@Override
@@ -62,16 +72,6 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	@Override
 	public void setIsSelectable(Boolean isSelectable) {
 		this.isSelectable = isSelectable;
-	}
-
-	@Override
-	public Boolean getIsSortable() {
-		return isSortable;
-	}
-
-	@Override
-	public void setIsSortable(Boolean isSortable) {
-		this.isSortable = isSortable;
 	}
 
 	@Override
