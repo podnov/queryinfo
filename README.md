@@ -263,7 +263,7 @@ public class OrganizationEntity extends DefaultOrganization {
 }
 ```
 
-#### Then I should receive this results:
+#### Then I should receive these results:
 
 ```
 | name          | state   | employees.firstName | employees.lastName |
