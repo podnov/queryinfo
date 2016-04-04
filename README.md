@@ -276,3 +276,19 @@ public class OrganizationEntity extends DefaultOrganization {
 ```
 
 In the integration-tests module, see the [Cucumber Feature File](integration-tests/src/test/resources/com/evanzeimet/queryinfo/it/feature/queryinfo.feature) for more query examples.
+
+
+## The Glue
+
+### Entities
+
+The default way to declare the fields on JPA entities that are in-scope for querying is by using annotations. The annotations are [@QueryInfoField](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/field/QueryInfoField.java) and [@QueryInfoJoin](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/join/QueryInfoJoin.java). If these annotations exist on an entity field, the field is considered in-scope for various purposes. Using the [@QueryInfoField](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/field/QueryInfoField.java) annotation, you can declare that a field is selectable, orderable, and/or predicateable. This means that for any field, you can independently toggle whether it is returned with query results, whether you can sort on that field, and whether you can create predicates for that field. Using the [@QueryInfoJoin](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/join/QueryInfoJoin.java) annotation, you can specify that queries are allowed to walk joined entities and how that join should be performed (LEFT, RIGHT, INNER).
+
+### QueryInfoEntityContext
+
+[QueryInfoEntityContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContext.java)s contain the runtime information needed to execute queries against a single entity. This information consists of a reference to the JPA entity class, a [QueryInfoPathFactory](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/path/QueryInfoPathFactory.java) that can create JPA paths for QueryInfo field names, and a [QueryInfoAttributeContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/attribute/QueryInfoAttributeContext.java) that contains information about the QueryInfo fields and joins that exist on an entity.
+
+### QueryInfoEntityContextRegistry
+
+Entity resolution and walking is enabled by a [QueryInfoEntityContextRegistry](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContextRegistry.java). This registry contains [QueryInfoEntityContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContext.java)s for each entity that's in-scope for the QueryInfo environment and allows queries for one entity to find the appropriate contexts for joined entities.
+

@@ -4,7 +4,7 @@ create database queryinfo_test DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_g
 
 create user 'queryinfo_test'@'%' identified by 'queryinfo_test';
 
-grant all on queryinfo_test.* to 'queryinfo_test'@'%';
+grant all on queryinfo_test.* to 'queryinfo_test'@'%' identified by 'queryinfo_test';
 
 
 
