@@ -11,10 +11,6 @@
 	<artifactId>queryinfo-integration-tests-db</artifactId>
 	<packaging>jar</packaging>
 
-	<properties>
-		<queryinfo.db.changeLogFile>queryinfo-it.changelog.xml</queryinfo.db.changeLogFile>
-	</properties>
-
 	<profiles>
 		<profile>
 			<id>default</id>

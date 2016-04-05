@@ -18,9 +18,13 @@
 	</modules>
 
 	<properties>
+		<liquibase.dropFirst>false</liquibase.dropFirst>
+		<liquibase.shouldRun>true</liquibase.shouldRun>
+
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 
+		<queryinfo.db.changeLogFile>queryinfo-it.changelog.xml</queryinfo.db.changeLogFile>
 		<queryinfo.db.datasource.name>queryinfo_test</queryinfo.db.datasource.name>
 		<queryinfo.db.driver.class>com.mysql.jdbc.Driver</queryinfo.db.driver.class>
 		<queryinfo.db.driver.jar>mysql-connector-java-${version.mysql.mysql-connector-java}.jar</queryinfo.db.driver.jar>
@@ -47,7 +51,7 @@
 		<version.org.apache.maven.plugins.maven-source-plugin>2.4</version.org.apache.maven.plugins.maven-source-plugin>
 		<version.org.codehaus.cargo.cargo-maven2-plugin>1.4.16</version.org.codehaus.cargo.cargo-maven2-plugin>
 		<version.org.codehaus.mojo.license-maven-plugin>1.8</version.org.codehaus.mojo.license-maven-plugin>
-		<version.org.liquibase.liquibase-maven-plugin>3.4.1</version.org.liquibase.liquibase-maven-plugin>
+		<version.org.liquibase.liquibase-maven-plugin>3.4.2</version.org.liquibase.liquibase-maven-plugin>
 		<version.org.hamcrest.hamcrest-all>1.3</version.org.hamcrest.hamcrest-all>
 		<version.org.mockito.mockito-all>1.9.5</version.org.mockito.mockito-all>
 		<version.org.wildfly.wildfly-parent>9.0.1.Final</version.org.wildfly.wildfly-parent>
@@ -306,6 +310,7 @@
 						</dependency>
 					</dependencies>
 					<configuration>
+						<liquibase.should.run>${liquibase.shouldRun}</liquibase.should.run>
 						<changeLogFile>${queryinfo.db.changeLogFile}</changeLogFile>
 						<driver>${queryinfo.db.driver.class}</driver>
 						<url>${queryinfo.db.url}</url>

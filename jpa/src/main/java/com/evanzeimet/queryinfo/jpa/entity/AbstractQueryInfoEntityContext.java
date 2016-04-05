@@ -56,9 +56,9 @@ public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInf
 	}
 
 	@Inject
-	protected void injectQueryInfoEntityContextFactory(@QueryInfoProvided Instance<QueryInfoEntityContextRegistry> contextRegistranceInstances) {
-		if (!contextRegistranceInstances.isUnsatisfied()) {
-			QueryInfoEntityContextRegistry entityContextRegistry = contextRegistranceInstances.iterator().next();
+	protected void injectQueryInfoEntityContextFactory(@QueryInfoProvided Instance<QueryInfoEntityContextRegistry> contextRegistryInstances) {
+		if (!contextRegistryInstances.isUnsatisfied()) {
+			QueryInfoEntityContextRegistry entityContextRegistry = contextRegistryInstances.iterator().next();
 
 			if (pathFactory == null) {
 				Class<Entity> rootEntityClass = getEntityClass();
