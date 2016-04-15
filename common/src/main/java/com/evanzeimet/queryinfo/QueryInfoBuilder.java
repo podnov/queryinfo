@@ -25,8 +25,6 @@ package com.evanzeimet.queryinfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.SerializationUtils;
-
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupBuilder;
@@ -36,14 +34,21 @@ import com.evanzeimet.queryinfo.sort.Sort;
 
 public class QueryInfoBuilder {
 
-	private QueryInfo builderReferenceInstance = new DefaultQueryInfo();
+	private QueryInfo builderReferenceInstance = createDefaultInstance();
 
 	public QueryInfoBuilder() {
 
 	}
 
 	public QueryInfo build() {
-		return SerializationUtils.clone(builderReferenceInstance);
+		DefaultQueryInfo result = createDefaultInstance();
+
+		result.setConditionGroup(builderReferenceInstance.getConditionGroup());
+		result.setPaginationInfo(builderReferenceInstance.getPaginationInfo());
+		result.setRequestedFields(builderReferenceInstance.getRequestedFields());
+		result.setSorts(builderReferenceInstance.getSorts());
+
+		return result;
 	}
 
 	public QueryInfoBuilder builderReferenceInstance(QueryInfo builderReferenceInstance) {
@@ -58,6 +63,10 @@ public class QueryInfoBuilder {
 
 	public static QueryInfoBuilder create() {
 		return new QueryInfoBuilder();
+	}
+
+	protected DefaultQueryInfo createDefaultInstance() {
+		return new DefaultQueryInfo();
 	}
 
 	public static QueryInfoBuilder createForCondition(Condition condition) {

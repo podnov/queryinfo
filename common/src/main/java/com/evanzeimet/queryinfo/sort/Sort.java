@@ -22,9 +22,8 @@ package com.evanzeimet.queryinfo.sort;
  * #L%
  */
 
-import java.io.Serializable;
 
-public interface Sort extends Serializable {
+public interface Sort {
 
 	String getDirection();
 

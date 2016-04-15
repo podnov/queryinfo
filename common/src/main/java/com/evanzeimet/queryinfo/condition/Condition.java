@@ -22,9 +22,9 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-import java.io.Serializable;
+import com.fasterxml.jackson.databind.JsonNode;
 
-public interface Condition extends Serializable {
+public interface Condition {
 
 	String getLeftHandSide();
 
@@ -34,8 +34,8 @@ public interface Condition extends Serializable {
 
 	void setOperator(String operator);
 
-	String getRightHandSide();
+	JsonNode getRightHandSide();
 
-	void setRightHandSide(String rightHandSide);
+	void setRightHandSide(JsonNode rightHandSide);
 
 }

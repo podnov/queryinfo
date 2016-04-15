@@ -43,11 +43,12 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPredicateFactory<RootEntity> {
 
 	private QueryInfoEntityContextRegistry entityContextRegistry;
-	private FieldValueParser fieldValueParser = new FieldValueParser();
+	private final FieldValueParser fieldValueParser = new FieldValueParser();
 
 	public DefaultQueryInfoPredicateFactory(QueryInfoEntityContextRegistry entityContextRegistry) {
 		this.entityContextRegistry = entityContextRegistry;
@@ -62,7 +63,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 	protected Predicate createPredicate(QueryInfoJPAContext jpaContext,
 			String fieldName,
 			ConditionOperator conditionOperator,
-			String fieldValue) throws QueryInfoException {
+			JsonNode fieldValue) throws QueryInfoException {
 		Predicate result = null;
 
 		QueryInfoEntityContext entityContext = entityContextRegistry.getContextForRoot(jpaContext);
@@ -94,7 +95,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				break;
 
 			case IN:
-				result = path.in(parsedFieldValue);
+				result = path.in((Object[]) parsedFieldValue);
 				break;
 
 			case LESS_THAN:
@@ -122,7 +123,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				break;
 
 			case NOT_IN:
-				result = path.in(parsedFieldValue);
+				result = path.in((Object[]) parsedFieldValue);
 				result = result.not();
 				break;
 
@@ -143,7 +144,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		Predicate result = null;
 		String fieldName = condition.getLeftHandSide();
 		String operator = condition.getOperator();
-		String fieldValue = condition.getRightHandSide();
+		JsonNode fieldValue = condition.getRightHandSide();
 
 		ConditionOperator conditionOperator = ConditionOperator.fromText(operator);
 

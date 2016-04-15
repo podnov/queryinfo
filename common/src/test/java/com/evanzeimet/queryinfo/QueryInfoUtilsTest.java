@@ -33,7 +33,7 @@ import org.junit.Test;
 public class QueryInfoUtilsTest {
 
 	private QueryInfoUtils utils;
-	private Integer defaultPageSize = 42;
+	private final Integer defaultPageSize = 42;
 
 	@Before
 	public void setUp() {

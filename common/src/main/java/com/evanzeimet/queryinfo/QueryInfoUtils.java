@@ -37,6 +37,7 @@ import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class QueryInfoUtils {
@@ -191,5 +192,10 @@ public class QueryInfoUtils {
 		}
 
 		return result;
+	}
+
+	public JsonNode treeify(Object object) {
+		ObjectMapper objectMapper = createObjectMapper();
+		return objectMapper.valueToTree(object);
 	}
 }

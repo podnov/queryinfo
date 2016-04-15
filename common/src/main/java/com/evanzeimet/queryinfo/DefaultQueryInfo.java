@@ -22,6 +22,8 @@ package com.evanzeimet.queryinfo;
  * #L%
  */
 
+import java.util.List;
+
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.DefaultConditionGroup;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
@@ -30,11 +32,7 @@ import com.evanzeimet.queryinfo.sort.DefaultSort;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.List;
-
 public class DefaultQueryInfo implements QueryInfo {
-
-	private static final long serialVersionUID = 5902877613942546416L;
 
 	@JsonDeserialize(as = DefaultConditionGroup.class)
 	private ConditionGroup conditionGroup;

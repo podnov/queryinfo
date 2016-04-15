@@ -22,18 +22,22 @@ package com.evanzeimet.queryinfo.sort;
  * #L%
  */
 
-import org.apache.commons.lang3.SerializationUtils;
 
 public class SortBuilder {
 
-	private Sort builderReferenceInstance = new DefaultSort();
+	private Sort builderReferenceInstance = createDefaultInstance();
 
 	public SortBuilder() {
 
 	}
 
 	public Sort build() {
-		return SerializationUtils.clone(builderReferenceInstance);
+		DefaultSort result = createDefaultInstance();
+
+		result.setDirection(builderReferenceInstance.getDirection());
+		result.setFieldName(builderReferenceInstance.getFieldName());
+
+		return result;
 	}
 
 	public SortBuilder builderReferenceInstance(Sort builderReferenceInstance) {
@@ -43,6 +47,10 @@ public class SortBuilder {
 
 	public static SortBuilder create() {
 		return new SortBuilder();
+	}
+
+	protected DefaultSort createDefaultInstance() {
+		return new DefaultSort();
 	}
 
 	public SortBuilder direction(SortDirection direction) {

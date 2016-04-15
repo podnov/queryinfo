@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.pagination;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,22 @@ package com.evanzeimet.queryinfo.pagination;
  * #L%
  */
 
-import org.apache.commons.lang3.SerializationUtils;
 
 public class PaginationInfoBuilder {
 
-	private PaginationInfo builderReferenceInstance = new DefaultPaginationInfo();
+	private PaginationInfo builderReferenceInstance = createDefaultInstance();
 
 	public PaginationInfoBuilder() {
 
 	}
 
 	public PaginationInfo build() {
-		return SerializationUtils.clone(builderReferenceInstance);
+		DefaultPaginationInfo result = createDefaultInstance();
+
+		result.setPageIndex(builderReferenceInstance.getPageIndex());
+		result.setPageSize(builderReferenceInstance.getPageSize());
+
+		return result;
 	}
 
 	public PaginationInfoBuilder builderReferenceInstance(PaginationInfo builderReferenceInstance) {
@@ -43,6 +47,10 @@ public class PaginationInfoBuilder {
 
 	public static PaginationInfoBuilder create() {
 		return new PaginationInfoBuilder();
+	}
+
+	protected DefaultPaginationInfo createDefaultInstance() {
+		return new DefaultPaginationInfo();
 	}
 
 	public static PaginationInfoBuilder createForAll() {

@@ -22,10 +22,9 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.List;
 
-public interface ConditionGroup extends Serializable {
+public interface ConditionGroup {
 
 	List<ConditionGroup> getConditionGroups();
 

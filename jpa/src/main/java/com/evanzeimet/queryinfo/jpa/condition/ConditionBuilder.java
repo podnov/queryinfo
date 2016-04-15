@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.condition;
+package com.evanzeimet.queryinfo.jpa.condition;
 
 /*
  * #%L
- * queryinfo-common
+ * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,32 +22,21 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
+import javax.persistence.metamodel.SingularAttribute;
 
-import com.evanzeimet.queryinfo.QueryInfoUtils;
+import com.evanzeimet.queryinfo.condition.Condition;
+import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class ConditionBuilder {
-
-	private static final QueryInfoUtils utils = new QueryInfoUtils();
-
-	private Condition builderReferenceInstance = createDefaultInstance();
+public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.ConditionBuilder {
 
 	public ConditionBuilder() {
 
 	}
 
-	public Condition build() {
-		Condition result = createDefaultInstance();
-
-		result.setLeftHandSide(builderReferenceInstance.getLeftHandSide());
-		result.setOperator(builderReferenceInstance.getOperator());
-		result.setRightHandSide(builderReferenceInstance.getRightHandSide());
-
-		return result;
-	}
-
+	@Override
 	public ConditionBuilder builderReferenceInstance(Condition builderReferenceInstance) {
-		this.builderReferenceInstance = builderReferenceInstance;
+		super.builderReferenceInstance(builderReferenceInstance);
 		return this;
 	}
 
@@ -55,42 +44,38 @@ public class ConditionBuilder {
 		return new ConditionBuilder();
 	}
 
-	protected DefaultCondition createDefaultInstance() {
-		return new DefaultCondition();
+	public ConditionBuilder leftHandSide(SingularAttribute<?, ?> leftHandSide) {
+		String name = leftHandSide.getName();
+		return leftHandSide(name);
 	}
 
+	@Override
 	public ConditionBuilder leftHandSide(String leftHandSide) {
-		builderReferenceInstance.setLeftHandSide(leftHandSide);
+		super.leftHandSide(leftHandSide);
 		return this;
 	}
 
+	@Override
 	public ConditionBuilder operator(ConditionOperator operator) {
-		String rawOperator = operator.getText();
-		return operator(rawOperator);
-	}
-
-	public ConditionBuilder operator(String operator) {
-		builderReferenceInstance.setOperator(operator);
+		super.operator(operator);
 		return this;
 	}
 
-	public ConditionBuilder rightHandSide(Object rightHandSide) {
-		boolean needsConversion = (rightHandSide != null);
-		needsConversion = (needsConversion && !(rightHandSide instanceof JsonNode));
-
-		JsonNode jsonNode;
-
-		if (needsConversion) {
-			jsonNode = utils.treeify(rightHandSide);
-		} else {
-			jsonNode = ((JsonNode) rightHandSide);
-		}
-
-		return rightHandSide(jsonNode);
+	@Override
+	public ConditionBuilder operator(String operator) {
+		super.operator(operator);
+		return this;
 	}
 
+	@Override
+	public ConditionBuilder rightHandSide(Object rightHandSide) {
+		super.rightHandSide(rightHandSide);
+		return this;
+	}
+
+	@Override
 	public ConditionBuilder rightHandSide(JsonNode rightHandSide) {
-		builderReferenceInstance.setRightHandSide(rightHandSide);
+		super.rightHandSide(rightHandSide);
 		return this;
 	}
 }

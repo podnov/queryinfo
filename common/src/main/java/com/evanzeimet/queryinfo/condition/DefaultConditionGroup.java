@@ -22,13 +22,11 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import java.util.List;
 
-public class DefaultConditionGroup implements ConditionGroup {
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-	private static final long serialVersionUID = -4685739021151165664L;
+public class DefaultConditionGroup implements ConditionGroup {
 
 	@JsonDeserialize(contentAs = DefaultConditionGroup.class)
 	private List<ConditionGroup> conditionGroups;
