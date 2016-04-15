@@ -22,17 +22,13 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-import com.evanzeimet.queryinfo.util.JSONToStringDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class DefaultCondition implements Condition {
 
-	private static final long serialVersionUID = 3264149014277724710L;
-
 	private String leftHandSide;
 	private String operator;
-	@JsonDeserialize(using = JSONToStringDeserializer.class)
-	private String rightHandSide;
+	private JsonNode rightHandSide;
 
 	public DefaultCondition() {
 
@@ -59,12 +55,12 @@ public class DefaultCondition implements Condition {
 	}
 
 	@Override
-	public String getRightHandSide() {
+	public JsonNode getRightHandSide() {
 		return rightHandSide;
 	}
 
 	@Override
-	public void setRightHandSide(String rightHandSide) {
+	public void setRightHandSide(JsonNode rightHandSide) {
 		this.rightHandSide = rightHandSide;
 	}
 }

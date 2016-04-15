@@ -22,21 +22,26 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConditionGroupBuilder {
 
-	private ConditionGroup builderReferenceInstance = new DefaultConditionGroup();
+	private ConditionGroup builderReferenceInstance = createDefaultInstance();
 
 	public ConditionGroupBuilder() {
 
 	}
 
 	public ConditionGroup build() {
-		return SerializationUtils.clone(builderReferenceInstance);
+		DefaultConditionGroup result = createDefaultInstance();
+
+		result.setConditionGroups(builderReferenceInstance.getConditionGroups());
+		result.setConditions(builderReferenceInstance.getConditions());
+		result.setOperator(builderReferenceInstance.getOperator());
+
+		return result;
 	}
 
 	public ConditionGroupBuilder builderReferenceInstance(ConditionGroup builderReferenceInstance) {
@@ -56,6 +61,10 @@ public class ConditionGroupBuilder {
 
 	public static ConditionGroupBuilder create() {
 		return new ConditionGroupBuilder();
+	}
+
+	protected DefaultConditionGroup createDefaultInstance() {
+		return new DefaultConditionGroup();
 	}
 
 	public static ConditionGroupBuilder createForCondition(Condition condition) {

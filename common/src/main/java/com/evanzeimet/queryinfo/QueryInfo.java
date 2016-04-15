@@ -22,14 +22,13 @@ package com.evanzeimet.queryinfo;
  * #L%
  */
 
-import java.io.Serializable;
 import java.util.List;
 
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 import com.evanzeimet.queryinfo.sort.Sort;
 
-public interface QueryInfo extends Serializable {
+public interface QueryInfo {
 
 	ConditionGroup getConditionGroup();
 

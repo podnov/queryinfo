@@ -23,6 +23,7 @@ package com.evanzeimet.queryinfo.condition;
  */
 
 import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.evanzeimet.queryinfo.QueryInfoTestUtils;
-import com.evanzeimet.queryinfo.condition.Condition;
-import com.evanzeimet.queryinfo.condition.ConditionBuilder;
-import com.evanzeimet.queryinfo.condition.ConditionGroup;
-import com.evanzeimet.queryinfo.condition.ConditionGroupBuilder;
-import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
-import com.evanzeimet.queryinfo.condition.ConditionOperator;
-import com.evanzeimet.queryinfo.condition.DefaultCondition;
 
 public class ConditionGroupBuilderTest {
 
@@ -87,11 +81,11 @@ public class ConditionGroupBuilderTest {
 
 	@Test
 	public void createForCondition() throws IOException {
-		Condition givenCondition = new DefaultCondition();
-
-		givenCondition.setLeftHandSide("lhs1");
-		givenCondition.setOperator("op1");
-		givenCondition.setRightHandSide("rhs1");
+		Condition givenCondition = ConditionBuilder.create()
+				.leftHandSide("lhs1")
+				.operator("op1")
+				.rightHandSide("rhs1")
+				.build();
 
 		ConditionGroup actualConditionGroup = ConditionGroupBuilder.createForCondition(givenCondition)
 				.build();
@@ -107,11 +101,11 @@ public class ConditionGroupBuilderTest {
 	public void createForConditionGroup() throws IOException {
 		List<Condition> givenConditions = new ArrayList<Condition>();
 
-		Condition givenCondition = new DefaultCondition();
-
-		givenCondition.setLeftHandSide("lhs1");
-		givenCondition.setOperator("op1");
-		givenCondition.setRightHandSide("rhs1");
+		Condition givenCondition = ConditionBuilder.create()
+				.leftHandSide("lhs1")
+				.operator("op1")
+				.rightHandSide("rhs1")
+				.build();
 
 		givenConditions.add(givenCondition);
 

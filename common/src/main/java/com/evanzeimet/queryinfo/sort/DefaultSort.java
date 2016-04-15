@@ -24,8 +24,6 @@ package com.evanzeimet.queryinfo.sort;
 
 public class DefaultSort implements Sort {
 
-	private static final long serialVersionUID = -3004002349970913148L;
-
 	private String direction;
 	private String fieldName;
 

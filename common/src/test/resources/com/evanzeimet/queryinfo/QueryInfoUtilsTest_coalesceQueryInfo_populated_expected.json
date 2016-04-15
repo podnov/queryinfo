@@ -7,12 +7,12 @@
           {
             "leftHandSide" : "state",
             "operator" : "=",
-            "rightHandSide" : "\"CA\""
+            "rightHandSide" : "CA"
           },
           {
             "leftHandSide" : "state",
             "operator" : "=",
-            "rightHandSide" : "\"WA\""
+            "rightHandSide" : "WA"
           }
         ],
         "operator" : "or"
@@ -22,7 +22,16 @@
       {
         "leftHandSide" : "active",
         "operator" : "=",
-        "rightHandSide" : "\"true\""
+        "rightHandSide" : true
+      },
+      {
+        "leftHandSide" : "someOtherField",
+        "operator" : "in",
+        "rightHandSide" : [
+          "A",
+          "B",
+          "C"
+        ]
       }
     ],
     "operator" : "and"

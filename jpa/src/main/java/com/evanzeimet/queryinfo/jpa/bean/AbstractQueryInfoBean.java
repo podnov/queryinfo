@@ -1,14 +1,12 @@
 package com.evanzeimet.queryinfo.jpa.bean;
 
-
-
 /*
  * #%L
  * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +21,8 @@ package com.evanzeimet.queryinfo.jpa.bean;
  * limitations under the License.
  * #L%
  */
+
+
 
 import java.util.List;
 
@@ -61,8 +61,11 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		super();
 	}
 
-	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
+	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext,
+			EntityManager entityManager) {
 		setBeanContext(beanContext);
+		this.entityManager = entityManager;
+		postConstruct();
 	}
 
 	protected void setBeanContext(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {

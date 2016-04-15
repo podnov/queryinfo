@@ -22,9 +22,8 @@ package com.evanzeimet.queryinfo.pagination;
  * #L%
  */
 
-import java.io.Serializable;
 
-public interface PaginationInfo extends Serializable {
+public interface PaginationInfo {
 
 	Integer getPageIndex();
 

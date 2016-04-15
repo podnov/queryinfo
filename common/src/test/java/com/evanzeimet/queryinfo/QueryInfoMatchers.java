@@ -50,8 +50,8 @@ public class QueryInfoMatchers {
 				operatorMatches = matchString(expectedOperator, actualOperator);
 
 
-				String expectedRhs = expected.getRightHandSide();
-				String actualRhs = actual.getRightHandSide();
+				String expectedRhs = expected.getRightHandSide().toString();
+				String actualRhs = actual.getRightHandSide().toString();
 				rightHandSideMatches = matchString(expectedRhs, actualRhs);
 
 				return (leftHandSideMatches && operatorMatches && rightHandSideMatches);

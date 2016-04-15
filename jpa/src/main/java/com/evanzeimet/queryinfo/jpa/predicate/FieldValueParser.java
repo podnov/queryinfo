@@ -1,19 +1,12 @@
 package com.evanzeimet.queryinfo.jpa.predicate;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 /*
  * #%L
  * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +22,11 @@ import java.util.List;
  * #L%
  */
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
 /**
  * It appears that hibernate parses at least numeric types out of the box:
  *
@@ -43,8 +41,9 @@ import javax.persistence.criteria.Expression;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
 public class FieldValueParser {
@@ -65,7 +64,7 @@ public class FieldValueParser {
 
 	public Object parse(Expression<?> path,
 			ConditionOperator conditionOperator,
-			String fieldValue) throws QueryInfoException {
+			JsonNode fieldValue) throws QueryInfoException {
 		Object result;
 		Class<?> javaType = path.getJavaType();
 
@@ -82,22 +81,7 @@ public class FieldValueParser {
 		return result;
 	}
 
-	protected <T> T parseType(String fieldValue, Class<T> javaType) throws QueryInfoException {
-		T result;
-
-		try {
-			result = objectMapper.readValue(fieldValue, javaType);
-		} catch (IOException e) {
-			String message = String.format("Could not parse [%s] as [%s]",
-					fieldValue,
-					javaType);
-			throw new QueryInfoException(message, e);
-		}
-
-		return result;
-	}
-
-	protected Date parseDate(String fieldValue) throws QueryInfoException {
+	protected Date parseDate(JsonNode fieldValue) throws QueryInfoException {
 		Date result;
 		String stringValue = parseType(fieldValue, String.class);
 
@@ -111,20 +95,25 @@ public class FieldValueParser {
 		return result;
 	}
 
-	protected <T> List<T> parseIn(Expression<?> path,
-			String fieldValue) throws QueryInfoException {
+	protected <T> Object[] parseIn(Expression<?> path,
+			JsonNode fieldValue) throws QueryInfoException {
 		Class<?> javaType = path.getJavaType();
 
 		TypeFactory typeFactory = objectMapper.getTypeFactory();
-		CollectionType collectionType = typeFactory.constructCollectionType(ArrayList.class,
-				javaType);
+		ArrayType arrayType = typeFactory.constructArrayType(javaType);
 
-		List<T> result;
+		return objectMapper.convertValue(fieldValue, arrayType);
+	}
+
+	protected <T> T parseType(JsonNode fieldValue, Class<T> javaType) throws QueryInfoException {
+		T result;
 
 		try {
-			result = objectMapper.readValue(fieldValue, collectionType);
-		} catch (IOException e) {
-			String message = String.format("Could not parse [%s] as list of [%s]", fieldValue, javaType);
+			result = objectMapper.convertValue(fieldValue, javaType);
+		} catch (IllegalArgumentException e) {
+			String message = String.format("Could not parse [%s] as [%s]",
+					fieldValue,
+					javaType);
 			throw new QueryInfoException(message, e);
 		}
 

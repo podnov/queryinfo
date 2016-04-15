@@ -23,6 +23,7 @@ package com.evanzeimet.queryinfo.jpa.bean;
  */
 
 
+import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 
 public class DefaultTupleQueryInfoBean<RootEntity, QueryInfoResult>
@@ -32,8 +33,9 @@ public class DefaultTupleQueryInfoBean<RootEntity, QueryInfoResult>
 		super();
 	}
 
-	public DefaultTupleQueryInfoBean(QueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> context) {
-		super(context);
+	public DefaultTupleQueryInfoBean(QueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> context,
+			EntityManager entityManager) {
+		super(context, entityManager);
 	}
 
 }
