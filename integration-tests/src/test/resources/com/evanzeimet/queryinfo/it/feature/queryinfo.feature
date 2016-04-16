@@ -26,6 +26,35 @@ Background:
 	| I'm       | Unemployed |                          |
 
 
+Scenario: Basic group by
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"groupByFields": [
+			"state"
+		],
+		"requestedFields": [
+			"state"
+		],
+		"sorts":[
+			{
+				"fieldName": "state",
+				"direction": "desc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| state   |
+	| WI      |
+	| WA      |
+	| IL      |
+	| DC      |
+	| CA      |
+
 Scenario: Use nested requested fields, one-to-many join
 
 	Given the organizations query info web service

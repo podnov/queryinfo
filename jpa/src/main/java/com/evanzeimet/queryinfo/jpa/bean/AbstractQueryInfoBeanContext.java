@@ -3,8 +3,14 @@ package com.evanzeimet.queryinfo.jpa.bean;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
-
+import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
+import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
+import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
+import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
+import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 /*
  * #%L
  * queryinfo-jpa
@@ -28,21 +34,11 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
  */
 
 
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
-import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
-import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
-
-
 public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult>
 		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
-	private QueryInfoEntityContext<RootEntity> entityContext;
-	private QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
+	private QueryInfoEntityContextRegistry entityContextRegistry;
+	private final QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
 	private QueryInfoOrderFactory<RootEntity> orderFactory;
 	private QueryInfoPredicateFactory<RootEntity> predicateFactory;
 
@@ -56,8 +52,8 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	}
 
 	@Override
-	public QueryInfoEntityContext<RootEntity> getEntityContext() {
-		return entityContext;
+	public QueryInfoEntityContextRegistry getEntityContextRegistry() {
+		return entityContextRegistry;
 	}
 
 	@Override
@@ -89,6 +85,8 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	}
 
 	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
+
 		if (orderFactory == null) {
 			orderFactory = new DefaultQueryInfoOrderFactory<>(entityContextRegistry);
 		} else {
