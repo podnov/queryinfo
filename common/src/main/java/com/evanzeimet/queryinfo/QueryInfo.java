@@ -34,6 +34,10 @@ public interface QueryInfo {
 
 	void setConditionGroup(ConditionGroup conditionGroup);
 
+	List<String> getGroupByFields();
+
+	void setGroupByFields(List<String> groupByFields);
+
 	PaginationInfo getPaginationInfo();
 
 	void setPaginationInfo(PaginationInfo paginationInfo);

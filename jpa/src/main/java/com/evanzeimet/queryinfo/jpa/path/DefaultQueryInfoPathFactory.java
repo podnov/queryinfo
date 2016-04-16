@@ -25,6 +25,7 @@ package com.evanzeimet.queryinfo.jpa.path;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
@@ -168,16 +169,17 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		boolean validForPurpose = false;
 
 		switch (purpose) {
+			case GROUP_BY:
+			case SELECT:
+				validForPurpose = fieldInfo.getIsSelectable();
+				break;
+
 			case ORDER:
 				validForPurpose = fieldInfo.getIsOrderable();
 				break;
 
 			case PREDICATE:
 				validForPurpose = fieldInfo.getIsPredicateable();
-				break;
-
-			case SELECT:
-				validForPurpose = fieldInfo.getIsSelectable();
 				break;
 		}
 
@@ -187,11 +189,11 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		}
 
 		QueryInfoJoinType queryInfoJoinType = fieldInfo.getJoinType();
-		boolean isSpecified = !QueryInfoJoinType.isUnspecified(queryInfoJoinType);
+		boolean joinTypeIsSpecified = !QueryInfoJoinType.isUnspecified(queryInfoJoinType);
 
-		if (isSpecified) {
+		if (joinTypeIsSpecified) {
 			/*
-			 * Ensure the correct join type is applied. Without this, JPA will
+			 * Bootstrap the correct join type if it is not already. Without this, JPA will
 			 * add an inner join by default. This probably only applies to the SELECT purpose.
 			 */
 			jpaContext.getJoin(from, fieldInfo);

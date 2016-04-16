@@ -36,6 +36,7 @@ public class DefaultQueryInfo implements QueryInfo {
 
 	@JsonDeserialize(as = DefaultConditionGroup.class)
 	private ConditionGroup conditionGroup;
+	private List<String> groupByFields;
 	@JsonDeserialize(as = DefaultPaginationInfo.class)
 	private PaginationInfo paginationInfo;
 	private List<String> requestedFields;
@@ -54,6 +55,16 @@ public class DefaultQueryInfo implements QueryInfo {
 	@Override
 	public void setConditionGroup(ConditionGroup conditionGroup) {
 		this.conditionGroup = conditionGroup;
+	}
+
+	@Override
+	public List<String> getGroupByFields() {
+		return groupByFields;
+	}
+
+	@Override
+	public void setGroupByFields(List<String> groupByFields) {
+		this.groupByFields = groupByFields;
 	}
 
 	@Override

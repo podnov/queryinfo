@@ -25,6 +25,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
 
 
 public enum QueryInfoAttributePurpose {
+	GROUP_BY,
 	ORDER,
 	PREDICATE,
 	SELECT;

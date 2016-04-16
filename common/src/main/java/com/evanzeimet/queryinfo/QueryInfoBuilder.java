@@ -44,6 +44,7 @@ public class QueryInfoBuilder {
 		DefaultQueryInfo result = createDefaultInstance();
 
 		result.setConditionGroup(builderReferenceInstance.getConditionGroup());
+		result.setGroupByFields(builderReferenceInstance.getGroupByFields());
 		result.setPaginationInfo(builderReferenceInstance.getPaginationInfo());
 		result.setRequestedFields(builderReferenceInstance.getRequestedFields());
 		result.setSorts(builderReferenceInstance.getSorts());
@@ -89,6 +90,11 @@ public class QueryInfoBuilder {
 				.build();
 		return create()
 				.conditionGroup(conditionGroup);
+	}
+
+	public QueryInfoBuilder groupByFields(List<String> groupByFields) {
+		builderReferenceInstance.setGroupByFields(groupByFields);
+		return this;
 	}
 
 	public QueryInfoBuilder paginationInfo(PaginationInfo paginationInfo) {

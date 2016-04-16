@@ -24,6 +24,7 @@ package com.evanzeimet.queryinfo.jpa.bean;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -31,15 +32,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
+import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
@@ -123,6 +130,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 
 		setQuerySelections(jpaContext, queryInfo);
 		setQueryPredicates(jpaContext, queryInfo);
+		setQueryGroupBy(jpaContext, queryInfo);
 		setQueryOrders(jpaContext, queryInfo);
 
 		TypedQuery<CriteriaQueryResult> typedQuery = entityManager.createQuery(criteriaQuery);
@@ -178,6 +186,34 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 
 		typedQuery.setFirstResult(firstResult);
 		typedQuery.setMaxResults(maxResults);
+	}
+
+	protected void setQueryGroupBy(QueryInfoJPAContext<RootEntity> jpaContext, QueryInfo queryInfo) throws QueryInfoException {
+		List<String> groupByFields = queryInfo.getGroupByFields();
+		boolean hasGroupByFields = groupByFields != null && !groupByFields.isEmpty();
+
+		if (hasGroupByFields) {
+			QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
+			QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
+
+			Root<RootEntity> root = jpaContext.getRoot();
+			QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
+
+			int groupByFieldCount = groupByFields.size();
+			List<Expression<?>> groupByExpressions = new ArrayList<Expression<?>>(groupByFieldCount);
+
+			for (String groupByField : groupByFields) {
+				Expression<?> path = pathFactory.getPathForField(jpaContext,
+						root,
+						groupByField,
+						QueryInfoAttributePurpose.GROUP_BY);
+
+				groupByExpressions.add(path);
+			}
+
+			CriteriaQuery<Object> criteriaQuery = jpaContext.getCriteriaQuery();
+			criteriaQuery.groupBy(groupByExpressions);
+		}
 	}
 
 	protected void setQueryOrders(QueryInfoJPAContext<RootEntity> jpaContext,
