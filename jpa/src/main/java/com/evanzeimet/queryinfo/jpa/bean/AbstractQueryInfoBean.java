@@ -143,6 +143,25 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return resultConveter.convert(criteriaQueryResults);
 	}
 
+	public QueryInfoResult queryForOne(QueryInfo queryInfo) throws QueryInfoException {
+		QueryInfoResult result;
+
+		List<QueryInfoResult> queryResults = query(queryInfo);
+		int resultCount = queryResults.size();
+
+		if (resultCount == 1) {
+			result = queryResults.get(0);
+		} else if (resultCount > 1) {
+			String message = String.format("Query for one expected 1 or 0 results but found [%s]",
+				resultCount);
+			throw new QueryInfoException(message);
+		} else {
+			result = null;
+		}
+
+		return result;
+	}
+
 	public PaginatedResult<QueryInfoResult> queryForPaginatedResult(QueryInfo queryInfo)
 			throws QueryInfoException {
 		PaginatedResult<QueryInfoResult> result = new DefaultPaginatedResult<>();
