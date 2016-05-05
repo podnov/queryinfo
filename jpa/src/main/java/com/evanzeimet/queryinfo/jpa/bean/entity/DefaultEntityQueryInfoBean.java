@@ -22,8 +22,6 @@ package com.evanzeimet.queryinfo.jpa.bean.entity;
  * #L%
  */
 
-import javax.persistence.EntityManager;
-
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
@@ -34,9 +32,8 @@ public class DefaultEntityQueryInfoBean<RootEntity>
 		super();
 	}
 
-	public DefaultEntityQueryInfoBean(QueryInfoBeanContext<RootEntity, RootEntity, RootEntity> context,
-			EntityManager entityManager) {
-		super(context, entityManager);
+	public DefaultEntityQueryInfoBean(QueryInfoBeanContext<RootEntity, RootEntity, RootEntity> context) {
+		super(context);
 	}
 
 }

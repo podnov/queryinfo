@@ -23,7 +23,6 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  */
 
 
-import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.bean.DefaultTupleQueryInfoBean;
@@ -36,8 +35,7 @@ public class DefaultTupleToJSONQueryInfoBean<RootEntity> extends DefaultTupleQue
 		super();
 	}
 
-	public DefaultTupleToJSONQueryInfoBean(QueryInfoBeanContext<RootEntity, Tuple, ObjectNode> context,
-			EntityManager entityManager) {
-		super(context, entityManager);
+	public DefaultTupleToJSONQueryInfoBean(QueryInfoBeanContext<RootEntity, Tuple, ObjectNode> context) {
+		super(context);
 	}
 }

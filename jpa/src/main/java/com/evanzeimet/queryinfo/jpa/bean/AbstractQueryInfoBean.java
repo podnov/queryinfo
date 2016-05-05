@@ -27,7 +27,6 @@ package com.evanzeimet.queryinfo.jpa.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -62,21 +61,19 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	protected QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext;
 	protected CriteriaBuilder criteriaBuilder;
 	protected EntityManager entityManager;
-	private QueryInfoUtils queryInfoUtils;
+	private final QueryInfoUtils queryInfoUtils = new QueryInfoUtils();
 
 	public AbstractQueryInfoBean() {
 		super();
 	}
 
-	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext,
-			EntityManager entityManager) {
+	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
 		setBeanContext(beanContext);
-		this.entityManager = entityManager;
-		postConstruct();
 	}
 
 	protected void setBeanContext(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
 		this.beanContext = beanContext;
+		updateStateForBeanContext();
 	}
 
 	protected QueryInfo coalesceQueryInfo(QueryInfo queryInfo) {
@@ -108,13 +105,6 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return jpaContextFactory.createJpaContext(criteriaBuilder,
 				beanContext,
 				criteriaQuery);
-	}
-
-	@PostConstruct
-	protected void postConstruct() {
-		entityManager = beanContext.getEntityManager();
-		criteriaBuilder = entityManager.getCriteriaBuilder();
-		queryInfoUtils = new QueryInfoUtils();
 	}
 
 	public List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException {
@@ -259,5 +249,10 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 			QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoSelectionSetter<RootEntity> selectionSetter = beanContext.getSelectionSetter();
 		selectionSetter.setSelection(jpaContext, queryInfo);
+	}
+
+	protected void updateStateForBeanContext() {
+		entityManager = beanContext.getEntityManager();
+		criteriaBuilder = entityManager.getCriteriaBuilder();
 	}
 }
