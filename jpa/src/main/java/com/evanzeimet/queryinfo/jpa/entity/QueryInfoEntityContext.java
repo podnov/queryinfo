@@ -30,6 +30,8 @@ public interface QueryInfoEntityContext<Entity> {
 
 	Class<Entity> getEntityClass();
 
+	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
+
 	QueryInfoPathFactory<Entity> getPathFactory();
 
 	QueryInfoAttributeContext getQueryInfoAttributeContext();

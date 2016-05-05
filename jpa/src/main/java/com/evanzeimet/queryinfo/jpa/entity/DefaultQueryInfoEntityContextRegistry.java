@@ -31,7 +31,7 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultQueryInfoEntityContextRegistry implements QueryInfoEntityContextRegistry {
 
-	private List<QueryInfoEntityContext<?>> entityContexts;
+	protected List<QueryInfoEntityContext<?>> entityContexts;
 
 	public DefaultQueryInfoEntityContextRegistry(List<QueryInfoEntityContext<?>> entityContexts) {
 		this.entityContexts = entityContexts;
