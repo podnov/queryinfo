@@ -25,6 +25,7 @@ package com.evanzeimet.queryinfo.jpa.selection;
 
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
@@ -39,4 +40,5 @@ public class DefaultEntityQueryInfoSelectionSetter<RootEntity>
 		Root<RootEntity> root = jpaContext.getRoot();
 		criteriaQuery.select(root);
 	}
+
 }

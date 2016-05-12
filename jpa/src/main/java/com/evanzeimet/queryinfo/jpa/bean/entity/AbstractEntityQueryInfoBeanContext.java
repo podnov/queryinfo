@@ -1,10 +1,9 @@
 package com.evanzeimet.queryinfo.jpa.bean.entity;
 
-
+import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry;
-
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 /*
  * #%L
  * queryinfo-jpa
@@ -26,8 +25,6 @@ import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry
  * limitations under the License.
  * #L%
  */
-
-
 import com.evanzeimet.queryinfo.jpa.result.DefaultEntityQueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultEntityQueryInfoSelectionSetter;
@@ -36,15 +33,20 @@ import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		extends AbstractQueryInfoBeanContext<RootEntity, RootEntity, RootEntity> {
 
-	private QueryInfoResultConverter<RootEntity, RootEntity> resultConveter = new DefaultEntityQueryInfoResultConverter<>();
-	private QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
+	private final QueryInfoResultConverter<RootEntity, RootEntity> resultConveter = new DefaultEntityQueryInfoResultConverter<>();
+	private final QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
 
 	public AbstractEntityQueryInfoBeanContext() {
 		super();
 	}
 
-	public AbstractEntityQueryInfoBeanContext(DefaultQueryInfoEntityContextRegistry entityContextRegistry) {
-		super(entityContextRegistry);
+	public AbstractEntityQueryInfoBeanContext(EntityManager entityManager) {
+		super(entityManager);
+	}
+
+	public AbstractEntityQueryInfoBeanContext(EntityManager entityManager,
+			QueryInfoEntityContextRegistry entityContextRegistry) {
+		super(entityManager, entityContextRegistry);
 	}
 
 	@Override

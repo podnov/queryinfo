@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.selection;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,11 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
-import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
+public interface TupleQueryInfoSelectionSetter<RootEntity> extends
+		QueryInfoSelectionSetter<RootEntity> {
 
-public interface QueryInfoEntityContext<Entity> {
-
-	Class<Entity> getEntityClass();
-
-	QueryInfoPathFactory<Entity> getPathFactory();
-
-	QueryInfoAttributeContext getQueryInfoAttributeContext();
+	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
 
 }

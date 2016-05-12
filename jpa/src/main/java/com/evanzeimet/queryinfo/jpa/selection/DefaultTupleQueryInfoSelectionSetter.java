@@ -45,12 +45,17 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
-		implements QueryInfoSelectionSetter<RootEntity> {
+		implements TupleQueryInfoSelectionSetter<RootEntity> {
 
 	protected QueryInfoEntityContextRegistry entityContextRegistry;
 	protected QueryInfoFieldUtils fieldUtils = new QueryInfoFieldUtils();
 
 	public DefaultTupleQueryInfoSelectionSetter(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
+	}
+
+	@Override
+	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
 		this.entityContextRegistry = entityContextRegistry;
 	}
 
