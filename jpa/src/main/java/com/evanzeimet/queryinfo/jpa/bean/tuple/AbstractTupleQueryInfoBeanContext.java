@@ -22,26 +22,31 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * #L%
  */
 
-
+import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
+import com.evanzeimet.queryinfo.jpa.selection.TupleQueryInfoSelectionSetter;
 
 public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> {
 
-	private QueryInfoSelectionSetter<RootEntity> selectionSetter;
+	private TupleQueryInfoSelectionSetter<RootEntity> selectionSetter;
 
 	public AbstractTupleQueryInfoBeanContext() {
 		super();
 	}
 
-	public AbstractTupleQueryInfoBeanContext(DefaultQueryInfoEntityContextRegistry entityContextRegistry) {
-		super(entityContextRegistry);
+	public AbstractTupleQueryInfoBeanContext(EntityManager entityManager) {
+		super(entityManager);
+	}
+
+	public AbstractTupleQueryInfoBeanContext(EntityManager entityManager,
+			QueryInfoEntityContextRegistry entityContextRegistry) {
+		super(entityManager, entityContextRegistry);
 	}
 
 	@Override
@@ -57,7 +62,12 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	@Override
 	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
 		super.setEntityContextRegistry(entityContextRegistry);
-		selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(entityContextRegistry);
+
+		if (selectionSetter == null) {
+			selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(entityContextRegistry);
+		} else {
+			selectionSetter.setEntityContextRegistry(entityContextRegistry);
+		}
 	}
 
 }

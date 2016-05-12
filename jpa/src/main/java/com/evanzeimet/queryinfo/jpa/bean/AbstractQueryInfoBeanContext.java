@@ -2,6 +2,7 @@ package com.evanzeimet.queryinfo.jpa.bean;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
@@ -38,6 +39,7 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	private QueryInfoEntityContextRegistry entityContextRegistry;
+	private EntityManager entityManager;
 	private final QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
 	private QueryInfoOrderFactory<RootEntity> orderFactory;
 	private QueryInfoPredicateFactory<RootEntity> predicateFactory;
@@ -46,14 +48,26 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		super();
 	}
 
-	public AbstractQueryInfoBeanContext(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this();
+	public AbstractQueryInfoBeanContext(EntityManager entityManager) {
+		super();
+		this.entityManager = entityManager;
+	}
+
+	public AbstractQueryInfoBeanContext(EntityManager entityManager,
+			QueryInfoEntityContextRegistry entityContextRegistry) {
+		super();
+		this.entityManager = entityManager;
 		setEntityContextRegistry(entityContextRegistry);
 	}
 
 	@Override
 	public QueryInfoEntityContextRegistry getEntityContextRegistry() {
 		return entityContextRegistry;
+	}
+
+	@Override
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 
 	@Override
