@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.evanzeimet.queryinfo</groupId>
 		<artifactId>queryinfo-parent</artifactId>
-		<version>0.0.7-SNAPSHOT</version>
+		<version>0.0.7</version>
 	</parent>
 
 	<artifactId>queryinfo-integration-tests-war</artifactId>
