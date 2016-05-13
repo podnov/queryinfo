@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
@@ -33,5 +32,7 @@ public interface QueryInfoEntityContext<Entity> {
 	QueryInfoPathFactory<Entity> getPathFactory();
 
 	QueryInfoAttributeContext getQueryInfoAttributeContext();
+
+	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
 
 }
