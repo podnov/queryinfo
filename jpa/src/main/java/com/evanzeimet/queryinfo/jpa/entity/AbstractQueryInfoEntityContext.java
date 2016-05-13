@@ -63,7 +63,8 @@ public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInf
 		}
 	}
 
-	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+	@Override
+	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
 		if (pathFactory == null) {
 			Class<Entity> rootEntityClass = getEntityClass();
 			pathFactory = new DefaultQueryInfoPathFactory<>(entityContextRegistry, rootEntityClass);
