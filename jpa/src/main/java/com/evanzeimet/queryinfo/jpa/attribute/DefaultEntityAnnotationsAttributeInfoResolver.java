@@ -1,7 +1,6 @@
 package com.evanzeimet.queryinfo.jpa.attribute;
 
 import java.lang.annotation.Annotation;
-
 /*
  * #%L
  * queryinfo-jpa
@@ -23,7 +22,6 @@ import java.lang.annotation.Annotation;
  * limitations under the License.
  * #L%
  */
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +50,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 
 	private static final Pattern accessorFieldNamePattern = Pattern.compile("(?:get|set)?(.+)");
 
-	private Class<T> entityClass;
+	private final Class<T> entityClass;
 
 	public DefaultEntityAnnotationsAttributeInfoResolver(Class<T> entityClass) {
 		this.entityClass = entityClass;

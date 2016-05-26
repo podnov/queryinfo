@@ -181,8 +181,7 @@ public class QueryInfoSteps {
 	}
 
 	protected List<PersonEntity> createPersonEntities(List<TestPerson> testPeople) {
-		personToEmployerOrganizationIdMapper.setReferrerReferencePersistenceIdsForTestIds(
-				testPeople);
+		personToEmployerOrganizationIdMapper.setReferrerReferencePersistenceIdsForTestIds(testPeople);
 		int personCount = testPeople.size();
 
 		List<PersonEntity> result = new ArrayList<>(personCount);
