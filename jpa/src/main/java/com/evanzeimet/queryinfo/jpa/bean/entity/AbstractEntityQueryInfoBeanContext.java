@@ -1,9 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.bean.entity;
 
-import javax.persistence.EntityManager;
-
-import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 /*
  * #%L
  * queryinfo-jpa
@@ -25,6 +21,11 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
  * limitations under the License.
  * #L%
  */
+
+import javax.persistence.EntityManager;
+
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.result.DefaultEntityQueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultEntityQueryInfoSelectionSetter;

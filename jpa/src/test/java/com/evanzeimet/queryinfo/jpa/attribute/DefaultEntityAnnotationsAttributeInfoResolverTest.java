@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -30,6 +31,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -37,7 +40,6 @@ import org.junit.Test;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
-import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
 import com.evanzeimet.queryinfo.jpa.field.DefaultQueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
@@ -47,11 +49,11 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
 public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
-	private DefaultEntityAnnotationsAttributeInfoResolver<EmployeeEntity> resolver;
+	private DefaultEntityAnnotationsAttributeInfoResolver<FTEmployeeEntity> resolver;
 
 	@Before
 	public void setUp() {
-		resolver = new DefaultEntityAnnotationsAttributeInfoResolver<EmployeeEntity>(EmployeeEntity.class);
+		resolver = new DefaultEntityAnnotationsAttributeInfoResolver<FTEmployeeEntity>(FTEmployeeEntity.class);
 	}
 
 	@Test
@@ -120,6 +122,26 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		String expected = "thingsAndStuff";
 
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void findAnnotatedMethods() {
+		List<Method> actualMethods = resolver.findAnnotatedMethods(FTEmployeeEntity.class,
+				QueryInfoField.class);
+
+		List<String> actualMethodIds = convertMethodsToIds(actualMethods);
+		Collections.sort(actualMethodIds);
+
+		List<String> expected = Arrays.asList(
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$AbstractEmployeeEntity::getInherited",
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::getEmployerEntity",
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::getStuffAndThings",
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::imOverridden",
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::isSomethingElse",
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::setThingsAndStuff"
+				);
+
+		assertEquals(expected, actualMethodIds);
 	}
 
 	@Test
@@ -237,7 +259,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 		String actualExceptionMessage = actualException.getMessage();
 		String expectedExceptionMessage = String.format(
-				"Found [3] non-unique attribute names for entity [com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest.EmployeeEntity]:%n"
+				"Found [3] non-unique attribute names for entity [com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest.FTEmployeeEntity]:%n"
 						+ "Found [2] field infos for name [field1]: field1, fieldOne.%n"
 						+ "Found [2] field infos for name [field2]: field2, fieldTwo.%n"
 						+ "Found [2] field infos for name [join1]: join1, joinOne.");
@@ -302,19 +324,44 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		assertNull(actualException);
 	}
 
+	protected List<String> convertMethodsToIds(List<Method> methods) {
+		int methodCount = methods.size();
+		List<String> result = new ArrayList<String>(methodCount);
+
+		for (Method method : methods) {
+			String methodName = method.getName();
+			String className = method.getDeclaringClass().getName();
+
+			String methodId = String.format("%s::%s", className, methodName);
+
+			result.add(methodId);
+		}
+
+		return result;
+	}
+
 	private Method getIsSomethingElseMethod() throws NoSuchMethodException {
-		return EmployeeEntity.class.getMethod("isSomethingElse");
+		return FTEmployeeEntity.class.getMethod("isSomethingElse");
 	}
 
 	private Method getStuffAndThingsGetter() throws NoSuchMethodException {
-		return EmployeeEntity.class.getMethod("getStuffAndThings");
+		return FTEmployeeEntity.class.getMethod("getStuffAndThings");
 	}
 
 	private Method getThingAndStuffSetter() throws NoSuchMethodException {
-		return EmployeeEntity.class.getMethod("setThingsAndStuff");
+		return FTEmployeeEntity.class.getMethod("setThingsAndStuff");
 	}
 
-	private static class EmployeeEntity {
+	private abstract static class AbstractEmployeeEntity {
+
+		@QueryInfoField
+		public Boolean getInherited() {
+			return true;
+		}
+
+	}
+
+	private static class FTEmployeeEntity extends AbstractEmployeeEntity {
 
 		private String stuffAndThings;
 
