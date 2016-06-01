@@ -23,6 +23,7 @@ package com.evanzeimet.queryinfo.jpa.predicate;
  */
 
 import javax.persistence.criteria.Predicate;
+
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
@@ -34,6 +35,5 @@ public interface QueryInfoPredicateFactory<RootEntity> {
 
 	Predicate[] createPredicates(QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
-
 
 }
