@@ -98,6 +98,14 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				result = path.in((Object[]) parsedFieldValue);
 				break;
 
+			case IS_NOT_NULL:
+				result = criteriaBuilder.isNotNull(path);
+				break;
+
+			case IS_NULL:
+				result = criteriaBuilder.isNull(path);
+				break;
+
 			case LESS_THAN:
 				result = criteriaBuilder.lessThan((Expression<Comparable>) path,
 						(Comparable<?>) parsedFieldValue);
@@ -117,22 +125,14 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 				result = criteriaBuilder.notEqual(path, parsedFieldValue);
 				break;
 
-			case NOT_LIKE:
-				result = criteriaBuilder.notLike((Expression<String>) path,
-						(String) parsedFieldValue);
-				break;
-
 			case NOT_IN:
 				result = path.in((Object[]) parsedFieldValue);
 				result = result.not();
 				break;
 
-			case NOT_NULL:
-				result = criteriaBuilder.isNotNull(path);
-				break;
-
-			case NULL:
-				result = criteriaBuilder.isNull(path);
+			case NOT_LIKE:
+				result = criteriaBuilder.notLike((Expression<String>) path,
+						(String) parsedFieldValue);
 				break;
 		}
 
