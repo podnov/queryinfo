@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

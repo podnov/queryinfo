@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.attribute;
+package com.evanzeimet.queryinfo.jpa.field;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,24 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+import static org.junit.Assert.assertEquals;
 
-public interface QueryInfoAttributeInfo {
+import org.junit.Test;
 
-	QueryInfoAttributeType getAttributeType();
+import com.evanzeimet.queryinfo.jpa.entity.TestOrganizationEntity_;
+import com.evanzeimet.queryinfo.jpa.entity.TestPersonEntity_;
 
-	String getJpaAttributeName();
+public class QueryInfoFieldNameBuilderTest {
 
-	void setJpaAttributeName(String jpaAttributeName);
+	@Test
+	public void build() {
+		String actual = QueryInfoFieldNameBuilder.create(TestOrganizationEntity_.employees)
+				.add(TestPersonEntity_.spouse)
+				.add(TestPersonEntity_.firstName)
+				.build();
+		String expected = "employees.spouse.firstName";
 
-	QueryInfoJoinType getJoinType();
-
-	void setJoinType(QueryInfoJoinType joinType);
-
-	String getName();
-
-	void setName(String name);
+		assertEquals(expected, actual);
+	}
 
 }

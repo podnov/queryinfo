@@ -40,9 +40,9 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 
 	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private EntityManager entityManager;
-	private final QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
-	private QueryInfoOrderFactory<RootEntity> orderFactory;
-	private QueryInfoPredicateFactory<RootEntity> predicateFactory;
+	protected final QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
+	protected QueryInfoOrderFactory<RootEntity> orderFactory;
+	protected QueryInfoPredicateFactory<RootEntity> predicateFactory;
 
 	public AbstractQueryInfoBeanContext() {
 		super();

@@ -46,6 +46,7 @@ import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.join.DefaultQueryInfoJoinInfo;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 
 public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
@@ -70,10 +71,10 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 		assertEquals(expectedJpaAttributeName, actualJpaAttributeName);
 
-		String actualFieldName = actualFieldInfo.getName();
-		String expectedFieldName = "stuffAndThings";
+		String actualName = actualFieldInfo.getName();
+		String expectedName = "stuffAndThings";
 
-		assertEquals(expectedFieldName, actualFieldName);
+		assertEquals(expectedName, actualName);
 
 		Boolean actualIsPredicateable = actualFieldInfo.getIsPredicateable();
 		assertTrue(actualIsPredicateable);
@@ -123,6 +124,56 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void createJoinInfo() throws NoSuchMethodException,
+			QueryInfoException {
+		Method annotatedMethod = getEmployerEntityGetter();
+
+		QueryInfoJoinInfo actualJoinInfo = resolver.createJoinInfo(annotatedMethod);
+
+		assertNotNull(actualJoinInfo);
+
+		String actualJpaAttributeName = actualJoinInfo.getJpaAttributeName();
+		String expectedJpaAttributeName = "employerEntity";
+
+		assertEquals(expectedJpaAttributeName, actualJpaAttributeName);
+
+		String actualName = actualJoinInfo.getName();
+		String expectedName = "employer";
+
+		assertEquals(expectedName, actualName);
+
+		QueryInfoJoinType actualJoinType = actualJoinInfo.getJoinType();
+		QueryInfoJoinType expectedJoinType = QueryInfoJoinType.LEFT;
+
+		assertEquals(expectedJoinType, actualJoinType);
+	}
+
+	@Test
+	public void createJoinInfo_nameNotSet() throws NoSuchMethodException,
+			QueryInfoException {
+		Method annotatedMethod = getSpouseEntityGetter();
+
+		QueryInfoJoinInfo actualJoinInfo = resolver.createJoinInfo(annotatedMethod);
+
+		assertNotNull(actualJoinInfo);
+
+		String actualJpaAttributeName = actualJoinInfo.getJpaAttributeName();
+		String expectedJpaAttributeName = "spouseEntity";
+
+		assertEquals(expectedJpaAttributeName, actualJpaAttributeName);
+
+		String actualName = actualJoinInfo.getName();
+		String expectedName = "spouseEntity";
+
+		assertEquals(expectedName, actualName);
+
+		QueryInfoJoinType actualJoinType = actualJoinInfo.getJoinType();
+		QueryInfoJoinType expectedJoinType = QueryInfoJoinType.UNSPECIFIED;
+
+		assertEquals(expectedJoinType, actualJoinType);
+	}
 
 	@Test
 	public void findAnnotatedMethods() {
@@ -133,12 +184,12 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		Collections.sort(actualMethodIds);
 
 		List<String> expected = Arrays.asList(
-				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$AbstractEmployeeEntity::getInherited",
 				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::getEmployerEntity",
 				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::getStuffAndThings",
 				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::imOverridden",
 				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::isSomethingElse",
-				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::setThingsAndStuff"
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$FTEmployeeEntity::setThingsAndStuff",
+				"com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolverTest$PersonEntity::getInherited"
 				);
 
 		assertEquals(expected, actualMethodIds);
@@ -340,8 +391,16 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		return result;
 	}
 
+	private Method getEmployerEntityGetter() throws NoSuchMethodException {
+		return FTEmployeeEntity.class.getMethod("getEmployerEntity");
+	}
+
 	private Method getIsSomethingElseMethod() throws NoSuchMethodException {
 		return FTEmployeeEntity.class.getMethod("isSomethingElse");
+	}
+
+	private Method getSpouseEntityGetter() throws NoSuchMethodException {
+		return FTEmployeeEntity.class.getMethod("getSpouseEntity");
 	}
 
 	private Method getStuffAndThingsGetter() throws NoSuchMethodException {
@@ -352,7 +411,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		return FTEmployeeEntity.class.getMethod("setThingsAndStuff");
 	}
 
-	private abstract static class AbstractEmployeeEntity {
+	private static class PersonEntity {
 
 		@QueryInfoField
 		public Boolean getInherited() {
@@ -361,7 +420,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 	}
 
-	private static class FTEmployeeEntity extends AbstractEmployeeEntity {
+	private static class FTEmployeeEntity extends PersonEntity {
 
 		private String stuffAndThings;
 
@@ -388,8 +447,14 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 		}
 
 		@QueryInfoField(name = "employer")
-		@QueryInfoJoin(name = "employer")
+		@QueryInfoJoin(name = "employer",
+				joinType = QueryInfoJoinType.LEFT)
 		public EmployerEntity getEmployerEntity() {
+			return null;
+		}
+
+		@QueryInfoJoin
+		public PersonEntity getSpouseEntity() {
 			return null;
 		}
 	}

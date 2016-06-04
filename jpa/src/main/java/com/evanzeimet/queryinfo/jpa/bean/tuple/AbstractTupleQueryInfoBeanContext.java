@@ -34,7 +34,7 @@ import com.evanzeimet.queryinfo.jpa.selection.TupleQueryInfoSelectionSetter;
 public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> {
 
-	private TupleQueryInfoSelectionSetter<RootEntity> selectionSetter;
+	protected TupleQueryInfoSelectionSetter<RootEntity> selectionSetter;
 
 	public AbstractTupleQueryInfoBeanContext() {
 		super();

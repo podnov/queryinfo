@@ -90,16 +90,16 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 		QueryInfoField annotation = annotatedMethod.getAnnotation(QueryInfoField.class);
 
 		String jpaAttributeName = createJpaAttributeName(annotatedMethod);
-		String fieldName = annotation.name();
+		String name = annotation.name();
 
-		if (StringUtils.isBlank(fieldName)) {
-			fieldName = jpaAttributeName;
+		if (StringUtils.isBlank(name)) {
+			name = jpaAttributeName;
 		}
 
 		return QueryInfoFieldInfoBuilder.create()
 				.annotation(annotation)
-				.name(fieldName)
 				.jpaAttributeName(jpaAttributeName)
+				.name(name)
 				.build();
 	}
 
@@ -121,10 +121,16 @@ public class DefaultEntityAnnotationsAttributeInfoResolver<T>
 		QueryInfoJoin annotation = annotatedMethod.getAnnotation(QueryInfoJoin.class);
 
 		String jpaAttributeName = createJpaAttributeName(annotatedMethod);
+		String name = annotation.name();
+
+		if (StringUtils.isBlank(name)) {
+			name = jpaAttributeName;
+		}
 
 		return QueryInfoJoinInfoBuilder.create()
 				.annotation(annotation)
 				.jpaAttributeName(jpaAttributeName)
+				.name(name)
 				.build();
 	}
 

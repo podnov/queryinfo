@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.attribute;
+package com.evanzeimet.queryinfo.jpa.entity;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,22 +22,19 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+public class TestEmployeeEntity extends TestPersonEntity {
 
-public interface QueryInfoAttributeInfo {
+	private Long employeeId;
 
-	QueryInfoAttributeType getAttributeType();
+	public TestEmployeeEntity() {
 
-	String getJpaAttributeName();
+	}
 
-	void setJpaAttributeName(String jpaAttributeName);
+	public Long getEmployeeId() {
+		return employeeId;
+	}
 
-	QueryInfoJoinType getJoinType();
-
-	void setJoinType(QueryInfoJoinType joinType);
-
-	String getName();
-
-	void setName(String name);
-
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
 }
