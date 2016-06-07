@@ -23,6 +23,7 @@ package com.evanzeimet.queryinfo.jpa.order;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -42,23 +43,17 @@ import com.evanzeimet.queryinfo.sort.SortDirection;
 
 public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderFactory<RootEntity> {
 
-	protected QueryInfoEntityContextRegistry entityContextRegistry;
+	public DefaultQueryInfoOrderFactory() {
 
-	public DefaultQueryInfoOrderFactory(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
 	}
 
-	@Override
-	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
-	}
-
-	protected Order createOrder(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected Order createOrder(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			Sort sort) throws QueryInfoException {
 		Order result;
 
 		String fieldName = sort.getFieldName();
-		Expression<?> path = getPathForField(jpaContext, fieldName);
+		Expression<?> path = getPathForField(entityContextRegistry, jpaContext, fieldName);
 
 		CriteriaBuilder criteriaBuilder = jpaContext.getCriteriaBuilder();
 		SortDirection direction = SortDirection.fromSort(sort);
@@ -73,25 +68,27 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 	}
 
 	@Override
-	public List<Order> createOrders(QueryInfoJPAContext<RootEntity> jpaContext,
+	public List<Order> createOrders(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		List<Sort> sorts = queryInfo.getSorts();
-		return createOrders(jpaContext, sorts);
+		return createOrders(entityContextRegistry, jpaContext, sorts);
 	}
 
-	protected List<Order> createOrders(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected List<Order> createOrders(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			List<Sort> sorts) throws QueryInfoException {
 		List<Order> result;
 
 		if (sorts == null) {
-			result = new ArrayList<>(0);
+			result = Collections.emptyList();
 		} else {
 			int sortCount = sorts.size();
 
 			result = new ArrayList<>(sortCount);
 
 			for (Sort sort : sorts) {
-				Order order = createOrder(jpaContext, sort);
+				Order order = createOrder(entityContextRegistry, jpaContext, sort);
 				result.add(order);
 			}
 		}
@@ -99,7 +96,8 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 		return result;
 	}
 
-	protected Expression<?> getPathForField(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected Expression<?> getPathForField(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			String fieldName) throws QueryInfoException {
 		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();

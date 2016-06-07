@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.selection;
+package com.evanzeimet.queryinfo.jpa.group;
 
 /*
  * #%L
@@ -22,11 +22,19 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
+import java.util.List;
+
+import javax.persistence.criteria.Expression;
+
+import com.evanzeimet.queryinfo.QueryInfo;
+import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface TupleQueryInfoSelectionSetter<RootEntity> extends
-		QueryInfoSelectionSetter<RootEntity> {
+public interface QueryInfoGroupByFactory<RootEntity> {
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
+	List<Expression<?>> createGroupByExpressions(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfo queryInfo) throws QueryInfoException;
 
 }

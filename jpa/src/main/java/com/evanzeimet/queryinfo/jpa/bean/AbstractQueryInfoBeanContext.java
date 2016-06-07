@@ -6,6 +6,8 @@ import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
+import com.evanzeimet.queryinfo.jpa.group.DefaultQueryInfoGroupByFactory;
+import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
@@ -34,15 +36,15 @@ import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
  * #L%
  */
 
-
 public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult>
 		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private EntityManager entityManager;
+	protected QueryInfoGroupByFactory<RootEntity> groupByFactory = new DefaultQueryInfoGroupByFactory<>();
 	protected final QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
-	protected QueryInfoOrderFactory<RootEntity> orderFactory;
-	protected QueryInfoPredicateFactory<RootEntity> predicateFactory;
+	protected QueryInfoOrderFactory<RootEntity> orderFactory = new DefaultQueryInfoOrderFactory<>();
+	protected QueryInfoPredicateFactory<RootEntity> predicateFactory = new DefaultQueryInfoPredicateFactory<>();
 
 	public AbstractQueryInfoBeanContext() {
 		super();
@@ -68,6 +70,11 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	@Override
 	public EntityManager getEntityManager() {
 		return entityManager;
+	}
+
+	@Override
+	public QueryInfoGroupByFactory<RootEntity> getGroupByFactory() {
+		return groupByFactory;
 	}
 
 	@Override
@@ -100,17 +107,5 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 
 	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
 		this.entityContextRegistry = entityContextRegistry;
-
-		if (orderFactory == null) {
-			orderFactory = new DefaultQueryInfoOrderFactory<>(entityContextRegistry);
-		} else {
-			orderFactory.setEntityContextRegistry(entityContextRegistry);
-		}
-
-		if (predicateFactory == null) {
-			predicateFactory = new DefaultQueryInfoPredicateFactory<>(entityContextRegistry);
-		} else {
-			predicateFactory.setEntityContextRegistry(entityContextRegistry);
-		}
 	}
 }

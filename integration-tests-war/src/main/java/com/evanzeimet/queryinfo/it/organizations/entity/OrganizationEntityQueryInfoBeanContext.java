@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.it.organizations.entity;
 
-
-
 /*
  * #%L
  * queryinfo-integration-tests
@@ -24,10 +22,10 @@ package com.evanzeimet.queryinfo.it.organizations.entity;
  * #L%
  */
 
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
 import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.bean.entity.AbstractEntityQueryInfoBeanContext;

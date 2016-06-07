@@ -22,19 +22,20 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
-
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultEntityQueryInfoSelectionSetter<RootEntity>
 		implements QueryInfoSelectionSetter<RootEntity> {
 
 	@Override
-	public void setSelection(QueryInfoJPAContext<RootEntity> jpaContext,
+	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		CriteriaQuery<RootEntity> criteriaQuery = jpaContext.getCriteriaQuery();
 		Root<RootEntity> root = jpaContext.getRoot();

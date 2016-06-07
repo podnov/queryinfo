@@ -44,21 +44,16 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
-		implements TupleQueryInfoSelectionSetter<RootEntity> {
+		implements QueryInfoSelectionSetter<RootEntity> {
 
-	protected QueryInfoEntityContextRegistry entityContextRegistry;
 	protected QueryInfoFieldUtils fieldUtils = new QueryInfoFieldUtils();
 
-	public DefaultTupleQueryInfoSelectionSetter(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
+	public DefaultTupleQueryInfoSelectionSetter() {
+
 	}
 
-	@Override
-	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
-	}
-
-	protected void setRequestAllSelection(QueryInfoJPAContext<RootEntity> jpaContext)
+	protected void setRequestAllSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext)
 				throws QueryInfoException {
 		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
@@ -75,10 +70,11 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 			fieldNames.add(fieldName);
 		}
 
-		setFieldNamesSelection(jpaContext, fieldNames);
+		setFieldNamesSelection(entityContextRegistry, jpaContext, fieldNames);
 	}
 
-	protected void setFieldNamesSelection(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected void setFieldNamesSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			List<String> requestedFields) throws QueryInfoException {
 		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
@@ -101,21 +97,23 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 		criteriaQuery.multiselect(selections);
 	}
 
-	protected void setRequestedFieldsSelection(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected void setRequestedFieldsSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		List<String> fieldNames = fieldUtils.coalesceRequestedFields(queryInfo);
-		setFieldNamesSelection(jpaContext, fieldNames);
+		setFieldNamesSelection(entityContextRegistry, jpaContext, fieldNames);
 	}
 
 	@Override
-	public void setSelection(QueryInfoJPAContext<RootEntity> jpaContext,
+	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		boolean hasRequestedAllFields = fieldUtils.hasRequestedAllFields(queryInfo);
 
 		if (hasRequestedAllFields) {
-			setRequestAllSelection(jpaContext);
+			setRequestAllSelection(entityContextRegistry, jpaContext);
 		} else {
-			setRequestedFieldsSelection(jpaContext, queryInfo);
+			setRequestedFieldsSelection(entityContextRegistry, jpaContext, queryInfo);
 		}
 	}
 }
