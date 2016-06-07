@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.selection;
+package com.evanzeimet.queryinfo.jpa.field;
 
 /*
  * #%L
@@ -22,11 +22,24 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import static org.junit.Assert.assertEquals;
 
-public interface TupleQueryInfoSelectionSetter<RootEntity> extends
-		QueryInfoSelectionSetter<RootEntity> {
+import org.junit.Test;
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
+import com.evanzeimet.queryinfo.jpa.entity.TestOrganizationEntity_;
+import com.evanzeimet.queryinfo.jpa.entity.TestPersonEntity_;
+
+public class QueryInfoFieldNameBuilderTest {
+
+	@Test
+	public void build() {
+		String actual = QueryInfoFieldNameBuilder.create(TestOrganizationEntity_.employees)
+				.add(TestPersonEntity_.spouse)
+				.add(TestPersonEntity_.firstName)
+				.build();
+		String expected = "employees.spouse.firstName";
+
+		assertEquals(expected, actual);
+	}
 
 }

@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.attribute;
 
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
-
 /*
  * #%L
  * queryinfo-jpa
@@ -24,6 +22,7 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
  * #L%
  */
 
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 
 public interface QueryInfoAttributeInfo {
 

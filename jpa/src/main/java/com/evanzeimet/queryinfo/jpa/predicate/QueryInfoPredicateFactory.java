@@ -31,9 +31,8 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public interface QueryInfoPredicateFactory<RootEntity> {
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
-
-	Predicate[] createPredicates(QueryInfoJPAContext<RootEntity> jpaContext,
+	Predicate[] createPredicates(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
 
 }

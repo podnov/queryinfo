@@ -29,12 +29,11 @@ import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
-import com.evanzeimet.queryinfo.jpa.selection.TupleQueryInfoSelectionSetter;
 
 public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> {
 
-	private TupleQueryInfoSelectionSetter<RootEntity> selectionSetter;
+	protected QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>();
 
 	public AbstractTupleQueryInfoBeanContext() {
 		super();
@@ -57,17 +56,6 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	@Override
 	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
 		return selectionSetter;
-	}
-
-	@Override
-	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		super.setEntityContextRegistry(entityContextRegistry);
-
-		if (selectionSetter == null) {
-			selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>(entityContextRegistry);
-		} else {
-			selectionSetter.setEntityContextRegistry(entityContextRegistry);
-		}
 	}
 
 }

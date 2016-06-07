@@ -25,6 +25,7 @@ package com.evanzeimet.queryinfo.jpa.bean;
 import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
@@ -38,6 +39,8 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 	QueryInfoEntityContextRegistry getEntityContextRegistry();
 
 	EntityManager getEntityManager();
+
+	QueryInfoGroupByFactory<RootEntity> getGroupByFactory();
 
 	QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory();
 

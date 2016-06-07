@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.selection;
+package com.evanzeimet.queryinfo.jpa.group;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,18 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
+import java.util.List;
+
+import javax.persistence.criteria.Expression;
+
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoSelectionSetter<RootEntity> {
+public interface QueryInfoGroupByFactory<RootEntity> {
 
-	void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+	List<Expression<?>> createGroupByExpressions(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
 

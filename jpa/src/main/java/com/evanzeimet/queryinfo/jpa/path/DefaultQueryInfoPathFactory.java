@@ -120,8 +120,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 				purpose);
 	}
 
-	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(
-			Join<RootEntity, JoinedEntity> join) {
+	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(Join<RootEntity, JoinedEntity> join) {
 		Class<JoinedEntity> joinedClass = join.getModel().getBindableJavaType();
 		QueryInfoEntityContext<JoinedEntity> joinBeanContext = entityContextRegistry.getContext(joinedClass);
 

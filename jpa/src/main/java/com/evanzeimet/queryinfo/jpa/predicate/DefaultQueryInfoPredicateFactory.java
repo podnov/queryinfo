@@ -47,20 +47,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPredicateFactory<RootEntity> {
 
-	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private final FieldValueParser fieldValueParser = new FieldValueParser();
 
-	public DefaultQueryInfoPredicateFactory(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
-	}
+	public DefaultQueryInfoPredicateFactory() {
 
-	@Override
-	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Predicate createPredicate(QueryInfoJPAContext jpaContext,
+	protected Predicate createPredicate(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext jpaContext,
 			String fieldName,
 			ConditionOperator conditionOperator,
 			JsonNode fieldValue) throws QueryInfoException {
@@ -139,7 +134,8 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		return result;
 	}
 
-	protected Predicate createPredicateForCondition(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected Predicate createPredicateForCondition(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			Condition condition) throws QueryInfoException {
 		Predicate result = null;
 		String fieldName = condition.getLeftHandSide();
@@ -152,7 +148,8 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		boolean hasOperator = (conditionOperator != null);
 
 		if (hasFieldName && hasOperator) {
-			result = createPredicate(jpaContext,
+			result = createPredicate(entityContextRegistry,
+					jpaContext,
 					fieldName,
 					conditionOperator,
 					fieldValue);
@@ -170,18 +167,21 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		return result;
 	}
 
-	protected Predicate createPredicateForConditionGroup(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected Predicate createPredicateForConditionGroup(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			ConditionGroup conditionGroup) throws QueryInfoException {
 		Predicate result;
 		List<Predicate> predicateList = new ArrayList<>();
 
 		List<ConditionGroup> conditionGroups = conditionGroup.getConditionGroups();
-		List<Predicate> conditionGroupsPredicates = createPredicatesForConditionGroups(jpaContext,
+		List<Predicate> conditionGroupsPredicates = createPredicatesForConditionGroups(entityContextRegistry,
+				jpaContext,
 				conditionGroups);
 		predicateList.addAll(conditionGroupsPredicates);
 
 		List<Condition> conditions = conditionGroup.getConditions();
-		List<Predicate> conditionsPredicates = createPredicatesForConditions(jpaContext,
+		List<Predicate> conditionsPredicates = createPredicatesForConditions(entityContextRegistry,
+				jpaContext,
 				conditions);
 		predicateList.addAll(conditionsPredicates);
 
@@ -208,12 +208,14 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 	}
 
 	@Override
-	public Predicate[] createPredicates(QueryInfoJPAContext<RootEntity> jpaContext,
+	public Predicate[] createPredicates(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		Predicate[] result;
 		ConditionGroup conditionGroup = queryInfo.getConditionGroup();
 
-		Predicate predicate = createPredicateForConditionGroup(jpaContext,
+		Predicate predicate = createPredicateForConditionGroup(entityContextRegistry,
+				jpaContext,
 				conditionGroup);
 
 		if (predicate == null) {
@@ -225,13 +227,15 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		return result;
 	}
 
-	protected List<Predicate> createPredicatesForConditionGroups(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected List<Predicate> createPredicatesForConditionGroups(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			List<ConditionGroup> conditionGroups) throws QueryInfoException {
 		List<Predicate> result = new ArrayList<>();
 
 		if (conditionGroups != null) {
 			for (ConditionGroup conditionGroup : conditionGroups) {
-				Predicate predicate = createPredicateForConditionGroup(jpaContext,
+				Predicate predicate = createPredicateForConditionGroup(entityContextRegistry,
+						jpaContext,
 						conditionGroup);
 
 				if (predicate != null) {
@@ -243,13 +247,15 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		return result;
 	}
 
-	protected List<Predicate> createPredicatesForConditions(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected List<Predicate> createPredicatesForConditions(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext,
 			List<Condition> conditions) throws QueryInfoException {
 		List<Predicate> result = new ArrayList<>();
 
 		if (conditions != null) {
 			for (Condition condition : conditions) {
-				Predicate predicate = createPredicateForCondition(jpaContext,
+				Predicate predicate = createPredicateForCondition(entityContextRegistry,
+						jpaContext,
 						condition);
 				result.add(predicate);
 			}

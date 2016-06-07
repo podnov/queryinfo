@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.field;
  * #L%
  */
 
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
