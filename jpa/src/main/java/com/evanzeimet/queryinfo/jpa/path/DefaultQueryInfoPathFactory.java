@@ -40,12 +40,9 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 public class DefaultQueryInfoPathFactory<RootEntity>
 		implements QueryInfoPathFactory<RootEntity> {
 
-	protected QueryInfoEntityContextRegistry entityContextRegistry;
 	protected Class<RootEntity> entityClass;
 
-	public DefaultQueryInfoPathFactory(QueryInfoEntityContextRegistry entityContextRegistry,
-			Class<RootEntity> entityClass) {
-		this.entityContextRegistry = entityContextRegistry;
+	public DefaultQueryInfoPathFactory(Class<RootEntity> entityClass) {
 		this.entityClass = entityClass;
 	}
 
@@ -54,27 +51,21 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		return entityClass;
 	}
 
-	@Override
-	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
-	}
-
-	protected QueryInfoAttributeContext getAttributeContext(From<?, RootEntity> from) {
-		QueryInfoEntityContext<?> entityContext = getEntityContext(from);
+	protected QueryInfoAttributeContext getAttributeContext(QueryInfoEntityContextRegistry entityContextRegistry,
+			From<?, RootEntity> from) {
+		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(from);
 		return entityContext.getQueryInfoAttributeContext();
 	}
 
-	protected QueryInfoEntityContext<RootEntity> getEntityContext(From<?, RootEntity> from) {
-		return entityContextRegistry.getContext(from);
-	}
-
-	protected <T> Expression<T> getEntityPath(QueryInfoJPAContext<?> jpaContext,
+	protected <T> Expression<T> getEntityPath(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String queryInfoFieldAttributeName,
 			QueryInfoAttributePurpose purpose) throws QueryInfoException {
 		Expression<T> result = null;
 
-		QueryInfoFieldInfo fieldInfo = validateFieldInfo(jpaContext,
+		QueryInfoFieldInfo fieldInfo = validateFieldInfo(entityContextRegistry,
+				jpaContext,
 				from,
 				queryInfoFieldAttributeName,
 				purpose);
@@ -95,32 +86,42 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		return result;
 	}
 
-	protected <JoinedEntity> Join<RootEntity, JoinedEntity> getJoin(QueryInfoJPAContext<?> jpaContext,
+	protected <JoinedEntity> Join<RootEntity, JoinedEntity> getJoin(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String queryInfoJoinAttributeName) throws QueryInfoException {
-		QueryInfoJoinInfo querInfoJoinInfo = validateJoinInfo(from, queryInfoJoinAttributeName);
+		QueryInfoJoinInfo querInfoJoinInfo = validateJoinInfo(entityContextRegistry,
+				from,
+				queryInfoJoinAttributeName);
 
 		return jpaContext.getJoin(from, querInfoJoinInfo);
 	}
 
-	protected <T, JoinedEntity> Expression<T> getJoinPath(QueryInfoJPAContext<?> jpaContext,
+	protected <T, JoinedEntity> Expression<T> getJoinPath(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			QueryInfoFieldPathParts pathParts,
 			QueryInfoAttributePurpose purpose) throws QueryInfoException {
 		String queryInfoJoinAttributeName = pathParts.consumeJoin();
 
-		Join<RootEntity, JoinedEntity> join = getJoin(jpaContext, from, queryInfoJoinAttributeName);
-		QueryInfoPathFactory<JoinedEntity> joinPathFactory = getJoinPathFactory(join);
+		Join<RootEntity, JoinedEntity> join = getJoin(entityContextRegistry,
+				jpaContext,
+				from,
+				queryInfoJoinAttributeName);
+		QueryInfoPathFactory<JoinedEntity> joinPathFactory = getJoinPathFactory(entityContextRegistry,
+				join);
 
 		String joinFieldName = pathParts.toString();
 
-		return joinPathFactory.getPathForField(jpaContext,
+		return joinPathFactory.getPathForField(entityContextRegistry,
+				jpaContext,
 				join,
 				joinFieldName,
 				purpose);
 	}
 
-	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(Join<RootEntity, JoinedEntity> join) {
+	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(QueryInfoEntityContextRegistry entityContextRegistry,
+			Join<RootEntity, JoinedEntity> join) {
 		Class<JoinedEntity> joinedClass = join.getModel().getBindableJavaType();
 		QueryInfoEntityContext<JoinedEntity> joinBeanContext = entityContextRegistry.getContext(joinedClass);
 
@@ -128,7 +129,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	}
 
 	@Override
-	public <T> Expression<T> getPathForField(QueryInfoJPAContext<?> jpaContext,
+	public <T> Expression<T> getPathForField(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String fieldName,
 			QueryInfoAttributePurpose purpose) throws QueryInfoException {
@@ -137,15 +139,16 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		QueryInfoFieldPathParts pathParts = QueryInfoFieldPathParts.fromFullPath(fieldName);
 
 		if (pathParts.hasJoins()) {
-			result = getJoinPath(jpaContext, from, pathParts, purpose);
+			result = getJoinPath(entityContextRegistry, jpaContext, from, pathParts, purpose);
 		} else {
-			result = getEntityPath(jpaContext, from, fieldName, purpose);
+			result = getEntityPath(entityContextRegistry, jpaContext, from, fieldName, purpose);
 		}
 
 		return result;
 	}
 
-	protected QueryInfoFieldInfo validateFieldInfo(QueryInfoJPAContext<?> jpaContext,
+	protected QueryInfoFieldInfo validateFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String queryInfoFieldAttributeName,
 			QueryInfoAttributePurpose purpose)
@@ -156,7 +159,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 			throw new QueryInfoException(message);
 		}
 
-		QueryInfoAttributeContext queryInfoAttributeContext = getAttributeContext(from);
+		QueryInfoAttributeContext queryInfoAttributeContext = getAttributeContext(entityContextRegistry,
+				from);
 
 		QueryInfoFieldInfo fieldInfo = queryInfoAttributeContext.getField(queryInfoFieldAttributeName);
 
@@ -201,9 +205,12 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		return fieldInfo;
 	}
 
-	protected QueryInfoJoinInfo validateJoinInfo(From<?, RootEntity> from, String queryInfoJoinAttributeName)
+	protected QueryInfoJoinInfo validateJoinInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			From<?, RootEntity> from,
+			String queryInfoJoinAttributeName)
 			throws QueryInfoException {
-		QueryInfoAttributeContext queryInfoAttributeContext = getAttributeContext(from);
+		QueryInfoAttributeContext queryInfoAttributeContext = getAttributeContext(entityContextRegistry,
+				from);
 		QueryInfoJoinInfo querInfoJoinInfo = queryInfoAttributeContext.getJoin(queryInfoJoinAttributeName);
 
 		if (querInfoJoinInfo == null) {

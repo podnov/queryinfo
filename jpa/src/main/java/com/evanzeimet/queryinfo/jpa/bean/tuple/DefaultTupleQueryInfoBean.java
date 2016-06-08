@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.bean;
+package com.evanzeimet.queryinfo.jpa.bean.tuple;
 
 /*
  * #%L
@@ -24,6 +24,9 @@ package com.evanzeimet.queryinfo.jpa.bean;
 
 
 import javax.persistence.Tuple;
+
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
 public class DefaultTupleQueryInfoBean<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBean<RootEntity, Tuple, QueryInfoResult> {

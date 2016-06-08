@@ -25,7 +25,6 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
 
 import javax.persistence.Tuple;
 
-import com.evanzeimet.queryinfo.jpa.bean.DefaultTupleQueryInfoBean;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

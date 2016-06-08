@@ -292,3 +292,10 @@ The default way to declare the fields on JPA entities that are in-scope for quer
 
 Entity resolution and walking is enabled by a [QueryInfoEntityContextRegistry](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContextRegistry.java). This registry contains [QueryInfoEntityContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContext.java)s for each entity that's in-scope for the QueryInfo environment and allows queries for one entity to find the appropriate contexts for joined entities.
 
+### QueryInfoBean
+
+JPA criteria query execution is performed by a query bean. The [AbstractQueryInfoBean](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/bean/AbstractQueryInfoBean.java) is the heavy-lifter that glues all the parts together. There are convenience generic versions depending on how you want to deserialize your query results. The [DefaultEntityQueryInfoBean](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/bean/entity/DefaultEntityQueryInfoBean.java) is useful when you're querying an entity and want instances of that entity returned. The [DefaultTupleQueryInfoBean](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/bean/tuple/DefaultTupleQueryInfoBean.java) is useful when you need to do some sort of custom tuple deserialization.
+
+### QueryInfoBeanContext
+
+A [QueryInfoBeanContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/bean/QueryInfoBeanContext.java) is a container for the parts that need to be glued together (or the part factories). QueryInfoBeanContexts contain all of the queryinfo state necessary for the QueryInfoBean to perform a query and return results.

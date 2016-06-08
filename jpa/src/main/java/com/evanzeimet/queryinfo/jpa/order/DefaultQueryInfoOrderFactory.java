@@ -103,7 +103,8 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
 		Root<RootEntity> root = jpaContext.getRoot();
 
-		return pathFactory.getPathForField(jpaContext,
+		return pathFactory.getPathForField(entityContextRegistry,
+				jpaContext,
 				root,
 				fieldName,
 				QueryInfoAttributePurpose.ORDER);

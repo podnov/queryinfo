@@ -37,6 +37,7 @@ import javax.persistence.criteria.From;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
@@ -48,7 +49,7 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultQueryInfoPathFactoryTest {
 
-	private Class<Entity> entityClass = Entity.class;
+	private final Class<Entity> entityClass = Entity.class;
 	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private From<?, Entity> from;
 	private QueryInfoJPAContext<?> jpaContext;
@@ -58,14 +59,15 @@ public class DefaultQueryInfoPathFactoryTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() {
-		pathFactory = new DefaultQueryInfoPathFactory<>(entityContextRegistry, entityClass);
+		pathFactory = new DefaultQueryInfoPathFactory<>(entityClass);
 		pathFactory = spy(pathFactory);
 
 		from = mock(From.class);
 		jpaContext = mock(QueryInfoJPAContext.class);
 
 		queryInfoAttributeContext = mock(QueryInfoAttributeContext.class);
-		doReturn(queryInfoAttributeContext).when(pathFactory).getAttributeContext(from);
+		doReturn(queryInfoAttributeContext).when(pathFactory).getAttributeContext(entityContextRegistry,
+				from);
 	}
 
 	@Test
@@ -82,7 +84,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -106,7 +109,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoException actualException = null;
 
 		try {
-			pathFactory.validateFieldInfo(jpaContext,
+			pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -135,7 +139,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoException actualException = null;
 
 		try {
-			pathFactory.validateFieldInfo(jpaContext,
+			pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -164,7 +169,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoException actualException = null;
 
 		try {
-			pathFactory.validateFieldInfo(jpaContext,
+			pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -193,7 +199,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoException actualException = null;
 
 		try {
-			pathFactory.validateFieldInfo(jpaContext,
+			pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -223,7 +230,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -250,7 +258,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -277,7 +286,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -305,7 +315,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -335,7 +346,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);
@@ -365,7 +377,8 @@ public class DefaultQueryInfoPathFactoryTest {
 		QueryInfoFieldInfo actualFieldInfo = null;
 
 		try {
-			actualFieldInfo = pathFactory.validateFieldInfo(jpaContext,
+			actualFieldInfo = pathFactory.validateFieldInfo(entityContextRegistry,
+					jpaContext,
 					from,
 					givenQueryInfoFieldAttributeName,
 					givenPurpose);

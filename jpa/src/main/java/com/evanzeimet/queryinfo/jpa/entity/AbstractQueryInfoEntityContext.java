@@ -22,10 +22,6 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-
 import com.evanzeimet.queryinfo.jpa.attribute.DefaultEntityAnnotationsAttributeInfoResolver;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAtrributeInfoResolver;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
@@ -34,12 +30,21 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInfoEntityContext<Entity> {
 
-	private DefaultQueryInfoPathFactory<Entity> pathFactory;
+	private QueryInfoPathFactory<Entity> pathFactory;
 	private QueryInfoAttributeContext queryInfoAttributeContext;
+
+	public AbstractQueryInfoEntityContext() {
+		setPathFactory(new DefaultQueryInfoPathFactory<Entity>(getEntityClass()));
+	}
 
 	@Override
 	public QueryInfoPathFactory<Entity> getPathFactory() {
 		return pathFactory;
+	}
+
+	protected void setPathFactory(QueryInfoPathFactory<Entity> pathFactory) {
+		this.pathFactory = pathFactory;
+		createAttributeContext();
 	}
 
 	@Override
@@ -55,23 +60,4 @@ public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInf
 		queryInfoAttributeContext = attribiteResolver.resolve(pathFactory);
 	}
 
-	@Inject
-	protected void injectQueryInfoEntityContextFactory(@QueryInfoProvided Instance<QueryInfoEntityContextRegistry> contextRegistryInstances) {
-		if (!contextRegistryInstances.isUnsatisfied()) {
-			QueryInfoEntityContextRegistry entityContextRegistry = contextRegistryInstances.iterator().next();
-			setEntityContextRegistry(entityContextRegistry);
-		}
-	}
-
-	@Override
-	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		if (pathFactory == null) {
-			Class<Entity> rootEntityClass = getEntityClass();
-			pathFactory = new DefaultQueryInfoPathFactory<>(entityContextRegistry, rootEntityClass);
-		} else {
-			pathFactory.setEntityContextRegistry(entityContextRegistry);
-		}
-
-		createAttributeContext();
-	}
 }

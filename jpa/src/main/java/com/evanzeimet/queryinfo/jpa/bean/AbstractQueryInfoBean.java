@@ -220,6 +220,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 			QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		QueryInfoPredicateFactory<RootEntity> predicateFactory = beanContext.getPredicateFactory();
+
 		Predicate[] predicates = predicateFactory.createPredicates(entityContextRegistry,
 				jpaContext,
 				queryInfo);
@@ -233,6 +234,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 			QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		QueryInfoSelectionSetter<RootEntity> selectionSetter = beanContext.getSelectionSetter();
+
 		selectionSetter.setSelection(entityContextRegistry, jpaContext, queryInfo);
 	}
 

@@ -22,13 +22,12 @@ package com.evanzeimet.queryinfo.it.organizations.tuple;
  * #L%
  */
 
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
-import com.evanzeimet.queryinfo.jpa.bean.DefaultTupleQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.tuple.DefaultTupleQueryInfoBean;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Stateless
