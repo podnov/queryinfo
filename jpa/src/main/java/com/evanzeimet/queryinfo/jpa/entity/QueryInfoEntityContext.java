@@ -33,6 +33,4 @@ public interface QueryInfoEntityContext<Entity> {
 
 	QueryInfoAttributeContext getQueryInfoAttributeContext();
 
-	void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry);
-
 }

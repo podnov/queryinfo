@@ -58,7 +58,8 @@ public class DefaultQueryInfoGroupByFactory<RootEntity>
 			result = new ArrayList<Expression<?>>(groupByFieldCount);
 
 			for (String groupByField : groupByFields) {
-				Expression<?> path = pathFactory.getPathForField(jpaContext,
+				Expression<?> path = pathFactory.getPathForField(entityContextRegistry,
+						jpaContext,
 						root,
 						groupByField,
 						QueryInfoAttributePurpose.GROUP_BY);

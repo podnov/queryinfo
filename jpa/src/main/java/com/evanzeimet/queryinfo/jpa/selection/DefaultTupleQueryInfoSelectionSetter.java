@@ -85,7 +85,8 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 		List<Selection<?>> selections = new ArrayList<>(selectionCount);
 
 		for (String requestedField : requestedFields) {
-			Expression<?> path = pathFactory.getPathForField(jpaContext,
+			Expression<?> path = pathFactory.getPathForField(entityContextRegistry,
+					jpaContext,
 					root,
 					requestedField,
 					QueryInfoAttributePurpose.SELECT);
