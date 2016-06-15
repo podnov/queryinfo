@@ -54,20 +54,23 @@ public class QueryInfoJoinKey {
 
 	@Override
 	public boolean equals(Object obj) {
+		boolean result;
+
 		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		QueryInfoJoinKey rhs = (QueryInfoJoinKey) obj;
-		return new EqualsBuilder()
+			result = false;
+		} else if (obj == this) {
+			result = true;
+		} else if (obj.getClass() != getClass()) {
+			result = false;
+		} else {
+			QueryInfoJoinKey rhs = (QueryInfoJoinKey) obj;
+			result = new EqualsBuilder()
 				.append(parentAttributeName, rhs.parentAttributeName)
 				.append(joinParent, rhs.joinParent)
 				.isEquals();
+		}
+
+		return result;
 	}
 
 	@Override

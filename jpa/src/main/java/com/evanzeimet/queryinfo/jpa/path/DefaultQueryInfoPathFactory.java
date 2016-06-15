@@ -54,7 +54,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	protected QueryInfoAttributeContext getAttributeContext(QueryInfoEntityContextRegistry entityContextRegistry,
 			From<?, RootEntity> from) {
 		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(from);
-		return entityContext.getQueryInfoAttributeContext();
+		return entityContext.getAttributeContext();
 	}
 
 	protected <T> Expression<T> getEntityPath(QueryInfoEntityContextRegistry entityContextRegistry,

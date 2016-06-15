@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L

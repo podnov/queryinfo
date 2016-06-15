@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
@@ -26,27 +26,18 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import javax.annotation.Generated;
-import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
 @SuppressWarnings("unchecked")
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
-@StaticMetamodel(TestOrganizationEntity.class)
-public abstract class TestOrganizationEntity_ {
+@StaticMetamodel(TestEmployeeEntity.class)
+public class TestEmployeeEntity_ extends TestPersonEntity_ {
 
-	public static volatile SingularAttribute<TestOrganizationEntity, String> address1;
-	public static volatile SingularAttribute<TestOrganizationEntity, String> address2;
-	public static volatile SingularAttribute<TestOrganizationEntity, String> city;
-	public static volatile ListAttribute<TestOrganizationEntity, TestEmployeeEntity> employees;
-	public static volatile SingularAttribute<TestOrganizationEntity, Long> id;
-	public static volatile SingularAttribute<TestOrganizationEntity, String> name;
-	public static volatile SingularAttribute<TestOrganizationEntity, String> phone;
-	public static volatile SingularAttribute<TestOrganizationEntity, String> state;
-	public static volatile SingularAttribute<TestOrganizationEntity, String> zip;
+	public static volatile SingularAttribute<TestPersonEntity, Long> employeeId;
 
 	static {
-		employees = mock(ListAttribute.class);
-		doReturn("employees").when(employees).getName();
+		employeeId = mock(SingularAttribute.class);
+		doReturn("employeeId").when(employeeId).getName();
 	}
 }

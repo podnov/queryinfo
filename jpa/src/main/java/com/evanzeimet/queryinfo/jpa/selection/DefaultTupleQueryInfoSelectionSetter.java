@@ -56,7 +56,7 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 			QueryInfoJPAContext<RootEntity> jpaContext)
 				throws QueryInfoException {
 		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getQueryInfoAttributeContext();
+		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getAttributeContext();
 
 		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
 		Iterator<QueryInfoFieldInfo> iterator = fields.values().iterator();
