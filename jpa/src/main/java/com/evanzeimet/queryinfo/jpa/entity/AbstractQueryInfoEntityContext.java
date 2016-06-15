@@ -31,7 +31,7 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInfoEntityContext<Entity> {
 
 	private QueryInfoPathFactory<Entity> pathFactory;
-	private QueryInfoAttributeContext queryInfoAttributeContext;
+	private QueryInfoAttributeContext attributeContext;
 
 	public AbstractQueryInfoEntityContext() {
 		setPathFactory(new DefaultQueryInfoPathFactory<Entity>(getEntityClass()));
@@ -48,16 +48,16 @@ public abstract class AbstractQueryInfoEntityContext<Entity> implements QueryInf
 	}
 
 	@Override
-	public QueryInfoAttributeContext getQueryInfoAttributeContext() {
-		return queryInfoAttributeContext;
+	public QueryInfoAttributeContext getAttributeContext() {
+		return attributeContext;
 	}
 
 	protected void createAttributeContext() {
 		Class<Entity> rootEntityClass = getEntityClass();
 		QueryInfoPathFactory<Entity> pathFactory = getPathFactory();
 
-		QueryInfoAtrributeInfoResolver<Entity> attribiteResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
-		queryInfoAttributeContext = attribiteResolver.resolve(pathFactory);
+		QueryInfoAtrributeInfoResolver<Entity> attributeResolver = new DefaultEntityAnnotationsAttributeInfoResolver<>(rootEntityClass);
+		attributeContext = attributeResolver.resolve(pathFactory);
 	}
 
 }

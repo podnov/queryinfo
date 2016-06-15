@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
@@ -25,6 +25,9 @@ package com.evanzeimet.queryinfo.jpa.entity;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
 
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+
 public class TestPersonEntity {
 
 	private String firstName;
@@ -36,6 +39,7 @@ public class TestPersonEntity {
 
 	}
 
+	@QueryInfoField
 	@Column
 	public String getFirstName() {
 		return firstName;
@@ -45,6 +49,7 @@ public class TestPersonEntity {
 		this.firstName = firstName;
 	}
 
+	@QueryInfoField
 	@Column
 	public Long getId() {
 		return id;
@@ -54,6 +59,7 @@ public class TestPersonEntity {
 		this.id = id;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getLastName() {
 		return lastName;
@@ -63,6 +69,7 @@ public class TestPersonEntity {
 		this.lastName = lastName;
 	}
 
+	@QueryInfoJoin
 	@OneToOne
 	public TestPersonEntity getSpouse() {
 		return spouse;

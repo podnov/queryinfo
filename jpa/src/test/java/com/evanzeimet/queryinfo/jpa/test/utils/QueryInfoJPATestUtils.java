@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.attribute;
+package com.evanzeimet.queryinfo.jpa.test.utils;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,24 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-import java.util.Map;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
+import javax.persistence.criteria.From;
+import javax.persistence.metamodel.Bindable;
 
-public interface QueryInfoAttributeContext {
+public class QueryInfoJPATestUtils {
 
-	QueryInfoFieldInfo getField(String queryInfoFieldAttributeName);
+	public <T extends From<?, ?>> T mockFrom(Class<T> fromClass,
+			Class<?> entityClass) {
+		T result = mock(fromClass);
 
-	Map<String, QueryInfoFieldInfo> getFields();
+		Bindable<?> model = mock(Bindable.class);
+		doReturn(model).when(result).getModel();
 
-	void setFields(Map<String, QueryInfoFieldInfo> fields);
+		doReturn(entityClass).when(model).getBindableJavaType();
 
-	QueryInfoJoinInfo getJoin(String queryInfoJoinAttributeName);
-
-	Map<String, QueryInfoJoinInfo> getJoins();
-
-	void setJoins(Map<String, QueryInfoJoinInfo> joins);
+		return result;
+	}
 
 }

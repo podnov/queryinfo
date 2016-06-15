@@ -32,44 +32,48 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class QueryInfoFieldNameBuilder<T> {
+public class QueryInfoJPAAtributeNameBuilder<T> {
 
 	private final List<String> attributeNames;
 
-	public QueryInfoFieldNameBuilder(PluralAttribute<?, ?, T> attribute) {
+	public QueryInfoJPAAtributeNameBuilder(PluralAttribute<?, ?, T> attribute) {
 		attributeNames = createAttributeNamesForRootAttribute(attribute);
 	}
 
-	public QueryInfoFieldNameBuilder(SingularAttribute<?, T> attribute) {
+	public QueryInfoJPAAtributeNameBuilder(SingularAttribute<?, T> attribute) {
 		attributeNames = createAttributeNamesForRootAttribute(attribute);
 	}
 
-	protected QueryInfoFieldNameBuilder(List<String> parents, PluralAttribute<?, ?, T> attribute) {
+	protected QueryInfoJPAAtributeNameBuilder(List<String> parents, PluralAttribute<?, ?, T> attribute) {
 		attributeNames = createAttributeNamesForChildAttribute(parents, attribute);
 	}
 
-	protected QueryInfoFieldNameBuilder(List<String> parents, SingularAttribute<?, T> attribute) {
+	protected QueryInfoJPAAtributeNameBuilder(List<String> parents, SingularAttribute<?, T> attribute) {
 		attributeNames = createAttributeNamesForChildAttribute(parents, attribute);
 	}
 
-	public <NT> QueryInfoFieldNameBuilder<NT> add(PluralAttribute<? super T, ?, NT> attribute) {
-		return new QueryInfoFieldNameBuilder<NT>(attributeNames, attribute);
+	public <NT> QueryInfoJPAAtributeNameBuilder<NT> add(PluralAttribute<? super T, ?, NT> attribute) {
+		return new QueryInfoJPAAtributeNameBuilder<NT>(attributeNames, attribute);
 	}
 
-	public <NT> QueryInfoFieldNameBuilder<NT> add(SingularAttribute<? super T, NT> attribute) {
-		return new QueryInfoFieldNameBuilder<NT>(attributeNames, attribute);
+	public <NT> QueryInfoJPAAtributeNameBuilder<NT> add(SingularAttribute<? super T, NT> attribute) {
+		return new QueryInfoJPAAtributeNameBuilder<NT>(attributeNames, attribute);
 	}
 
-	public String build() {
+	public List<String> buildList() {
+		return new ArrayList<String>(attributeNames);
+	}
+
+	public String buildString() {
 		return StringUtils.join(attributeNames, ".");
 	}
 
-	public static <T> QueryInfoFieldNameBuilder<T> create(SingularAttribute<?, T> rootAttribute) {
-		return new QueryInfoFieldNameBuilder<T>(rootAttribute);
+	public static <T> QueryInfoJPAAtributeNameBuilder<T> create(SingularAttribute<?, T> rootAttribute) {
+		return new QueryInfoJPAAtributeNameBuilder<T>(rootAttribute);
 	}
 
-	public static <T> QueryInfoFieldNameBuilder<T> create(PluralAttribute<?, ?, T> rootAttribute) {
-		return new QueryInfoFieldNameBuilder<T>(rootAttribute);
+	public static <T> QueryInfoJPAAtributeNameBuilder<T> create(PluralAttribute<?, ?, T> rootAttribute) {
+		return new QueryInfoJPAAtributeNameBuilder<T>(rootAttribute);
 	}
 
 	protected List<String> createAttributeNamesForChildAttribute(List<String> parents,

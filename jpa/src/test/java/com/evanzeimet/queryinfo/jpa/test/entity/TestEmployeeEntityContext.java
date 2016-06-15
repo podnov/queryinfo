@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.attribute;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,16 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-import java.util.Map;
+import com.evanzeimet.queryinfo.jpa.entity.AbstractQueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
+public class TestEmployeeEntityContext
+		extends AbstractQueryInfoEntityContext<TestEmployeeEntity>
+		implements QueryInfoEntityContext<TestEmployeeEntity> {
 
-public interface QueryInfoAttributeContext {
-
-	QueryInfoFieldInfo getField(String queryInfoFieldAttributeName);
-
-	Map<String, QueryInfoFieldInfo> getFields();
-
-	void setFields(Map<String, QueryInfoFieldInfo> fields);
-
-	QueryInfoJoinInfo getJoin(String queryInfoJoinAttributeName);
-
-	Map<String, QueryInfoJoinInfo> getJoins();
-
-	void setJoins(Map<String, QueryInfoJoinInfo> joins);
+	@Override
+	public Class<TestEmployeeEntity> getEntityClass() {
+		return TestEmployeeEntity.class;
+	}
 
 }

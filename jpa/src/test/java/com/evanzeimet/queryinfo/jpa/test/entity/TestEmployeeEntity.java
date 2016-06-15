@@ -1,4 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.field;
+package com.evanzeimet.queryinfo.jpa.test.entity;
+
+import javax.persistence.Column;
+
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 
 /*
  * #%L
@@ -22,24 +26,21 @@ package com.evanzeimet.queryinfo.jpa.field;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
+public class TestEmployeeEntity extends TestPersonEntity {
 
-import org.junit.Test;
+	private Long employeeId;
 
-import com.evanzeimet.queryinfo.jpa.entity.TestOrganizationEntity_;
-import com.evanzeimet.queryinfo.jpa.entity.TestPersonEntity_;
+	public TestEmployeeEntity() {
 
-public class QueryInfoFieldNameBuilderTest {
-
-	@Test
-	public void build() {
-		String actual = QueryInfoFieldNameBuilder.create(TestOrganizationEntity_.employees)
-				.add(TestPersonEntity_.spouse)
-				.add(TestPersonEntity_.firstName)
-				.build();
-		String expected = "employees.spouse.firstName";
-
-		assertEquals(expected, actual);
 	}
 
+	@QueryInfoField
+	@Column
+	public Long getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
+	}
 }

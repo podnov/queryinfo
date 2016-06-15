@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
@@ -22,22 +22,16 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
+import com.evanzeimet.queryinfo.jpa.entity.AbstractQueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 
-import javax.annotation.Generated;
-import javax.persistence.metamodel.SingularAttribute;
-import javax.persistence.metamodel.StaticMetamodel;
+public class TestOrganizationEntityContext
+		extends AbstractQueryInfoEntityContext<TestOrganizationEntity>
+		implements QueryInfoEntityContext<TestOrganizationEntity> {
 
-@SuppressWarnings("unchecked")
-@Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
-@StaticMetamodel(TestEmployeeEntity.class)
-public class TestEmployeeEntity_ extends TestPersonEntity_ {
-
-	public static volatile SingularAttribute<TestPersonEntity, Long> employeeId;
-
-	static {
-		employeeId = mock(SingularAttribute.class);
-		doReturn("employeeId").when(employeeId).getName();
+	@Override
+	public Class<TestOrganizationEntity> getEntityClass() {
+		return TestOrganizationEntity.class;
 	}
+
 }

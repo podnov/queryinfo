@@ -35,6 +35,7 @@ import javax.persistence.criteria.Predicate;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
@@ -101,6 +102,12 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 				criteriaQuery);
 	}
 
+	public QueryInfoEntityContext<RootEntity> getRootEntityContext() {
+		Class<RootEntity> rootEntityClass = beanContext.getRootEntityClass();
+		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
+		return entityContextRegistry.getContext(rootEntityClass);
+	}
+
 	public List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException {
 		queryInfo = coalesceQueryInfo(queryInfo);
 
@@ -124,6 +131,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		List<CriteriaQueryResult> criteriaQueryResults = typedQuery.getResultList();
 
 		QueryInfoResultConverter<CriteriaQueryResult, QueryInfoResult> resultConveter = beanContext.getResultConverter();
+
 		return resultConveter.convert(criteriaQueryResults);
 	}
 

@@ -301,7 +301,7 @@ public class DefaultQueryInfoPathFactoryTest {
 	}
 
 	@Test
-	public void validateFieldInfo_joinTypeSpecifiedField() {
+	public void validateFieldInfo_isJoinedField() {
 		String givenQueryInfoFieldAttributeName = "myAttributeName";
 		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.SELECT;
 

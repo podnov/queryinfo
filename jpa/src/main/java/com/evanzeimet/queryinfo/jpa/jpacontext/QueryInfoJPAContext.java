@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.jpacontext;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /*
  * #%L
@@ -24,6 +22,9 @@ import java.util.Map;
  * limitations under the License.
  * #L%
  */
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -84,7 +85,7 @@ public class QueryInfoJPAContext<RootEntity> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <L, R> Join<L, R> getJoin(From<?, ?> joinParent,
+	public <Z, X> Join<Z, X> getJoin(From<?, ?> joinParent,
 			QueryInfoAttributeInfo attributeInfo) {
 		QueryInfoJoinKey joinKey = createJoinKey(joinParent,
 				attributeInfo);
@@ -107,7 +108,7 @@ public class QueryInfoJPAContext<RootEntity> {
 			putJoin(joinKey, result);
 		}
 
-		return (Join<L, R>) result;
+		return (Join<Z, X>) result;
 	}
 
 	public QueryInfoJoinKey putJoin(From<?, ?> joinParent,

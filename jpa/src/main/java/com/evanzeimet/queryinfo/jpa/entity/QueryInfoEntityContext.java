@@ -27,10 +27,11 @@ import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public interface QueryInfoEntityContext<Entity> {
 
+	QueryInfoAttributeContext getAttributeContext();
+
 	Class<Entity> getEntityClass();
 
 	QueryInfoPathFactory<Entity> getPathFactory();
 
-	QueryInfoAttributeContext getQueryInfoAttributeContext();
 
 }

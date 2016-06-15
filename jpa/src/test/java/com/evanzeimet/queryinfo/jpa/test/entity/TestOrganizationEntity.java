@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
@@ -27,12 +27,15 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+
 public class TestOrganizationEntity {
 
 	private String address1;
 	private String address2;
 	private String city;
-	private List<TestPersonEntity> employees;
+	private List<TestEmployeeEntity> employees;
 	private Long id;
 	private String name;
 	private String phone;
@@ -43,6 +46,7 @@ public class TestOrganizationEntity {
 
 	}
 
+	@QueryInfoField
 	@Column
 	public String getAddress1() {
 		return address1;
@@ -52,6 +56,7 @@ public class TestOrganizationEntity {
 		this.address1 = address1;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getAddress2() {
 		return address2;
@@ -61,6 +66,7 @@ public class TestOrganizationEntity {
 		this.address2 = address2;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getCity() {
 		return city;
@@ -70,15 +76,17 @@ public class TestOrganizationEntity {
 		this.city = city;
 	}
 
+	@QueryInfoJoin
 	@OneToMany
-	public List<TestPersonEntity> getEmployees() {
+	public List<TestEmployeeEntity> getEmployees() {
 		return employees;
 	}
 
-	public void setEmployees(List<TestPersonEntity> employees) {
+	public void setEmployees(List<TestEmployeeEntity> employees) {
 		this.employees = employees;
 	}
 
+	@QueryInfoField
 	@Column
 	public Long getId() {
 		return id;
@@ -88,6 +96,7 @@ public class TestOrganizationEntity {
 		this.id = id;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getName() {
 		return name;
@@ -97,6 +106,7 @@ public class TestOrganizationEntity {
 		this.name = name;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getPhone() {
 		return phone;
@@ -106,6 +116,7 @@ public class TestOrganizationEntity {
 		this.phone = phone;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getState() {
 		return state;
@@ -115,6 +126,7 @@ public class TestOrganizationEntity {
 		this.state = state;
 	}
 
+	@QueryInfoField
 	@Column
 	public String getZip() {
 		return zip;

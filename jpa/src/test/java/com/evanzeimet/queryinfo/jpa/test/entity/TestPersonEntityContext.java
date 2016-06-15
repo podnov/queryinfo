@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
@@ -22,19 +22,16 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-public class TestEmployeeEntity extends TestPersonEntity {
+import com.evanzeimet.queryinfo.jpa.entity.AbstractQueryInfoEntityContext;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 
-	private Long employeeId;
+public class TestPersonEntityContext
+		extends AbstractQueryInfoEntityContext<TestPersonEntity>
+		implements QueryInfoEntityContext<TestPersonEntity> {
 
-	public TestEmployeeEntity() {
-
+	@Override
+	public Class<TestPersonEntity> getEntityClass() {
+		return TestPersonEntity.class;
 	}
 
-	public Long getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
-	}
 }
