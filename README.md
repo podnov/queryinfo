@@ -1,6 +1,6 @@
 # QueryInfo
 
-![Build Status](https://travis-ci.org/podnov/query-info.svg?branch=master)
+![Build Status](https://travis-ci.org/podnov/queryinfo.svg?branch=master)
 
 The purpose of this code is to easily create and execute dynamic queries against arbitrary data. The queryinfo-common module includes POJOs that allow you create a serializable query structure. A JSON example of this structure looks like so:
 
