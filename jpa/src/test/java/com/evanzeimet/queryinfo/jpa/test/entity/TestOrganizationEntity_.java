@@ -22,15 +22,13 @@ package com.evanzeimet.queryinfo.jpa.test.entity;
  * #L%
  */
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@SuppressWarnings("unchecked")
+import com.evanzeimet.queryinfo.jpa.test.utils.QueryInfoJPATestUtils;
+
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(TestOrganizationEntity.class)
 public abstract class TestOrganizationEntity_ {
@@ -38,15 +36,32 @@ public abstract class TestOrganizationEntity_ {
 	public static volatile SingularAttribute<TestOrganizationEntity, String> address1;
 	public static volatile SingularAttribute<TestOrganizationEntity, String> address2;
 	public static volatile SingularAttribute<TestOrganizationEntity, String> city;
-	public static volatile ListAttribute<TestOrganizationEntity, TestEmployeeEntity> employees;
+	public static volatile ListAttribute<TestOrganizationEntity, TestEmployeeEntity> employeeEntities;
 	public static volatile SingularAttribute<TestOrganizationEntity, Long> id;
 	public static volatile SingularAttribute<TestOrganizationEntity, String> name;
 	public static volatile SingularAttribute<TestOrganizationEntity, String> phone;
 	public static volatile SingularAttribute<TestOrganizationEntity, String> state;
 	public static volatile SingularAttribute<TestOrganizationEntity, String> zip;
 
+	private static final QueryInfoJPATestUtils jpaTestUtils = new QueryInfoJPATestUtils();
+
 	static {
-		employees = mock(ListAttribute.class);
-		doReturn("employees").when(employees).getName();
+		address1 = mockSingularAttribute("address1");
+		address2 = mockSingularAttribute("address2");
+		city = mockSingularAttribute("city");
+		employeeEntities = mockListAttribute("employeeEntities");
+		id = mockSingularAttribute("id");
+		name = mockSingularAttribute("name");
+		phone = mockSingularAttribute("phone");
+		state = mockSingularAttribute("state");
+		zip = mockSingularAttribute("zip");
+	}
+
+	private static <E> ListAttribute<TestOrganizationEntity, E> mockListAttribute(String name) {
+		return jpaTestUtils.mockListAttribute(name, TestOrganizationEntity.class);
+	}
+
+	private static <T> SingularAttribute<TestOrganizationEntity, T> mockSingularAttribute(String name) {
+		return jpaTestUtils.mockSingularAttribute(name, TestOrganizationEntity.class);
 	}
 }

@@ -1,8 +1,8 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.it.organizationemployee;
 
 /*
  * #%L
- * queryinfo-jpa
+ * queryinfo-integration-tests
  * $Id:$
  * $HeadURL:$
  * %%
@@ -22,15 +22,22 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-import javax.persistence.criteria.From;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoEntityContextRegistry {
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(From<?, Entity> from);
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass);
+@Path("organizationemployees")
+public interface OrganizationEmployeesResource {
 
-	public <Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	Response query(DefaultQueryInfo queryInfo);
 
 }

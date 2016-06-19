@@ -25,8 +25,10 @@ package com.evanzeimet.queryinfo.jpa.result;
 
 import java.util.List;
 
+import com.evanzeimet.queryinfo.QueryInfoException;
+
 public interface QueryInfoResultConverter<CriteriaQueryResultType, QueryInfoResultType> {
 
-	List<QueryInfoResultType> convert(List<CriteriaQueryResultType> criteriaQueryResults);
+	List<QueryInfoResultType> convert(List<CriteriaQueryResultType> criteriaQueryResults) throws QueryInfoException;
 
 }

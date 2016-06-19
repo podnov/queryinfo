@@ -1,12 +1,12 @@
-package com.evanzeimet.queryinfo.it.organizations.entity;
+package com.evanzeimet.queryinfo.it.organizationemployee;
 
 /*
  * #%L
- * queryinfo-integration-tests
+ * queryinfo-integration-tests-war
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,21 @@ package com.evanzeimet.queryinfo.it.organizations.entity;
  * #L%
  */
 
+
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
-import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.bean.tuple.DefaultTupleQueryInfoBean;
 
 @Stateless
-public class OrganizationEntityQueryInfoBean extends DefaultEntityQueryInfoBean<OrganizationEntity> {
+public class OrganizationEmployeeQueryInfoBean
+	extends DefaultTupleQueryInfoBean<OrganizationEntity, OrganizationEmployee> {
 
 	@Inject
 	@PostConstruct
-	protected void postConstruct(OrganizationEntityQueryInfoBeanContext context) {
+	protected void postConstruct(OrganizationEmployeeQueryInfoBeanContext context) {
 		setBeanContext(context);
 	}
 

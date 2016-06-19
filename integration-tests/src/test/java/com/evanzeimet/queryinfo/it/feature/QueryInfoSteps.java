@@ -122,6 +122,11 @@ public class QueryInfoSteps {
 		}
 	}
 
+	@Given("^the organization employees query info web service$")
+	public void Given_the_organization_employees_query_info_web_service() {
+		path = "/organizationemployees";
+	}
+
 	@Given("^the organizations query info web service$")
 	public void Given_the_organizations_query_info_web_service() {
 		path = "/organizations";

@@ -25,7 +25,75 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 	| I'm       | Unemployed |                          |
 
+	
+Scenario: Tuple to pojo conversion with requested fields
 
+	Given the organization employees query info web service
+	When I send the query:
+	"""
+	{
+		"requestedFields": [
+			"employees.lastName",
+			"name"
+		],
+		"sorts":[
+			{
+				"fieldName": "name",
+				"direction": "asc"
+			},
+			{
+				"fieldName": "employees.lastName",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| employeesFirstName | employeesLastName | name      |
+	| [[NULL]]           | Bezos             | Amazon    |
+	| [[NULL]]           | Zeimet            | CDW       |
+	| [[NULL]]           | Faulkner          | Epic      |
+	| [[NULL]]           | Zuckerberg        | Facebook  |
+	| [[NULL]]           | Page              | Google    |
+	| [[NULL]]           | [[NULL]]          | Pets.com  |
+	| [[NULL]]           | Bradshaw          | U.S. Navy |
+	| [[NULL]]           | Kazanski          | U.S. Navy |
+	| [[NULL]]           | Metcalf           | U.S. Navy |
+	| [[NULL]]           | Mitchell          | U.S. Navy |
+
+Scenario: Tuple to pojo conversion
+
+	Given the organization employees query info web service
+	When I send the query:
+	"""
+	{
+		"sorts":[
+			{
+				"fieldName": "name",
+				"direction": "asc"
+			},
+			{
+				"fieldName": "employees.lastName",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| employeesFirstName | employeesLastName | name      |
+	| Jeff               | Bezos             | Amazon    |
+	| Evan               | Zeimet            | CDW       |
+	| Judith             | Faulkner          | Epic      |
+	| Mark               | Zuckerberg        | Facebook  |
+	| Larry              | Page              | Google    |
+	| [[NULL]]           | [[NULL]]          | Pets.com  |
+	| Nick               | Bradshaw          | U.S. Navy |
+	| Tom                | Kazanski          | U.S. Navy |
+	| Mike               | Metcalf           | U.S. Navy |
+	| Pete               | Mitchell          | U.S. Navy |
+	
 Scenario: Basic group by
 
 	Given the organizations query info web service

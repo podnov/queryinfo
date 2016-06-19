@@ -84,8 +84,16 @@ public class QueryInfoTestUtils {
 		return new QueryInfoUtils().objectify(json, typeOfT);
 	}
 
-	public static String stringify(Object actual) throws JsonProcessingException {
+	public static String stringify(Object actual) {
+		String result;
 		ObjectWriter writer = createObjectWriter();
-		return writer.writeValueAsString(actual);
+
+		try {
+			result = writer.writeValueAsString(actual);
+		} catch (JsonProcessingException e) {
+			throw new QueryInfoRuntimeException("Could not stringify", e);
+		}
+
+		return result;
 	}
 }

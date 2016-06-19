@@ -35,7 +35,7 @@ public class TestOrganizationEntity {
 	private String address1;
 	private String address2;
 	private String city;
-	private List<TestEmployeeEntity> employees;
+	private List<TestEmployeeEntity> employeeEntities;
 	private Long id;
 	private String name;
 	private String phone;
@@ -76,14 +76,14 @@ public class TestOrganizationEntity {
 		this.city = city;
 	}
 
-	@QueryInfoJoin
+	@QueryInfoJoin(name = "employees")
 	@OneToMany
-	public List<TestEmployeeEntity> getEmployees() {
-		return employees;
+	public List<TestEmployeeEntity> getEmployeeEntities() {
+		return employeeEntities;
 	}
 
-	public void setEmployees(List<TestEmployeeEntity> employees) {
-		this.employees = employees;
+	public void setEmployeeEntities(List<TestEmployeeEntity> employeeEntities) {
+		this.employeeEntities = employeeEntities;
 	}
 
 	@QueryInfoField

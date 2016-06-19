@@ -26,7 +26,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
@@ -36,6 +38,8 @@ import org.junit.Test;
 
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.field.DefaultQueryInfoFieldInfo;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestEmployeeEntity;
@@ -54,6 +58,63 @@ public class QueryInfoAttributeUtilsTest {
 		utils = new QueryInfoAttributeUtils();
 
 		jpaTestUtils = new QueryInfoJPATestUtils();
+	}
+
+	@Test
+	public void convertAttributeNameToMemberName_joins() {
+		String givenElementAlias = "employees.spouse.lastName";
+
+		String actual = utils.convertAttributeNameToMemberName(givenElementAlias);
+		String expected = "employeesSpouseLastName";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void convertAttributeNameToMemberName_noJoin() {
+		String givenElementAlias = "lastName";
+
+		String actual = utils.convertAttributeNameToMemberName(givenElementAlias);
+		String expected = "lastName";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void getFieldInfo() {
+		Map<String, QueryInfoFieldInfo> givenFields = new HashMap<>();
+
+		QueryInfoFieldInfo givenCityFieldInfo;
+
+		{
+			QueryInfoFieldInfo fieldInfo = createFieldInfo("firstName");
+			givenFields.put(fieldInfo.getJpaAttributeName(), fieldInfo);
+		}
+		{
+			QueryInfoFieldInfo fieldInfo = createFieldInfo("lastName");
+			givenFields.put(fieldInfo.getJpaAttributeName(), fieldInfo);
+		}
+		{
+			QueryInfoFieldInfo fieldInfo = createFieldInfo("address");
+			givenFields.put(fieldInfo.getJpaAttributeName(), fieldInfo);
+		}
+		{
+			QueryInfoFieldInfo fieldInfo = createFieldInfo("city");
+			givenCityFieldInfo = fieldInfo;
+			givenFields.put(fieldInfo.getJpaAttributeName(), fieldInfo);
+		}
+		{
+			QueryInfoFieldInfo fieldInfo = createFieldInfo("state");
+			givenFields.put(fieldInfo.getJpaAttributeName(), fieldInfo);
+		}
+
+		DefaultQueryInfoAttributeContext givenAttributeContext = new DefaultQueryInfoAttributeContext();
+		givenAttributeContext.setFields(givenFields);
+
+		QueryInfoFieldInfo actual = utils.getFieldInfo(givenAttributeContext, "city");
+		QueryInfoFieldInfo expected = givenCityFieldInfo;
+
+		assertEquals(expected, actual);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,7 +136,7 @@ public class QueryInfoAttributeUtilsTest {
 
 		{
 			// bootstrap jpa joins
-			doReturn(employeesJoin).when(organizationRoot).join("employees");
+			doReturn(employeesJoin).when(organizationRoot).join("employeeEntities");
 			doReturn(employeesSpouseJoin).when(employeesJoin).join("spouse");
 			doReturn(employeesSpousesSpouseJoin).when(employeesSpouseJoin).join("spouse");
 		}
@@ -96,7 +157,7 @@ public class QueryInfoAttributeUtilsTest {
 			jpaContext.getJoin(employeesSpouseJoin, employeesSpousesSpouseJoinInfo);
 		}
 
-		List<String> jpaAttributeNames = Arrays.asList("employees", "spouse", "spouse");
+		List<String> jpaAttributeNames = Arrays.asList("employeeEntities", "spouse", "spouse");
 
 		Join<?, ?> actual = utils.getJoinForAttributePath(entityContextRegistry,
 				jpaContext,
@@ -107,4 +168,9 @@ public class QueryInfoAttributeUtilsTest {
 		assertEquals(expected, actual);
 	}
 
+	protected QueryInfoFieldInfo createFieldInfo(String jpaAttributeName) {
+		DefaultQueryInfoFieldInfo result = new DefaultQueryInfoFieldInfo();
+		result.setJpaAttributeName(jpaAttributeName);
+		return result;
+	}
 }

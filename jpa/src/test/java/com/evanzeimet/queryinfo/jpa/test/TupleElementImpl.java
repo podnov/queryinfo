@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.test;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,27 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-import javax.persistence.criteria.From;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoEntityContextRegistry {
+import javax.persistence.TupleElement;
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(From<?, Entity> from);
+public class TupleElementImpl<X> implements TupleElement<X> {
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass);
+	private String alias;
+	private Class<? extends X> javaType;
 
-	public <Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+	public TupleElementImpl(String alias, Class<? extends X> javaType) {
+		this.alias = alias;
+		this.javaType = javaType;
+	}
+
+	@Override
+	public String getAlias() {
+		return alias;
+	}
+
+	@Override
+	public Class<? extends X> getJavaType() {
+		return javaType;
+	}
 
 }
