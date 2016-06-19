@@ -31,12 +31,16 @@ import org.junit.Test;
 
 import com.evanzeimet.queryinfo.jpa.test.entity.TestOrganizationEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestPersonEntity_;
+import com.evanzeimet.queryinfo.jpa.test.entity.TestQueryInfoEntityContextRegistry;
 
 public class QueryInfoJPAAtributeNameBuilderTest {
 
 	@Test
-	public void buildList() {
-		List<String> actual = QueryInfoJPAAtributeNameBuilder.create(TestOrganizationEntity_.employees)
+	public void buildList_entityContextRegistry() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		List<String> actual = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestPersonEntity_.spouse)
 				.add(TestPersonEntity_.firstName)
 				.buildList();
@@ -47,12 +51,40 @@ public class QueryInfoJPAAtributeNameBuilderTest {
 	}
 
 	@Test
-	public void buildString() {
-		String actual = QueryInfoJPAAtributeNameBuilder.create(TestOrganizationEntity_.employees)
+	public void buildList_noEntityContextRegistry() {
+		List<String> actual = QueryInfoJPAAtributeNameBuilder.create()
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestPersonEntity_.spouse)
+				.add(TestPersonEntity_.firstName)
+				.buildList();
+
+		List<String> expected = Arrays.asList("employeeEntities", "spouse", "firstName");
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_entityContextRegistry() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		String actual = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestPersonEntity_.spouse)
 				.add(TestPersonEntity_.firstName)
 				.buildString();
 		String expected = "employees.spouse.firstName";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_noEntityContextRegistry() {
+		String actual = QueryInfoJPAAtributeNameBuilder.create()
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestPersonEntity_.spouse)
+				.add(TestPersonEntity_.firstName)
+				.buildString();
+		String expected = "employeeEntities.spouse.firstName";
 
 		assertEquals(expected, actual);
 	}

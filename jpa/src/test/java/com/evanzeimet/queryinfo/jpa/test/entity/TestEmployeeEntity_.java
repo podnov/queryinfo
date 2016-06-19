@@ -22,22 +22,25 @@ package com.evanzeimet.queryinfo.jpa.test.entity;
  * #L%
  */
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@SuppressWarnings("unchecked")
+import com.evanzeimet.queryinfo.jpa.test.utils.QueryInfoJPATestUtils;
+
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(TestEmployeeEntity.class)
 public class TestEmployeeEntity_ extends TestPersonEntity_ {
 
-	public static volatile SingularAttribute<TestPersonEntity, Long> employeeId;
+	public static volatile SingularAttribute<TestEmployeeEntity, Long> employeeId;
+
+	private static final QueryInfoJPATestUtils jpaTestUtils = new QueryInfoJPATestUtils();
 
 	static {
-		employeeId = mock(SingularAttribute.class);
-		doReturn("employeeId").when(employeeId).getName();
+		employeeId = mockSingularAttribute("employeeId");
+	}
+
+	private static <X, T> SingularAttribute<TestEmployeeEntity, T> mockSingularAttribute(String name) {
+		return jpaTestUtils.mockSingularAttribute(name, TestEmployeeEntity.class);
 	}
 }

@@ -23,14 +23,12 @@ package com.evanzeimet.queryinfo.jpa.test.entity;
  */
 
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@SuppressWarnings("unchecked")
+import com.evanzeimet.queryinfo.jpa.test.utils.QueryInfoJPATestUtils;
+
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
 @StaticMetamodel(TestPersonEntity.class)
 public abstract class TestPersonEntity_ {
@@ -40,17 +38,16 @@ public abstract class TestPersonEntity_ {
 	public static volatile SingularAttribute<TestPersonEntity, Long> id;
 	public static volatile SingularAttribute<TestPersonEntity, TestPersonEntity> spouse;
 
+	private static final QueryInfoJPATestUtils jpaTestUtils = new QueryInfoJPATestUtils();
+
 	static {
-		firstName = mock(SingularAttribute.class);
-		doReturn("firstName").when(firstName).getName();
+		firstName = mockSingularAttribute("firstName");
+		lastName = mockSingularAttribute("lastName");
+		id = mockSingularAttribute("id");
+		spouse = mockSingularAttribute("spouse");
+	}
 
-		lastName = mock(SingularAttribute.class);
-		doReturn("lastName").when(lastName).getName();
-
-		id = mock(SingularAttribute.class);
-		doReturn("id").when(id).getName();
-
-		spouse = mock(SingularAttribute.class);
-		doReturn("spouse").when(spouse).getName();
+	private static <X, T> SingularAttribute<TestPersonEntity, T> mockSingularAttribute(String name) {
+		return jpaTestUtils.mockSingularAttribute(name, TestPersonEntity.class);
 	}
 }

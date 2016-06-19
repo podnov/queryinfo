@@ -27,6 +27,9 @@ import static org.mockito.Mockito.mock;
 
 import javax.persistence.criteria.From;
 import javax.persistence.metamodel.Bindable;
+import javax.persistence.metamodel.ListAttribute;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.SingularAttribute;
 
 public class QueryInfoJPATestUtils {
 
@@ -38,6 +41,36 @@ public class QueryInfoJPATestUtils {
 		doReturn(model).when(result).getModel();
 
 		doReturn(entityClass).when(model).getBindableJavaType();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <X, E> ListAttribute<X, E> mockListAttribute(String name,
+			Class<X> hostType) {
+		ListAttribute<X, E> result = mock(ListAttribute.class);
+		doReturn(name).when(result).getName();
+
+		ManagedType<X> managedType = mockManagedType(hostType);
+		doReturn(managedType).when(result).getDeclaringType();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <X> ManagedType<X> mockManagedType(Class<X> hostType) {
+		ManagedType<X> result = mock(ManagedType.class);
+		doReturn(hostType).when(result).getJavaType();
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <X, T> SingularAttribute<X, T> mockSingularAttribute(String name, Class<X> hostType) {
+		SingularAttribute<X, T> result = mock(SingularAttribute.class);
+		doReturn(name).when(result).getName();
+
+		ManagedType<X> managedType = mockManagedType(hostType);
+		doReturn(managedType).when(result).getDeclaringType();
 
 		return result;
 	}

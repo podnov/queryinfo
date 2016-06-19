@@ -24,17 +24,102 @@ package com.evanzeimet.queryinfo.jpa.attribute;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.metamodel.Attribute;
-
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class QueryInfoAttributeUtils {
+
+	private static final Pattern convertAttributeNameToMemberNamePattern = Pattern.compile(""
+			+ "(\\w+)" // capture all word characters
+			+ "(\\.|$)" // match either join notation "." or end of line
+	);
+
+	public String convertAttributeNameToMemberName(String attributeName) {
+		Matcher matcher = convertAttributeNameToMemberNamePattern.matcher(attributeName);
+		boolean foundFirstMatch = false;
+
+		int characterCount = attributeName.length();
+		StringBuilder result = new StringBuilder(characterCount);
+
+		while (matcher.find()) {
+			String attributePart = matcher.group(1);
+
+			if (foundFirstMatch) {
+				String firstLetter = attributePart.substring(0, 1).toUpperCase();
+				String otherLetters = attributePart.substring(1);
+
+				result.append(firstLetter)
+						.append(otherLetters);
+			} else {
+				result.append(attributePart);
+			}
+
+			foundFirstMatch = true;
+		}
+
+		return result.toString();
+	}
+
+	protected QueryInfoAttributeContext getAttributeDeclaringTypeAttributeContext(
+			QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<?, ?> attribute) {
+		Class<?> declaringTypeClass = attribute.getDeclaringType().getJavaType();
+		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(declaringTypeClass);
+		return entityContext.getAttributeContext();
+	}
+
+	public <T extends QueryInfoAttributeInfo> T getAttributeInfo(Map<String, T> attributes,
+			Attribute<?, ?> jpaAttribute) {
+		String jpaAttributeName = jpaAttribute.getName();
+		return getAttributeInfo(attributes, jpaAttributeName);
+	}
+
+	public <T extends QueryInfoAttributeInfo> T getAttributeInfo(Map<String, T> attributes, String jpaAttributeName) {
+		T result = null;
+		Iterator<T> attributeIterator = attributes.values().iterator();
+
+		while (attributeIterator.hasNext()) {
+			T attributeInfo = attributeIterator.next();
+
+			String joinInfoJpaAttributeName = attributeInfo.getJpaAttributeName();
+
+			if (joinInfoJpaAttributeName.equals(jpaAttributeName)) {
+				result = attributeInfo;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	public QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<?, ?> fieldAttribute) {
+		QueryInfoAttributeContext attributeContext = getAttributeDeclaringTypeAttributeContext(entityContextRegistry,
+				fieldAttribute);
+		return getFieldInfo(attributeContext, fieldAttribute);
+	}
+
+	public QueryInfoFieldInfo getFieldInfo(QueryInfoAttributeContext attributeContext,
+			Attribute<?, ?> jpaAttribute) {
+		Map<String, QueryInfoFieldInfo> fieldInfos = attributeContext.getFields();
+		return getAttributeInfo(fieldInfos, jpaAttribute);
+	}
+
+	public QueryInfoFieldInfo getFieldInfo(QueryInfoAttributeContext attributeContext,
+			String jpaAttributeName) {
+		Map<String, QueryInfoFieldInfo> fieldInfos = attributeContext.getFields();
+		return getAttributeInfo(fieldInfos, jpaAttributeName);
+	}
 
 	public <Z, X> Join<Z, X> getJoinForAttributePath(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<?> jpaContext,
@@ -57,29 +142,23 @@ public class QueryInfoAttributeUtils {
 		return result;
 	}
 
+	public QueryInfoJoinInfo getJoinInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<?, ?> joinAttribute) {
+		QueryInfoAttributeContext attributeContext = getAttributeDeclaringTypeAttributeContext(entityContextRegistry,
+				joinAttribute);
+		return getJoinInfo(attributeContext, joinAttribute);
+	}
+
 	public QueryInfoJoinInfo getJoinInfo(QueryInfoAttributeContext attributeContext,
 			Attribute<?, ?> jpaAttribute) {
-		String jpaAttributeName = jpaAttribute.getName();
-		return getJoinInfo(attributeContext, jpaAttributeName);
+		Map<String, QueryInfoJoinInfo> joinInfos = attributeContext.getJoins();
+		return getAttributeInfo(joinInfos, jpaAttribute);
 	}
 
 	public QueryInfoJoinInfo getJoinInfo(QueryInfoAttributeContext attributeContext,
 			String jpaAttributeName) {
-		QueryInfoJoinInfo result = null;
-		Iterator<QueryInfoJoinInfo> joinInfos = attributeContext.getJoins().values().iterator();
-
-		while (joinInfos.hasNext()) {
-			QueryInfoJoinInfo joinInfo = joinInfos.next();
-
-			String joinInfoJpaAttributeName = joinInfo.getJpaAttributeName();
-
-			if (joinInfoJpaAttributeName.equals(jpaAttributeName)) {
-				result = joinInfo;
-				break;
-			}
-		}
-
-		return result;
+		Map<String, QueryInfoJoinInfo> joinInfos = attributeContext.getJoins();
+		return getAttributeInfo(joinInfos, jpaAttributeName);
 	}
 
 }

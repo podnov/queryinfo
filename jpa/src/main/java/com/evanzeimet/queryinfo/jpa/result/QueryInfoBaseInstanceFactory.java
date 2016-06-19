@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.entity;
+package com.evanzeimet.queryinfo.jpa.result;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,15 +22,9 @@ package com.evanzeimet.queryinfo.jpa.entity;
  * #L%
  */
 
-import javax.persistence.criteria.From;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoEntityContextRegistry {
+public interface QueryInfoBaseInstanceFactory<T> {
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(From<?, Entity> from);
-
-	public <Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass);
-
-	public <Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+	T create();
 
 }
