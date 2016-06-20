@@ -29,6 +29,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.evanzeimet.queryinfo.jpa.test.entity.TestEmployeeEntity_;
+import com.evanzeimet.queryinfo.jpa.test.entity.TestOrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestOrganizationEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestPersonEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestQueryInfoEntityContextRegistry;
@@ -39,9 +41,10 @@ public class QueryInfoJPAAtributeNameBuilderTest {
 	public void buildList_entityContextRegistry() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		List<String> actual = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+		List<String> actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
-				.add(TestPersonEntity_.spouse)
+				.add(TestEmployeeEntity_.spouse)
 				.add(TestPersonEntity_.firstName)
 				.buildList();
 
@@ -52,9 +55,10 @@ public class QueryInfoJPAAtributeNameBuilderTest {
 
 	@Test
 	public void buildList_noEntityContextRegistry() {
-		List<String> actual = QueryInfoJPAAtributeNameBuilder.create()
+		List<String> actual = QueryInfoJPAAttributeNameBuilder.create()
+				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
-				.add(TestPersonEntity_.spouse)
+				.add(TestEmployeeEntity_.spouse)
 				.add(TestPersonEntity_.firstName)
 				.buildList();
 
@@ -64,12 +68,31 @@ public class QueryInfoJPAAtributeNameBuilderTest {
 	}
 
 	@Test
+	public void buildString_clear() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+	
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.spouse)
+				.add(TestPersonEntity_.mappedSuperclassField)
+				.clear()
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.firstName)
+				.buildString();
+		String expected = "employees.firstName";
+	
+		assertEquals(expected, actual);
+	}
+
+	@Test
 	public void buildString_entityContextRegistry() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
-				.add(TestPersonEntity_.spouse)
+				.add(TestEmployeeEntity_.spouse)
 				.add(TestPersonEntity_.firstName)
 				.buildString();
 		String expected = "employees.spouse.firstName";
@@ -79,12 +102,41 @@ public class QueryInfoJPAAtributeNameBuilderTest {
 
 	@Test
 	public void buildString_noEntityContextRegistry() {
-		String actual = QueryInfoJPAAtributeNameBuilder.create()
+		String actual = QueryInfoJPAAttributeNameBuilder.create()
+				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
-				.add(TestPersonEntity_.spouse)
+				.add(TestEmployeeEntity_.spouse)
 				.add(TestPersonEntity_.firstName)
 				.buildString();
 		String expected = "employeeEntities.spouse.firstName";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_entityContextRegistry_mappedSuperclass() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.spouse)
+				.add(TestPersonEntity_.mappedSuperclassField)
+				.buildString();
+		String expected = "employees.spouse.mappedSuperclassFieldRenamed";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_noEntityContextRegistry_mappedSuperclass() {
+		String actual = QueryInfoJPAAttributeNameBuilder.create()
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.spouse)
+				.add(TestPersonEntity_.mappedSuperclassField)
+				.buildString();
+		String expected = "employeeEntities.spouse.mappedSuperclassField";
 
 		assertEquals(expected, actual);
 	}

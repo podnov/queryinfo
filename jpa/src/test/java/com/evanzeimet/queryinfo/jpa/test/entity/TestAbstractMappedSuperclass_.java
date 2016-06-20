@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.test.entity;
  * #L%
  */
 
-
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
@@ -30,29 +29,18 @@ import javax.persistence.metamodel.StaticMetamodel;
 import com.evanzeimet.queryinfo.jpa.test.utils.QueryInfoJPATestUtils;
 
 @Generated(value = "org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor")
-@StaticMetamodel(TestPersonEntity.class)
-public abstract class TestPersonEntity_ extends TestAbstractMappedSuperclass_ {
+@StaticMetamodel(TestAbstractMappedSuperclass.class)
+public abstract class TestAbstractMappedSuperclass_ {
 
-	public static volatile SingularAttribute<TestPersonEntity, String> firstName;
-	public static volatile SingularAttribute<TestPersonEntity, String> lastName;
-	public static volatile SingularAttribute<TestPersonEntity, Long> id;
-	public static volatile SingularAttribute<TestPersonEntity, TestPersonEntity> spouse;
+	public static volatile SingularAttribute<TestAbstractMappedSuperclass, String> mappedSuperclassField;
 
 	private static final QueryInfoJPATestUtils jpaTestUtils = new QueryInfoJPATestUtils();
 
 	static {
-		firstName = mockSingularAttribute("firstName");
-		lastName = mockSingularAttribute("lastName");
-		id = mockSingularAttribute("id");
-		spouse = mockSingularAttribute("spouse", TestPersonEntity.class);
+		mappedSuperclassField = mockSingularAttribute("mappedSuperclassField");
 	}
 
-	private static <X, T> SingularAttribute<TestPersonEntity, T> mockSingularAttribute(String name) {
-		return jpaTestUtils.mockSingularAttribute(name, TestPersonEntity.class);
-	}
-
-	private static <X, T> SingularAttribute<TestPersonEntity, T> mockSingularAttribute(String name,
-			Class<T> joinedType) {
-		return jpaTestUtils.mockSingularAttribute(name, TestPersonEntity.class, joinedType);
+	private static <X, T> SingularAttribute<TestAbstractMappedSuperclass, T> mockSingularAttribute(String name) {
+		return jpaTestUtils.mockSingularAttribute(name, TestAbstractMappedSuperclass.class);
 	}
 }

@@ -57,8 +57,21 @@ public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.Conditi
 	}
 
 	public ConditionBuilder leftHandSide(Attribute<?, ?> leftHandSide) {
-		String name = attributeUtils.getFieldAttributeName(entityContextRegistry, leftHandSide);
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry,
+				leftHandSide);
 		return leftHandSide(name);
+	}
+
+	protected <T> ConditionBuilder leftHandSide(Class<T> attributeHost,
+			Attribute<? super T, ?> leftHandSide) {
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry,
+				attributeHost,
+				leftHandSide);
+		return leftHandSide(name);
+	}
+
+	public <T> AttributeHostBuilder<T> leftHandSideHost(Class<T> attributeHost) {
+		return new AttributeHostBuilder<T>(this, attributeHost);
 	}
 
 	@Override
@@ -89,5 +102,21 @@ public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.Conditi
 	public ConditionBuilder rightHandSide(JsonNode rightHandSide) {
 		super.rightHandSide(rightHandSide);
 		return this;
+	}
+
+	public static class AttributeHostBuilder<T> {
+
+		private final Class<T> attributeHost;
+		private final ConditionBuilder conditionBuilder;
+
+		protected AttributeHostBuilder(ConditionBuilder conditionBuilder, Class<T> attributeHost) {
+			this.conditionBuilder = conditionBuilder;
+			this.attributeHost = attributeHost;
+		}
+		
+		public ConditionBuilder leftHandSide(Attribute<? super T, ?> leftHandSide) {
+			return conditionBuilder.leftHandSide(attributeHost, leftHandSide);
+		}
+
 	}
 }

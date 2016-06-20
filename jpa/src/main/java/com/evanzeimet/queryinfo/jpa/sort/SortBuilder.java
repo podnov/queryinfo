@@ -72,9 +72,37 @@ public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 		return fieldName(name);
 	}
 
+	protected <T> SortBuilder fieldName(Class<T> attributeHost,
+			Attribute<? super T, ?> attribute) {
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry,
+				attributeHost,
+				attribute);
+		return fieldName(name);
+	}
+
+	public <T> AttributeHostBuilder<T> fieldNameHost(Class<T> attributeHost) {
+		return new AttributeHostBuilder<T>(this, attributeHost);
+	}
+
 	@Override
 	public SortBuilder fieldName(String fieldName) {
 		super.fieldName(fieldName);
 		return this;
+	}
+
+	public static class AttributeHostBuilder<T> {
+
+		private final Class<T> attributeHost;
+		private final SortBuilder sort;
+
+		protected AttributeHostBuilder(SortBuilder sortBuilder, Class<T> attributeHost) {
+			this.sort = sortBuilder;
+			this.attributeHost = attributeHost;
+		}
+
+		public SortBuilder fieldName(Attribute<? super T, ?> leftHandSide) {
+			return sort.fieldName(attributeHost, leftHandSide);
+		}
+
 	}
 }

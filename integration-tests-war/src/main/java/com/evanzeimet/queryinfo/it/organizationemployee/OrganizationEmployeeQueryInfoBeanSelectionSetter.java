@@ -32,7 +32,7 @@ import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity_;
 import com.evanzeimet.queryinfo.it.people.PersonEntity_;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAtributeNameBuilder;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributeNameBuilder;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
@@ -60,26 +60,29 @@ public class OrganizationEmployeeQueryInfoBeanSelectionSetter
 			QueryInfoJPAContext<OrganizationEntity> jpaContext) throws QueryInfoException {
 		List<String> requestedFields = new ArrayList<>();
 
+		QueryInfoJPAAttributeNameBuilder<OrganizationEntity, OrganizationEntity> attributeNameBuilder = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(OrganizationEntity.class);
+
 		for (OrganizationEmployeeField field : OrganizationEmployeeField.values()) {
 			String fieldName = null;
 
 			switch (field) {
 				case EMPLOYEE_FIRST_NAME:
-					fieldName = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+					fieldName = attributeNameBuilder.clear()
 							.add(OrganizationEntity_.employeeEntities)
 							.add(PersonEntity_.firstName)
 							.buildString();
 					break;
 
 				case EMPLOYEE_LAST_NAME:
-					fieldName = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+					fieldName = attributeNameBuilder.clear()
 							.add(OrganizationEntity_.employeeEntities)
 							.add(PersonEntity_.lastName)
 							.buildString();
 					break;
 
 				case NAME:
-					fieldName = QueryInfoJPAAtributeNameBuilder.create(entityContextRegistry)
+					fieldName = attributeNameBuilder.clear()
 							.add(OrganizationEntity_.name)
 							.buildString();
 					break;

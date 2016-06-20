@@ -49,7 +49,7 @@ public abstract class TestOrganizationEntity_ {
 		address1 = mockSingularAttribute("address1");
 		address2 = mockSingularAttribute("address2");
 		city = mockSingularAttribute("city");
-		employeeEntities = mockListAttribute("employeeEntities");
+		employeeEntities = mockListAttribute("employeeEntities", TestEmployeeEntity.class);
 		id = mockSingularAttribute("id");
 		name = mockSingularAttribute("name");
 		phone = mockSingularAttribute("phone");
@@ -57,8 +57,9 @@ public abstract class TestOrganizationEntity_ {
 		zip = mockSingularAttribute("zip");
 	}
 
-	private static <E> ListAttribute<TestOrganizationEntity, E> mockListAttribute(String name) {
-		return jpaTestUtils.mockListAttribute(name, TestOrganizationEntity.class);
+	private static <E> ListAttribute<TestOrganizationEntity, E> mockListAttribute(String name,
+			Class<E> joinedType) {
+		return jpaTestUtils.mockListAttribute(name, TestOrganizationEntity.class, joinedType);
 	}
 
 	private static <T> SingularAttribute<TestOrganizationEntity, T> mockSingularAttribute(String name) {

@@ -32,6 +32,7 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.metamodel.Attribute;
 
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
@@ -73,12 +74,21 @@ public class QueryInfoAttributeUtils {
 		return result.toString();
 	}
 
-	protected QueryInfoAttributeContext getAttributeDeclaringTypeAttributeContext(
-			QueryInfoEntityContextRegistry entityContextRegistry,
-			Attribute<?, ?> attribute) {
-		Class<?> declaringTypeClass = attribute.getDeclaringType().getJavaType();
-		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(declaringTypeClass);
+	protected <T> QueryInfoAttributeContext getAttributeContext(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> clazz) {
+		QueryInfoEntityContext<T> entityContext = entityContextRegistry.getContext(clazz);
+
+		if (entityContext == null) {
+			String message = String.format("Could not find entity context for [%s]",
+					clazz.getCanonicalName());
+			throw new QueryInfoRuntimeException(message);
+		}
+
 		return entityContext.getAttributeContext();
+	}
+
+	protected <T> Class<T> getAttributeHostType(Attribute<T, ?> attribute) {
+		return attribute.getDeclaringType().getJavaType();
 	}
 
 	public <T extends QueryInfoAttributeInfo> T getAttributeInfo(Map<String, T> attributes,
@@ -105,14 +115,22 @@ public class QueryInfoAttributeUtils {
 		return result;
 	}
 
-	public String getFieldAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
-			Attribute<?, ?> fieldAttribute) {
+	public <T> String getFieldAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<T, ?> fieldAttribute) {
+		Class<T> attributeHost = getAttributeHostType(fieldAttribute);
+		return getFieldAttributeName(entityContextRegistry, attributeHost, fieldAttribute);
+	}
+
+	public <T> String getFieldAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> attributeHost,
+			Attribute<? super T, ?> fieldAttribute) {
 		String result;
 
 		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
 			result = fieldAttribute.getName();
 		} else {
 			QueryInfoFieldInfo fieldInfo = getFieldInfo(entityContextRegistry,
+					attributeHost,
 					fieldAttribute);
 			result = fieldInfo.getName();
 		}
@@ -120,10 +138,17 @@ public class QueryInfoAttributeUtils {
 		return result;
 	}
 
-	public QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
-			Attribute<?, ?> fieldAttribute) {
-		QueryInfoAttributeContext attributeContext = getAttributeDeclaringTypeAttributeContext(entityContextRegistry,
-				fieldAttribute);
+	public <T> QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<T, ?> fieldAttribute) {
+		Class<T> attributeHost = getAttributeHostType(fieldAttribute);
+		return getFieldInfo(entityContextRegistry, attributeHost, fieldAttribute);
+	}
+
+	public <T> QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> attributeHost,
+			Attribute<? super T, ?> fieldAttribute) {
+		QueryInfoAttributeContext attributeContext = getAttributeContext(entityContextRegistry,
+				attributeHost);
 		return getFieldInfo(attributeContext, fieldAttribute);
 	}
 
@@ -139,14 +164,23 @@ public class QueryInfoAttributeUtils {
 		return getAttributeInfo(fieldInfos, jpaAttributeName);
 	}
 
-	public String getJoinAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
-			Attribute<?, ?> joinAttribute) {
+	public <T> String getJoinAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<T, ?> joinAttribute) {
+		Class<T> attributeHost = getAttributeHostType(joinAttribute);
+		return getJoinAttributeName(entityContextRegistry, attributeHost, joinAttribute);
+	}
+
+	public <T> String getJoinAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> attributeHost,
+			Attribute<? super T, ?> joinAttribute) {
 		String result;
 
 		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
 			result = joinAttribute.getName();
 		} else {
-			QueryInfoJoinInfo joinInfo = getJoinInfo(entityContextRegistry, joinAttribute);
+			QueryInfoJoinInfo joinInfo = getJoinInfo(entityContextRegistry,
+					attributeHost,
+					joinAttribute);
 			result = joinInfo.getName();
 		}
 
@@ -174,10 +208,17 @@ public class QueryInfoAttributeUtils {
 		return result;
 	}
 
-	public QueryInfoJoinInfo getJoinInfo(QueryInfoEntityContextRegistry entityContextRegistry,
-			Attribute<?, ?> joinAttribute) {
-		QueryInfoAttributeContext attributeContext = getAttributeDeclaringTypeAttributeContext(entityContextRegistry,
-				joinAttribute);
+	public <T> QueryInfoJoinInfo getJoinInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<T, ?> joinAttribute) {
+		Class<T> attributeHost = getAttributeHostType(joinAttribute);
+		return getJoinInfo(entityContextRegistry, attributeHost, joinAttribute);
+	}
+
+	public <T> QueryInfoJoinInfo getJoinInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> attributeHost,
+			Attribute<? super T, ?> joinAttribute) {
+		QueryInfoAttributeContext attributeContext = getAttributeContext(entityContextRegistry,
+				attributeHost);
 		return getJoinInfo(attributeContext, joinAttribute);
 	}
 

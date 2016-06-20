@@ -25,6 +25,8 @@ package com.evanzeimet.queryinfo.jpa.test.utils;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.util.List;
+
 import javax.persistence.criteria.From;
 import javax.persistence.metamodel.Bindable;
 import javax.persistence.metamodel.ListAttribute;
@@ -57,6 +59,17 @@ public class QueryInfoJPATestUtils {
 		return result;
 	}
 
+	public <X, E> ListAttribute<X, E> mockListAttribute(String name,
+			Class<X> hostType,
+			Class<E> joinedType) {
+		ListAttribute<X, E> result = mockListAttribute(name, hostType);
+
+		doReturn(List.class).when(result).getJavaType();
+		doReturn(joinedType).when(result).getBindableJavaType();
+
+		return result;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <X> ManagedType<X> mockManagedType(Class<X> hostType) {
 		ManagedType<X> result = mock(ManagedType.class);
@@ -71,6 +84,15 @@ public class QueryInfoJPATestUtils {
 
 		ManagedType<X> managedType = mockManagedType(hostType);
 		doReturn(managedType).when(result).getDeclaringType();
+
+		return result;
+	}
+
+	public <X, T> SingularAttribute<X, T> mockSingularAttribute(String name, Class<X> hostType,
+			Class<T> joinedType) {
+		SingularAttribute<X, T> result = mockSingularAttribute(name, hostType);
+
+		doReturn(joinedType).when(result).getJavaType();
 
 		return result;
 	}
