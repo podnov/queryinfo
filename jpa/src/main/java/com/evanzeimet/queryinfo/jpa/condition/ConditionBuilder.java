@@ -22,16 +22,24 @@ package com.evanzeimet.queryinfo.jpa.condition;
  * #L%
  */
 
-import javax.persistence.metamodel.SingularAttribute;
+import static com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils.ENTITY_CONTEXT_REGISTRY_NOT_USED;
+
+import javax.persistence.metamodel.Attribute;
 
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.ConditionBuilder {
 
-	public ConditionBuilder() {
+	private static final QueryInfoAttributeUtils attributeUtils = new QueryInfoAttributeUtils();
 
+	private final QueryInfoEntityContextRegistry entityContextRegistry;
+
+	public ConditionBuilder(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	@Override
@@ -41,11 +49,15 @@ public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.Conditi
 	}
 
 	public static ConditionBuilder create() {
-		return new ConditionBuilder();
+		return create(ENTITY_CONTEXT_REGISTRY_NOT_USED);
 	}
 
-	public ConditionBuilder leftHandSide(SingularAttribute<?, ?> leftHandSide) {
-		String name = leftHandSide.getName();
+	public static ConditionBuilder create(QueryInfoEntityContextRegistry entityContextRegistry) {
+		return new ConditionBuilder(entityContextRegistry);
+	}
+
+	public ConditionBuilder leftHandSide(Attribute<?, ?> leftHandSide) {
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry, leftHandSide);
 		return leftHandSide(name);
 	}
 

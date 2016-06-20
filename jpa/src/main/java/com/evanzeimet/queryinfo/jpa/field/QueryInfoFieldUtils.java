@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.field;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
