@@ -37,6 +37,7 @@ import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributeNameBuilder;
 import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
@@ -93,6 +94,13 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
 
 		return typedQuery.getSingleResult();
+	}
+
+	public QueryInfoJPAAttributeNameBuilder<RootEntity, RootEntity> createJpaAttributeNameBuilder() {
+		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
+		Class<RootEntity> rootEntityClass = beanContext.getRootEntityClass();
+		return QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(rootEntityClass);
 	}
 
 	protected QueryInfoJPAContext<RootEntity> createJpaContext(CriteriaQuery<?> criteriaQuery) {

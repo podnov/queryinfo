@@ -1,12 +1,12 @@
-package com.evanzeimet.queryinfo;
+package com.evanzeimet.queryinfo.jpa.test.entity;
 
 /*
  * #%L
- * queryinfo-common
+ * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,22 @@ package com.evanzeimet.queryinfo;
  * #L%
  */
 
-public class QueryInfoRuntimeException extends RuntimeException {
+import javax.persistence.MappedSuperclass;
 
-	private static final long serialVersionUID = -2013214996144812311L;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 
-	public QueryInfoRuntimeException() {
-		super();
+@MappedSuperclass
+public abstract class TestAbstractMappedSuperclass {
+
+	private String mappedSuperclassField;
+
+	@QueryInfoField(name = "mappedSuperclassFieldRenamed")
+	public String getMappedSuperclassField() {
+		return mappedSuperclassField;
 	}
 
-	public QueryInfoRuntimeException(String message) {
-		super(message);
+	public void setMappedSuperclassField(String mappedSuperclassField) {
+		this.mappedSuperclassField = mappedSuperclassField;
 	}
 
-	public QueryInfoRuntimeException(Throwable cause) {
-		super(cause);
-	}
-
-	public QueryInfoRuntimeException(String message, Throwable cause) {
-		super(message, cause);
-	}
 }

@@ -23,12 +23,14 @@ package com.evanzeimet.queryinfo.jpa.test.entity;
  */
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
 
-public class TestPersonEntity {
+@Entity
+public class TestPersonEntity extends TestAbstractMappedSuperclass {
 
 	private String firstName;
 	private Long id;
