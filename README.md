@@ -298,4 +298,4 @@ JPA criteria query execution is performed by a query bean. The [AbstractQueryInf
 
 ### QueryInfoBeanContext
 
-A [QueryInfoBeanContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/bean/QueryInfoBeanContext.java) is a container for the parts that need to be glued together (or the part factories). QueryInfoBeanContexts contain all of the queryinfo state necessary for the QueryInfoBean to perform a query and return results.
+A [QueryInfoBeanContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/bean/QueryInfoBeanContext.java) is a container for the parts (or part factories) that need to be glued together. QueryInfoBeanContexts contain all of the queryinfo state necessary for the QueryInfoBean to perform a query and return results.

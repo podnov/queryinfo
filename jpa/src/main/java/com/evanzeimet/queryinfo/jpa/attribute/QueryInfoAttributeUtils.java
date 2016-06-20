@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.metamodel.Attribute;
+
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
@@ -38,6 +39,8 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class QueryInfoAttributeUtils {
+
+	public static final QueryInfoEntityContextRegistry ENTITY_CONTEXT_REGISTRY_NOT_USED = null;
 
 	private static final Pattern convertAttributeNameToMemberNamePattern = Pattern.compile(""
 			+ "(\\w+)" // capture all word characters
@@ -102,6 +105,21 @@ public class QueryInfoAttributeUtils {
 		return result;
 	}
 
+	public String getFieldAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<?, ?> fieldAttribute) {
+		String result;
+
+		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
+			result = fieldAttribute.getName();
+		} else {
+			QueryInfoFieldInfo fieldInfo = getFieldInfo(entityContextRegistry,
+					fieldAttribute);
+			result = fieldInfo.getName();
+		}
+
+		return result;
+	}
+
 	public QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
 			Attribute<?, ?> fieldAttribute) {
 		QueryInfoAttributeContext attributeContext = getAttributeDeclaringTypeAttributeContext(entityContextRegistry,
@@ -119,6 +137,20 @@ public class QueryInfoAttributeUtils {
 			String jpaAttributeName) {
 		Map<String, QueryInfoFieldInfo> fieldInfos = attributeContext.getFields();
 		return getAttributeInfo(fieldInfos, jpaAttributeName);
+	}
+
+	public String getJoinAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<?, ?> joinAttribute) {
+		String result;
+
+		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
+			result = joinAttribute.getName();
+		} else {
+			QueryInfoJoinInfo joinInfo = getJoinInfo(entityContextRegistry, joinAttribute);
+			result = joinInfo.getName();
+		}
+
+		return result;
 	}
 
 	public <Z, X> Join<Z, X> getJoinForAttributePath(QueryInfoEntityContextRegistry entityContextRegistry,

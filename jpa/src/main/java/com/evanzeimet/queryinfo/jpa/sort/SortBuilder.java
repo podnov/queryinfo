@@ -22,15 +22,23 @@ package com.evanzeimet.queryinfo.jpa.sort;
  * #L%
  */
 
-import javax.persistence.metamodel.SingularAttribute;
+import static com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils.ENTITY_CONTEXT_REGISTRY_NOT_USED;
 
+import javax.persistence.metamodel.Attribute;
+
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.evanzeimet.queryinfo.sort.SortDirection;
 
 public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 
-	public SortBuilder() {
+	private static final QueryInfoAttributeUtils attributeUtils = new QueryInfoAttributeUtils();
 
+	private final QueryInfoEntityContextRegistry entityContextRegistry;
+
+	public SortBuilder(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
 	}
 
 	@Override
@@ -40,7 +48,11 @@ public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 	}
 
 	public static SortBuilder create() {
-		return new SortBuilder();
+		return create(ENTITY_CONTEXT_REGISTRY_NOT_USED);
+	}
+
+	public static SortBuilder create(QueryInfoEntityContextRegistry entityContextRegistry) {
+		return new SortBuilder(entityContextRegistry);
 	}
 
 	@Override
@@ -55,8 +67,8 @@ public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 		return this;
 	}
 
-	public SortBuilder fieldName(SingularAttribute<?, ?> attribute) {
-		String name = attribute.getName();
+	public SortBuilder fieldName(Attribute<?, ?> attribute) {
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry, attribute);
 		return fieldName(name);
 	}
 

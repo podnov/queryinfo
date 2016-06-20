@@ -28,20 +28,19 @@ import java.util.List;
 import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 
-
 public class TestQueryInfoEntityContextRegistry extends DefaultQueryInfoEntityContextRegistry {
 
-    protected TestQueryInfoEntityContextRegistry(List<QueryInfoEntityContext<?>> entityContexts) {
-        super(entityContexts);
-    }
+	protected TestQueryInfoEntityContextRegistry(List<QueryInfoEntityContext<?>> entityContexts) {
+		super(entityContexts);
+	}
 
-    public static TestQueryInfoEntityContextRegistry create() {
-        List<QueryInfoEntityContext<?>> entityContexts = new ArrayList<QueryInfoEntityContext<?>>();
+	public static TestQueryInfoEntityContextRegistry create() {
+		List<QueryInfoEntityContext<?>> entityContexts = new ArrayList<QueryInfoEntityContext<?>>();
 
-        entityContexts.add(new TestEmployeeEntityContext());
-        entityContexts.add(new TestOrganizationEntityContext());
-        entityContexts.add(new TestPersonEntityContext());
+		entityContexts.add(new TestEmployeeEntityContext());
+		entityContexts.add(new TestOrganizationEntityContext());
+		entityContexts.add(new TestPersonEntityContext());
 
-        return new TestQueryInfoEntityContextRegistry(entityContexts);
-    }
+		return new TestQueryInfoEntityContextRegistry(entityContexts);
+	}
 }

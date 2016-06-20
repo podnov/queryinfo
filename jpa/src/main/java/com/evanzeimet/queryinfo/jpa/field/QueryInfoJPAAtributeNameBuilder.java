@@ -22,6 +22,8 @@ package com.evanzeimet.queryinfo.jpa.field;
  * #L%
  */
 
+import static com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils.ENTITY_CONTEXT_REGISTRY_NOT_USED;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,24 +36,21 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
 public class QueryInfoJPAAtributeNameBuilder<T> {
-
-	private static final QueryInfoEntityContextRegistry ENTITY_CONTEXT_REGISTRY_NOT_USED = null;
 
 	private static final QueryInfoAttributeUtils attributeUtils = new QueryInfoAttributeUtils();
 
 	private final QueryInfoEntityContextRegistry entityContextRegistry;
 	private final List<Attribute<?, ?>> attributes;
 
-	public QueryInfoJPAAtributeNameBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected QueryInfoJPAAtributeNameBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
 			PluralAttribute<?, ?, T> attribute) {
 		this.entityContextRegistry = entityContextRegistry;
 		this.attributes = asAttributeList(attribute);
 	}
 
-	public QueryInfoJPAAtributeNameBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected QueryInfoJPAAtributeNameBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
 			SingularAttribute<?, T> attribute) {
 		this.entityContextRegistry = entityContextRegistry;
 		this.attributes = asAttributeList(attribute);
@@ -127,34 +126,16 @@ public class QueryInfoJPAAtributeNameBuilder<T> {
 	}
 
 	protected String getFieldAttributeName(Attribute<?, ?> fieldAttribute) {
-		String result;
-
-		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
-			result = fieldAttribute.getName();
-		} else {
-			QueryInfoFieldInfo fieldInfo = attributeUtils.getFieldInfo(entityContextRegistry, fieldAttribute);
-			result = fieldInfo.getName();
-		}
-
-		return result;
+		return attributeUtils.getFieldAttributeName(entityContextRegistry, fieldAttribute);
 	}
 
 	protected String getJoinAttributeName(Attribute<?, ?> joinAttribute) {
-		String result;
-
-		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
-			result = joinAttribute.getName();
-		} else {
-			QueryInfoJoinInfo joinInfo = attributeUtils.getJoinInfo(entityContextRegistry, joinAttribute);
-			result = joinInfo.getName();
-		}
-
-		return result;
+		return attributeUtils.getJoinAttributeName(entityContextRegistry, joinAttribute);
 	}
 
 	public static class RootBuilder {
 
-		private QueryInfoEntityContextRegistry entityContextRegistry;
+		private final QueryInfoEntityContextRegistry entityContextRegistry;
 
 		private RootBuilder(QueryInfoEntityContextRegistry entityContextRegistry) {
 			this.entityContextRegistry = entityContextRegistry;
