@@ -22,6 +22,10 @@ package com.evanzeimet.queryinfo.jpa.result;
  * #L%
  */
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 
 public class DefaultTupleToPojoQueryInfoResultConverter<T>
@@ -36,12 +40,25 @@ public class DefaultTupleToPojoQueryInfoResultConverter<T>
 		super(resultClass, baseInstanceFactory);
 	}
 
-	private static class DefaultBaseInstanceFactory<T> implements QueryInfoBaseInstanceFactory<T> {
+	protected static class DefaultBaseInstanceFactory<T> implements QueryInfoBaseInstanceFactory<T> {
 
 		private Class<T> clazz;
+		private MethodHandle constructorMethodHandle;
 
 		public DefaultBaseInstanceFactory(Class<T> clazz) {
 			this.clazz = clazz;
+			findConstructor();
+		}
+
+		protected void findConstructor() {
+			MethodType methodType = MethodType.methodType(void.class);
+
+			try {
+				constructorMethodHandle = MethodHandles.lookup().findConstructor(clazz, methodType);
+			} catch (NoSuchMethodException | IllegalAccessException e) {
+				String message = String.format("Could not find accessible no-arg constructor on [%s]", clazz.getCanonicalName());
+				throw new QueryInfoRuntimeException(message, e);
+			}
 		}
 
 		@Override
@@ -49,9 +66,9 @@ public class DefaultTupleToPojoQueryInfoResultConverter<T>
 			T result;
 
 			try {
-				result = clazz.newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				String message = String.format("Failed invoking newInstance on [%s]", clazz.getCanonicalName());
+				result = (T) constructorMethodHandle.invoke();
+			} catch (Throwable e) {
+				String message = String.format("Failed invoking constructor on [%s]", clazz.getCanonicalName());
 				throw new QueryInfoRuntimeException(message, e);
 			}
 
