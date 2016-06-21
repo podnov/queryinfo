@@ -41,6 +41,7 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class QueryInfoAttributeUtils {
 
+	public static final QueryInfoAttributeType ATTRIBUTE_TYPE_NOT_SPECIFIED = null;
 	public static final QueryInfoEntityContextRegistry ENTITY_CONTEXT_REGISTRY_NOT_USED = null;
 
 	private static final Pattern convertAttributeNameToMemberNamePattern = Pattern.compile(""
@@ -115,6 +116,66 @@ public class QueryInfoAttributeUtils {
 		return result;
 	}
 
+	public <T> QueryInfoAttributeInfo getAttributeInfo(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> attributeHost,
+			Attribute<? super T, ?> attribute,
+			QueryInfoAttributeType attributeType) {
+		QueryInfoAttributeInfo result = null;
+
+		if (attributeType == ATTRIBUTE_TYPE_NOT_SPECIFIED) {
+			result = getFieldInfo(entityContextRegistry, attributeHost, attribute);
+
+			if (result == null) {
+				result = getJoinInfo(entityContextRegistry, attributeHost, attribute);
+			}
+		} else if (QueryInfoAttributeType.JOIN.equals(attributeType)) {
+			result = getJoinInfo(entityContextRegistry, attributeHost, attribute);
+		} else if (QueryInfoAttributeType.FIELD.equals(attributeType)) {
+			result = getFieldInfo(entityContextRegistry, attributeHost, attribute);
+		}
+
+		return result;
+	}
+
+	public <T> String getAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Attribute<T, ?> fieldAttribute,
+			QueryInfoAttributeType attributeType) {
+		Class<T> attributeHost = getAttributeHostType(fieldAttribute);
+		return getAttributeName(entityContextRegistry, attributeHost, fieldAttribute, attributeType);
+	}
+
+	public <T> String getAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
+			Class<T> attributeHost,
+			Attribute<? super T, ?> attribute,
+			QueryInfoAttributeType attributeType) {
+		String result;
+
+		if (entityContextRegistry == ENTITY_CONTEXT_REGISTRY_NOT_USED) {
+			result = attribute.getName();
+		} else {
+			QueryInfoAttributeInfo attributeInfo = getAttributeInfo(entityContextRegistry,
+					attributeHost,
+					attribute,
+					attributeType);
+
+			if (attributeInfo == null) {
+				String rawAttributeType = (attributeType == null
+						? "unspecified"
+						: attributeType.name());
+
+				String message = createAttributeNotFoundMessage(attributeHost,
+						attribute);
+				message = String.format("%s using attribute type [%s]", message, rawAttributeType);
+
+				throw new QueryInfoRuntimeException(message);
+			}
+
+			result = attributeInfo.getName();
+		}
+
+		return result;
+	}
+
 	public <T> String getFieldAttributeName(QueryInfoEntityContextRegistry entityContextRegistry,
 			Attribute<T, ?> fieldAttribute) {
 		Class<T> attributeHost = getAttributeHostType(fieldAttribute);
@@ -132,10 +193,25 @@ public class QueryInfoAttributeUtils {
 			QueryInfoFieldInfo fieldInfo = getFieldInfo(entityContextRegistry,
 					attributeHost,
 					fieldAttribute);
+
+			if (fieldInfo == null) {
+				String message = createAttributeNotFoundMessage(attributeHost, fieldAttribute);
+				throw new QueryInfoRuntimeException(message);
+			}
+
 			result = fieldInfo.getName();
 		}
 
 		return result;
+	}
+
+	public <T> String createAttributeNotFoundMessage(Class<T> attributeHost,
+			Attribute<? super T, ?> attribute) {
+		String attributeHostClass = attributeHost.getCanonicalName();
+		String attributeName = attribute.getName();
+		return String.format("No attribute found for [%s] on [%s]",
+				attributeName,
+				attributeHostClass);
 	}
 
 	public <T> QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,

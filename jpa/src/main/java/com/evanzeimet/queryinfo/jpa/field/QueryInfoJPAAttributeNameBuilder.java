@@ -34,8 +34,10 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeType;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
 public class QueryInfoJPAAttributeNameBuilder<R, T> {
 
@@ -92,6 +94,10 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 	}
 
 	public List<String> buildList() {
+		return buildList(QueryInfoAttributeUtils.ATTRIBUTE_TYPE_NOT_SPECIFIED);
+	}
+
+	public List<String> buildList(QueryInfoAttributeType leafAttributeType) {
 		List<String> result;
 
 		if (attributes == null || attributes.isEmpty()) {
@@ -105,27 +111,31 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 
 			for (int attributeIndex = 0; attributeIndex < joinCount; attributeIndex++) {
 				Attribute<?, ?> attribute = attributes.get(attributeIndex);
+
 				String joinAttributeName = getJoinAttributeName(nextAttributeHost, attribute);
 				result.add(joinAttributeName);
 
-				if (attribute instanceof PluralAttribute<?, ?, ?>) {
-					PluralAttribute<?, ?, ?> pluralAttribute = ((PluralAttribute<?, ?, ?>) attribute);
-					nextAttributeHost = pluralAttribute.getBindableJavaType();
-				} else {
-					nextAttributeHost = attribute.getJavaType();
-				}
+				nextAttributeHost = getAttributeJoinedType(attribute);
 			}
 
 			Attribute<?, ?> attribute = attributes.get(attributeCount - 1);
-			String fieldAttributeName = getFieldAttributeName(nextAttributeHost, attribute);
-			result.add(fieldAttributeName);
+
+			String leafAttributeName = getLeafAttributeName(nextAttributeHost,
+					attribute,
+					leafAttributeType);
+
+			result.add(leafAttributeName);
 		}
 
 		return result;
 	}
 
 	public String buildString() {
-		List<String> attributeNames = buildList();
+		return buildString(QueryInfoAttributeUtils.ATTRIBUTE_TYPE_NOT_SPECIFIED);
+	}
+
+	public String buildString(QueryInfoAttributeType leafAttributeType) {
+		List<String> attributeNames = buildList(leafAttributeType);
 		return StringUtils.join(attributeNames, ".");
 	}
 
@@ -142,34 +152,50 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 		return new RootBuilder(entityContextRegistry);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected <H> String getFieldAttributeName(Class<?> attributeHost, Attribute<?, ?> attribute) {
-		String result;
+	protected Class<?> getAttributeJoinedType(Attribute<?, ?> attribute) {
+		Class<?> result;
 
-		if (attributeHost == null) {
-			result = attributeUtils.getFieldAttributeName(entityContextRegistry, attribute);
+		if (attribute instanceof PluralAttribute<?, ?, ?>) {
+			PluralAttribute<?, ?, ?> pluralAttribute = ((PluralAttribute<?, ?, ?>) attribute);
+			result = pluralAttribute.getBindableJavaType();
 		} else {
-			result = attributeUtils.getFieldAttributeName(entityContextRegistry,
-					(Class<H>) attributeHost,
-					(Attribute<? super H, ?>) attribute);
+			result = attribute.getJavaType();
 		}
 
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <H> String getJoinAttributeName(Class<?> attributeHost, Attribute<?, ?> attribute) {
-		String result;
+	protected <H> QueryInfoFieldInfo getFieldInfo(Class<?> attributeHost, Attribute<?, ?> attribute) {
+		return attributeUtils.getFieldInfo(entityContextRegistry,
+				(Class<H>) attributeHost,
+				(Attribute<? super H, ?>) attribute);
+	}
 
-		if (attributeHost == null) {
-			result = attributeUtils.getJoinAttributeName(entityContextRegistry, attribute);
-		} else {
-			result = attributeUtils.getJoinAttributeName(entityContextRegistry,
+	@SuppressWarnings("unchecked")
+	protected <H> String getJoinAttributeName(Class<?> attributeHost,
+			Attribute<?, ?> attribute) {
+		return attributeUtils.getJoinAttributeName(entityContextRegistry,
+				(Class<H>) attributeHost,
+				(Attribute<? super H, ?>) attribute);
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <H> QueryInfoJoinInfo getJoinInfo(Class<?> attributeHost,
+			Attribute<?, ?> attribute) {
+		return attributeUtils.getJoinInfo(entityContextRegistry,
 					(Class<H>) attributeHost,
 					(Attribute<? super H, ?>) attribute);
-		}
-
-		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <H> String getLeafAttributeName(Class<?> attributeHost,
+			Attribute<?, ?> attribute,
+			QueryInfoAttributeType attributeType) {
+		return attributeUtils.getAttributeName(entityContextRegistry,
+				(Class<H>) attributeHost,
+				(Attribute<? super H, ?>) attribute,
+				attributeType);
 	}
 
 	public static class RootBuilder {
