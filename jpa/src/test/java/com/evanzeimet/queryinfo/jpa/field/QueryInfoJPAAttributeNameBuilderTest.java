@@ -29,13 +29,14 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeType;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestEmployeeEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestOrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestOrganizationEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestPersonEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestQueryInfoEntityContextRegistry;
 
-public class QueryInfoJPAAtributeNameBuilderTest {
+public class QueryInfoJPAAttributeNameBuilderTest {
 
 	@Test
 	public void buildList_entityContextRegistry() {
@@ -96,6 +97,61 @@ public class QueryInfoJPAAtributeNameBuilderTest {
 				.add(TestPersonEntity_.firstName)
 				.buildString();
 		String expected = "employees.spouse.firstName";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_leafAttributeType_field() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.spouse)
+				.buildString(QueryInfoAttributeType.FIELD);
+		String expected = "employees.spouseEntity";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_leafAttributeType_join() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.spouse)
+				.buildString(QueryInfoAttributeType.JOIN);
+		String expected = "employees.spouse";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_leafAttributeType_unspecified_preferField() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.add(TestEmployeeEntity_.spouse)
+				.buildString();
+		String expected = "employees.spouseEntity";
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void buildString_leafAttributeType_unspecified_fallbackToJoin() {
+		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
+
+		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+				.root(TestOrganizationEntity.class)
+				.add(TestOrganizationEntity_.employeeEntities)
+				.buildString();
+		String expected = "employees";
 
 		assertEquals(expected, actual);
 	}

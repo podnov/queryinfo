@@ -72,6 +72,7 @@ public class TestPersonEntity extends TestAbstractMappedSuperclass {
 	}
 
 	@QueryInfoJoin
+	@QueryInfoField(name = "spouseEntity")
 	@OneToOne
 	public TestPersonEntity getSpouse() {
 		return spouse;
