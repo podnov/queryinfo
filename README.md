@@ -275,7 +275,7 @@ public class OrganizationEntity extends DefaultOrganization {
 		"employees.firstName",
 		"employees.lastName"
 	],
-	"sorts":[
+	"sorts": [
 		{
 			"fieldName": "name",
 			"direction": "desc"
