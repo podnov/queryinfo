@@ -33,20 +33,20 @@ The purpose of this code is to easily create and execute dynamic queries against
 		],
 		"operator": "and"
 	},
-	"paginationInfo" : {
-		"pageIndex" : 0,
-		"pageSize" : 9223372036854775807
+	"paginationInfo": {
+		"pageIndex": 0,
+		"pageSize": 9223372036854775807
 	},
-	"requestedFields" : [
+	"requestedFields": [
 		"name",
 		"address",
 		"city",
 		"state"
 	],
-	"sorts" : [
+	"sorts": [
 		{
-			"direction" : "desc",
-			"fieldName" : "name"
+			"direction": "desc",
+			"fieldName": "name"
 		}
 	]
 }
