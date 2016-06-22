@@ -57,6 +57,19 @@ Using the queryinfo-jpa module, you can map condition field names ("leftHandSide
 #### Given this PersonEntity:
 
 ```java
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+
 @Entity
 @Table(name = "people")
 public class PersonEntity extends DefaultPerson {
@@ -112,6 +125,18 @@ public class PersonEntity extends DefaultPerson {
 #### And this OrganizationEntity:
 
 ```java
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import com.evanzeimet.queryinfo.it.people.PersonEntity;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
+import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
+
 @Entity
 @Table(name = "organizations")
 public class OrganizationEntity extends DefaultOrganization {
