@@ -49,7 +49,8 @@ import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> {
+public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> 
+		implements QueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	protected static final int DEFAULT_PAGE_INDEX = 0;
 	protected static final int DEFAULT_MAX_RESULTS = 20;
@@ -76,6 +77,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return queryInfoUtils.coalesceQueryInfo(queryInfo);
 	}
 
+	@Override
 	public Long count(QueryInfo queryInfo) throws QueryInfoException {
 		Boolean useDistinctSelections = beanContext.getUseDistinctSelections();
 
@@ -96,6 +98,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return typedQuery.getSingleResult();
 	}
 
+	@Override
 	public QueryInfoJPAAttributeNameBuilder<RootEntity, RootEntity> createJpaAttributeNameBuilder() {
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		Class<RootEntity> rootEntityClass = beanContext.getRootEntityClass();
@@ -116,6 +119,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return entityContextRegistry.getContext(rootEntityClass);
 	}
 
+	@Override
 	public List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException {
 		queryInfo = coalesceQueryInfo(queryInfo);
 
@@ -143,6 +147,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return resultConveter.convert(criteriaQueryResults);
 	}
 
+	@Override
 	public QueryInfoResult queryForOne(QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoResult result;
 
@@ -162,6 +167,7 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		return result;
 	}
 
+	@Override
 	public PaginatedResult<QueryInfoResult> queryForPaginatedResult(QueryInfo queryInfo)
 			throws QueryInfoException {
 		PaginatedResult<QueryInfoResult> result = new DefaultPaginatedResult<>();
