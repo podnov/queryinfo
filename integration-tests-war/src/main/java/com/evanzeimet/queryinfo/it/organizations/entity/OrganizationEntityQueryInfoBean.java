@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizations.entity;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -33,9 +32,8 @@ import com.evanzeimet.queryinfo.jpa.bean.entity.DefaultEntityQueryInfoBean;
 public class OrganizationEntityQueryInfoBean extends DefaultEntityQueryInfoBean<OrganizationEntity> {
 
 	@Inject
-	@PostConstruct
-	protected void postConstruct(OrganizationEntityQueryInfoBeanContext context) {
-		setBeanContext(context);
+	public void setBeanContext(OrganizationEntityQueryInfoBeanContext beanContext) {
+		super.setBeanContext(beanContext);
 	}
 
 }

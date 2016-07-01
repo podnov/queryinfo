@@ -69,4 +69,8 @@ public class DefaultQueryInfoEntityContextRegistry implements QueryInfoEntityCon
 		Class<T> rootEntityClass = jpaContext.getRoot().getModel().getBindableJavaType();
 		return getContext(rootEntityClass);
 	}
+
+	public List<QueryInfoEntityContext<?>> getContexts() {
+		return entityContexts;
+	}
 }

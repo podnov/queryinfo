@@ -31,13 +31,35 @@ import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 public class DefaultTupleToPojoQueryInfoResultConverter<T>
 		extends AbstractTupleToPojoQueryInfoResultConverter<T> {
 
+	private QueryInfoBaseInstanceFactory<T> baseInstanceFactory;
+	private Class<T> resultClass;
+
 	public DefaultTupleToPojoQueryInfoResultConverter(Class<T> resultClass) {
-		super(resultClass, new DefaultBaseInstanceFactory<T>(resultClass));
+		this(resultClass, new DefaultBaseInstanceFactory<T>(resultClass));
 	}
 
 	public DefaultTupleToPojoQueryInfoResultConverter(Class<T> resultClass,
 			QueryInfoBaseInstanceFactory<T> baseInstanceFactory) {
-		super(resultClass, baseInstanceFactory);
+		setResultClass(resultClass);
+		setBaseInstanceFactory(baseInstanceFactory);
+	}
+
+	@Override
+	public QueryInfoBaseInstanceFactory<T> getBaseInstanceFactory() {
+		return baseInstanceFactory;
+	}
+
+	public void setBaseInstanceFactory(QueryInfoBaseInstanceFactory<T> baseInstanceFactory) {
+		this.baseInstanceFactory = baseInstanceFactory;
+	}
+
+	@Override
+	public Class<T> getResultClass() {
+		return resultClass;
+	}
+
+	public void setResultClass(Class<T> resultClass) {
+		this.resultClass = resultClass;
 	}
 
 	protected static class DefaultBaseInstanceFactory<T> implements QueryInfoBaseInstanceFactory<T> {

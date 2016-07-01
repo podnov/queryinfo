@@ -23,21 +23,18 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  */
 
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.bean.tuple.DefaultTupleQueryInfoBean;
 
 @Stateless
 public class OrganizationEmployeeQueryInfoBean
-	extends DefaultTupleQueryInfoBean<OrganizationEntity, OrganizationEmployee> {
+	extends DefaultTupleQueryInfoBean<OrganizationEntity, DefaultOrganizationEmployee> {
 
 	@Inject
-	@PostConstruct
-	protected void postConstruct(OrganizationEmployeeQueryInfoBeanContext context) {
-		setBeanContext(context);
+	public void setBeanContext(OrganizationEmployeeQueryInfoBeanContext beanContext) {
+		super.setBeanContext(beanContext);
 	}
 
 }

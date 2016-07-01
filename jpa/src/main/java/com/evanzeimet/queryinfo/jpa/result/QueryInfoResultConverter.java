@@ -27,8 +27,8 @@ import java.util.List;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 
-public interface QueryInfoResultConverter<CriteriaQueryResultType, QueryInfoResultType> {
+public interface QueryInfoResultConverter<CriteriaQueryResult, QueryInfoResult> {
 
-	List<QueryInfoResultType> convert(List<CriteriaQueryResultType> criteriaQueryResults) throws QueryInfoException;
+	List<QueryInfoResult> convert(List<CriteriaQueryResult> criteriaQueryResults) throws QueryInfoException;
 
 }

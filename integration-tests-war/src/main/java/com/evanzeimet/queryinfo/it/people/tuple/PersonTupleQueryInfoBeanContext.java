@@ -27,7 +27,7 @@ import javax.ejb.Stateless;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
+import com.evanzeimet.queryinfo.it.QueryInfoTest;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.bean.tuple.AbstractTupleToJSONQueryInfoBeanContext;
 
@@ -36,12 +36,9 @@ public class PersonTupleQueryInfoBeanContext
 	extends AbstractTupleToJSONQueryInfoBeanContext<PersonEntity> {
 
 	@Inject
-	@QueryInfoEntityManager
-	private EntityManager entityManager;
-
 	@Override
-	public EntityManager getEntityManager() {
-		return entityManager;
+	public void setEntityManager(@QueryInfoTest EntityManager entityManager) {
+		super.setEntityManager(entityManager);
 	}
 
 	@Override

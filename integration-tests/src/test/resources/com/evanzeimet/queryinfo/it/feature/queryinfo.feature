@@ -25,7 +25,65 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 	| I'm       | Unemployed |                          |
 
-	
+
+Scenario: Generic entity resource test
+
+	Given the generic query info web service for the "personEntity"
+	When I send the query:
+	"""
+	{
+		"sorts":[
+			{
+				"fieldName": "lastName",
+				"direction": "asc"
+			},
+			{
+				"fieldName": "firstName",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName                  |
+	| Jeff      | Bezos                     |
+	| Nick      | Bradshaw                  |
+	| Judith    | Faulkner                  |
+	| Tom       | Kazanski                  |
+	| Mike      | Metcalf                   |
+	| Pete      | Mitchell                  |
+	| Larry     | Page                      |
+	| I'm       | Unemployed                |
+	| Evan      | Zeimet                    |
+	| Mark      | Zuckerberg                |
+
+
+Scenario: Generic entity resource test
+
+	Given the generic query info web service for the "organizationEntity"
+	When I send the query:
+	"""
+	{
+		"sorts":[
+			{
+				"fieldName": "name",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these organizations:
+	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
+	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
+	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
+	| Epic      | 1979 Milky Way            |          | Verona        | WI    | 53593 | 1979        | true   |
+	| Facebook  | 1 Hacker Way              |          | Menlo Park    | CA    | 94025 | 2004        | true   |
+	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
+	| Pets.com  |                           |          | San Francisco | CA    | 94101 | 1998        | false  |
+	| U.S. Navy | The Pentagon              |          | Washington    | DC    | 20001 | 1775        | true   |
+
 Scenario: Tuple to pojo conversion with requested fields
 
 	Given the organization employees query info web service

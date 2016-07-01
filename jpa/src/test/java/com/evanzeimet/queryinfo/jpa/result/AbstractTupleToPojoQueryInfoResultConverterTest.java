@@ -302,14 +302,27 @@ public class AbstractTupleToPojoQueryInfoResultConverterTest {
 
 	private static class TestFieldsConverter extends AbstractTupleToPojoQueryInfoResultConverter<TestFieldsResult> {
 
+		private QueryInfoBaseInstanceFactory<TestFieldsResult> baseInstanceFactory;
+
 		public TestFieldsConverter() {
-			super(TestFieldsResult.class, new QueryInfoBaseInstanceFactory<TestFieldsResult>() {
+			baseInstanceFactory = new QueryInfoBaseInstanceFactory<TestFieldsResult>() {
 
 				@Override
 				public TestFieldsResult create() {
 					return new TestFieldsResult();
 				}
-			});
+
+			};
+		}
+
+		@Override
+		public QueryInfoBaseInstanceFactory<TestFieldsResult> getBaseInstanceFactory() {
+			return baseInstanceFactory;
+		}
+
+		@Override
+		public Class<TestFieldsResult> getResultClass() {
+			return TestFieldsResult.class;
 		}
 
 	}
@@ -317,14 +330,27 @@ public class AbstractTupleToPojoQueryInfoResultConverterTest {
 	private static class TestMixedConverter
 			extends AbstractTupleToPojoQueryInfoResultConverter<TestMixedResult> {
 
+		private QueryInfoBaseInstanceFactory<TestMixedResult> baseInstanceFactory;
+
 		public TestMixedConverter() {
-			super(TestMixedResult.class, new QueryInfoBaseInstanceFactory<TestMixedResult>() {
+			baseInstanceFactory = new QueryInfoBaseInstanceFactory<TestMixedResult>() {
 
 				@Override
 				public TestMixedResult create() {
 					return new TestMixedResult();
 				}
-			});
+
+			};
+		}
+
+		@Override
+		public QueryInfoBaseInstanceFactory<TestMixedResult> getBaseInstanceFactory() {
+			return baseInstanceFactory;
+		}
+
+		@Override
+		public Class<TestMixedResult> getResultClass() {
+			return TestMixedResult.class;
 		}
 
 	}
@@ -332,14 +358,27 @@ public class AbstractTupleToPojoQueryInfoResultConverterTest {
 	private static class TestPropertiesConverter
 			extends AbstractTupleToPojoQueryInfoResultConverter<TestPropertiesResult> {
 
+		private QueryInfoBaseInstanceFactory<TestPropertiesResult> baseInstanceFactory;
+
 		public TestPropertiesConverter() {
-			super(TestPropertiesResult.class, new QueryInfoBaseInstanceFactory<TestPropertiesResult>() {
+			baseInstanceFactory = new QueryInfoBaseInstanceFactory<TestPropertiesResult>() {
 
 				@Override
 				public TestPropertiesResult create() {
 					return new TestPropertiesResult();
 				}
-			});
+
+			};
+		}
+
+		@Override
+		public QueryInfoBaseInstanceFactory<TestPropertiesResult> getBaseInstanceFactory() {
+			return baseInstanceFactory;
+		}
+
+		@Override
+		public Class<TestPropertiesResult> getResultClass() {
+			return TestPropertiesResult.class;
 		}
 
 	}

@@ -52,14 +52,12 @@ public abstract class AbstractTupleToPojoQueryInfoResultConverter<QueryInfoResul
 	private static final Logger logger = LoggerFactory.getLogger(AbstractTupleToPojoQueryInfoResultConverter.class);
 
 	protected QueryInfoAttributeUtils attributeUtils = new QueryInfoAttributeUtils();
-	protected QueryInfoBaseInstanceFactory<QueryInfoResultType> baseInstanceFactory;
-	protected Class<? extends QueryInfoResultType> resultClass;
 
+	public AbstractTupleToPojoQueryInfoResultConverter() {
 
-	public AbstractTupleToPojoQueryInfoResultConverter(Class<? extends QueryInfoResultType> resultClass, QueryInfoBaseInstanceFactory<QueryInfoResultType> baseInstanceFactory) {
-		this.resultClass = resultClass;
-		this.baseInstanceFactory = baseInstanceFactory;
 	}
+
+	public abstract QueryInfoBaseInstanceFactory<QueryInfoResultType> getBaseInstanceFactory();
 
 	@Override
 	public List<QueryInfoResultType> convert(List<Tuple> tuples) throws QueryInfoException {
@@ -84,7 +82,7 @@ public abstract class AbstractTupleToPojoQueryInfoResultConverter<QueryInfoResul
 
 	protected QueryInfoResultType convertTuple(Map<String, MethodHandle> methodHandles,
 			Tuple tuple) throws Throwable {
-		QueryInfoResultType result = baseInstanceFactory.create();
+		QueryInfoResultType result = getBaseInstanceFactory().create();
 		Iterator<Entry<String, MethodHandle>> methodHandlesEntryIterator = methodHandles.entrySet().iterator();
 
 		while (methodHandlesEntryIterator.hasNext()) {
@@ -115,8 +113,10 @@ public abstract class AbstractTupleToPojoQueryInfoResultConverter<QueryInfoResul
 	}
 
 	protected MethodHandle findFieldPutHandle(String memberName, Class<?> elementJavaType) {
+		Class<QueryInfoResultType> resultClass = getResultClass();
 		return findFieldPutHandle(resultClass, memberName, elementJavaType);
 	}
+
 
 	protected MethodHandle findFieldPutHandle(Class<?> hostClass,
 			String memberName,
@@ -145,9 +145,12 @@ public abstract class AbstractTupleToPojoQueryInfoResultConverter<QueryInfoResul
 
 	protected MethodHandle findFieldSetterHandle(String memberName, Class<?> elementJavaType) {
 		MethodHandle result = null;
+
 		String methodSuffix = StringUtils.capitalize(memberName);
 		String setterName = String.format("set%s", methodSuffix);
+
 		MethodType methodType = methodType(void.class, elementJavaType);
+		Class<QueryInfoResultType> resultClass = getResultClass();
 
 		try {
 			result = MethodHandles.lookup().findVirtual(resultClass,
@@ -183,6 +186,8 @@ public abstract class AbstractTupleToPojoQueryInfoResultConverter<QueryInfoResul
 
 		return result;
 	}
+
+	public abstract Class<QueryInfoResultType> getResultClass();
 
 	protected Map<String, MethodHandle> mapElementMethodHandles(List<TupleElement<?>> tupleElements)
 			throws QueryInfoException {

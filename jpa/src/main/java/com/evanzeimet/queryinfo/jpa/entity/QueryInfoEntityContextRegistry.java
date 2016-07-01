@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.entity;
 
+import java.util.List;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -27,10 +29,12 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public interface QueryInfoEntityContextRegistry {
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(From<?, Entity> from);
+	<Entity> QueryInfoEntityContext<Entity> getContext(From<?, Entity> from);
 
-	public <Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass);
+	<Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass);
 
-	public <Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+	<Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+
+	List<QueryInfoEntityContext<?>> getContexts();
 
 }

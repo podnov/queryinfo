@@ -22,10 +22,8 @@ package com.evanzeimet.queryinfo.it.people.tuple;
  * #L%
  */
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.bean.tuple.DefaultTupleQueryInfoBean;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -34,8 +32,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class PersonTupleQueryInfoBean extends DefaultTupleQueryInfoBean<PersonEntity, ObjectNode> {
 
 	@Inject
-	@PostConstruct
-	protected void postConstruct(PersonTupleQueryInfoBeanContext context) {
-		setBeanContext(context);
+	public void setBeanContext(PersonTupleQueryInfoBeanContext beanContext) {
+		super.setBeanContext(beanContext);
 	}
+
 }

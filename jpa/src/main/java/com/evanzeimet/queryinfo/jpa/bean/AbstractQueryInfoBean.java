@@ -34,6 +34,7 @@ import javax.persistence.criteria.Predicate;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
@@ -49,28 +50,41 @@ import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> 
+public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult>
 		implements QueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	protected static final int DEFAULT_PAGE_INDEX = 0;
 	protected static final int DEFAULT_MAX_RESULTS = 20;
 
-	protected QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext;
-	protected CriteriaBuilder criteriaBuilder;
-	protected EntityManager entityManager;
+	private QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext;
 	private final QueryInfoUtils queryInfoUtils = new QueryInfoUtils();
 
 	public AbstractQueryInfoBean() {
 		super();
 	}
 
-	public AbstractQueryInfoBean(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
-		setBeanContext(beanContext);
+	public QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> getBeanContext() {
+		return beanContext;
 	}
 
-	protected void setBeanContext(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
+	public void setBeanContext(QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> beanContext) {
 		this.beanContext = beanContext;
-		updateStateForBeanContext();
+	}
+
+	protected EntityManager getEntityManager()  {
+		if (beanContext == null) {
+			String message = String.format("No bean context set on [%s]", getClass().getCanonicalName());
+			throw new QueryInfoRuntimeException(message);
+		}
+
+		EntityManager entityManager = beanContext.getEntityManager();
+
+		if (entityManager == null) {
+			String message = String.format("No EntityManager provided by bean context [%s]", beanContext.getClass().getCanonicalName());
+			throw new QueryInfoRuntimeException(message);
+		}
+
+		return entityManager;
 	}
 
 	protected QueryInfo coalesceQueryInfo(QueryInfo queryInfo) {
@@ -85,6 +99,9 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 			String message = "Distinct selections cannot be used with count queries because the count result will always be distinct";
 			throw new QueryInfoException(message);
 		}
+
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
 		queryInfo = coalesceQueryInfo(queryInfo);
 
@@ -107,7 +124,10 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	}
 
 	protected QueryInfoJPAContext<RootEntity> createJpaContext(CriteriaQuery<?> criteriaQuery) {
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = beanContext.getJpaContextFactory();
+
 		return jpaContextFactory.createJpaContext(criteriaBuilder,
 				beanContext,
 				criteriaQuery);
@@ -122,6 +142,9 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	@Override
 	public List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException {
 		queryInfo = coalesceQueryInfo(queryInfo);
+
+		EntityManager entityManager = getEntityManager();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
 		Class<CriteriaQueryResult> resultClass = beanContext.getCriteriaQueryResultClass();
 		CriteriaQuery<CriteriaQueryResult> criteriaQuery = criteriaBuilder.createQuery(resultClass);
@@ -260,8 +283,4 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		selectionSetter.setSelection(entityContextRegistry, jpaContext, queryInfo);
 	}
 
-	protected void updateStateForBeanContext() {
-		entityManager = beanContext.getEntityManager();
-		criteriaBuilder = entityManager.getCriteriaBuilder();
-	}
 }
