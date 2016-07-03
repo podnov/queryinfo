@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.feature;
  * #L%
  */
 
-
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
 
@@ -120,6 +119,11 @@ public class QueryInfoSteps {
 			testUtils.truncateTable(PersonEntity.class);
 			testUtils.persistEntities(personEntities);
 		}
+	}
+
+	@Given("^the generic query info web service for the \"([^\"]*)\"$")
+	public void Given_the_generic_query_info_web_service_for_the__(String entityUri) {
+		path = "/generic/" + entityUri;
 	}
 
 	@Given("^the organization employees query info web service$")

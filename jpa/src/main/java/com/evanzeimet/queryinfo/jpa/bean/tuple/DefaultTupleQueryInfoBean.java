@@ -26,17 +26,12 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
 public class DefaultTupleQueryInfoBean<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBean<RootEntity, Tuple, QueryInfoResult> {
 
 	public DefaultTupleQueryInfoBean() {
 		super();
-	}
-
-	public DefaultTupleQueryInfoBean(QueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> context) {
-		super(context);
 	}
 
 }

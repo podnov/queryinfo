@@ -22,31 +22,16 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * #L%
  */
 
-import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 
 public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> {
 
-	protected QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>();
-
-	public AbstractTupleQueryInfoBeanContext() {
-		super();
-	}
-
-	public AbstractTupleQueryInfoBeanContext(EntityManager entityManager) {
-		super(entityManager);
-	}
-
-	public AbstractTupleQueryInfoBeanContext(EntityManager entityManager,
-			QueryInfoEntityContextRegistry entityContextRegistry) {
-		super(entityManager, entityContextRegistry);
-	}
+	private QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>();
 
 	@Override
 	public Class<Tuple> getCriteriaQueryResultClass() {
@@ -56,6 +41,10 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	@Override
 	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
 		return selectionSetter;
+	}
+
+	public void setSelectionSetter(QueryInfoSelectionSetter<RootEntity> selectionSetter) {
+		this.selectionSetter = selectionSetter;
 	}
 
 }

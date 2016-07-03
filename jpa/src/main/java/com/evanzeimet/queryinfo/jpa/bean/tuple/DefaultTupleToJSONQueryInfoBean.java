@@ -23,9 +23,6 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  */
 
 
-import javax.persistence.Tuple;
-
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DefaultTupleToJSONQueryInfoBean<RootEntity> extends DefaultTupleQueryInfoBean<RootEntity, ObjectNode> {
@@ -34,7 +31,4 @@ public class DefaultTupleToJSONQueryInfoBean<RootEntity> extends DefaultTupleQue
 		super();
 	}
 
-	public DefaultTupleToJSONQueryInfoBean(QueryInfoBeanContext<RootEntity, Tuple, ObjectNode> context) {
-		super(context);
-	}
 }

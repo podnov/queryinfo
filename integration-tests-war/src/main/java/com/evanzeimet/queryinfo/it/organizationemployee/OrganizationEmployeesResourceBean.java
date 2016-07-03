@@ -48,7 +48,7 @@ public class OrganizationEmployeesResourceBean implements OrganizationEmployeesR
 		Response result;
 
 		try {
-			List<OrganizationEmployee> organizationEmployees = queryInfoBean.query(queryInfo);
+			List<DefaultOrganizationEmployee> organizationEmployees = queryInfoBean.query(queryInfo);
 			result = Response.ok(organizationEmployees).build();
 		} catch (QueryInfoException e) {
 			logger.error("Could not retrieve organization employees", e);

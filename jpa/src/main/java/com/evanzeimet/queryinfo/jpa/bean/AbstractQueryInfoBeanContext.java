@@ -1,26 +1,12 @@
 package com.evanzeimet.queryinfo.jpa.bean;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
-import com.evanzeimet.queryinfo.jpa.group.DefaultQueryInfoGroupByFactory;
-import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
-import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
-import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
-import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
-import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
-import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 /*
  * #%L
  * queryinfo-jpa
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,30 +22,35 @@ import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
  * #L%
  */
 
+
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
+import com.evanzeimet.queryinfo.jpa.entity.QueryInfoProvided;
+import com.evanzeimet.queryinfo.jpa.group.DefaultQueryInfoGroupByFactory;
+import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
+import com.evanzeimet.queryinfo.jpa.jpacontext.DefaultQueryInfoJPAContextFactory;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
+import com.evanzeimet.queryinfo.jpa.order.DefaultQueryInfoOrderFactory;
+import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
+import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
+import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
+
 public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult>
 		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private EntityManager entityManager;
-	protected QueryInfoGroupByFactory<RootEntity> groupByFactory = new DefaultQueryInfoGroupByFactory<>();
-	protected final QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
-	protected QueryInfoOrderFactory<RootEntity> orderFactory = new DefaultQueryInfoOrderFactory<>();
-	protected QueryInfoPredicateFactory<RootEntity> predicateFactory = new DefaultQueryInfoPredicateFactory<>();
+	private QueryInfoGroupByFactory<RootEntity> groupByFactory = new DefaultQueryInfoGroupByFactory<>();
+	private QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
+	private QueryInfoOrderFactory<RootEntity> orderFactory = new DefaultQueryInfoOrderFactory<>();
+	private QueryInfoPredicateFactory<RootEntity> predicateFactory = new DefaultQueryInfoPredicateFactory<>();
+	private Boolean useDistinctSelections = false;
 
 	public AbstractQueryInfoBeanContext() {
 		super();
-	}
-
-	public AbstractQueryInfoBeanContext(EntityManager entityManager) {
-		super();
-		this.entityManager = entityManager;
-	}
-
-	public AbstractQueryInfoBeanContext(EntityManager entityManager,
-			QueryInfoEntityContextRegistry entityContextRegistry) {
-		super();
-		this.entityManager = entityManager;
-		setEntityContextRegistry(entityContextRegistry);
 	}
 
 	@Override
@@ -67,9 +58,17 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		return entityContextRegistry;
 	}
 
+	public void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
+		this.entityContextRegistry = entityContextRegistry;
+	}
+
 	@Override
 	public EntityManager getEntityManager() {
 		return entityManager;
+	}
+
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 	@Override
@@ -77,9 +76,17 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		return groupByFactory;
 	}
 
+	public void setGroupByFactory(QueryInfoGroupByFactory<RootEntity> groupByFactory) {
+		this.groupByFactory = groupByFactory;
+	}
+
 	@Override
 	public QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory() {
 		return jpaContextFactory;
+	}
+
+	public void setJpaContextFactory(QueryInfoJPAContextFactory<RootEntity> jpaContextFactory) {
+		this.jpaContextFactory = jpaContextFactory;
 	}
 
 	@Override
@@ -87,14 +94,26 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		return orderFactory;
 	}
 
+	public void setOrderFactory(QueryInfoOrderFactory<RootEntity> orderFactory) {
+		this.orderFactory = orderFactory;
+	}
+
 	@Override
 	public QueryInfoPredicateFactory<RootEntity> getPredicateFactory() {
 		return predicateFactory;
 	}
 
+	public void setPredicateFactory(QueryInfoPredicateFactory<RootEntity> predicateFactory) {
+		this.predicateFactory = predicateFactory;
+	}
+
 	@Override
 	public Boolean getUseDistinctSelections() {
-		return Boolean.FALSE;
+		return useDistinctSelections;
+	}
+
+	public void setUseDistinctSelections(Boolean useDistinctSelections) {
+		this.useDistinctSelections = useDistinctSelections;
 	}
 
 	@Inject
@@ -105,7 +124,11 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 		}
 	}
 
-	protected void setEntityContextRegistry(QueryInfoEntityContextRegistry entityContextRegistry) {
-		this.entityContextRegistry = entityContextRegistry;
+	@Inject
+	protected void injectQueryInfoEntityManager(@QueryInfoProvided Instance<EntityManager> entityManagerInstance) {
+		if (!entityManagerInstance.isUnsatisfied()) {
+			EntityManager entityManager = entityManagerInstance.iterator().next();
+			setEntityManager(entityManager);
+		}
 	}
 }

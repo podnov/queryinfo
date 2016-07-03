@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.organizations.tuple;
+package com.evanzeimet.queryinfo.it.generic;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.it.organizations.tuple;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,17 +22,24 @@ package com.evanzeimet.queryinfo.it.organizations.tuple;
  * #L%
  */
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
-import com.evanzeimet.queryinfo.jpa.bean.tuple.DefaultTupleQueryInfoBean;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-@Stateless
-public class OrganizationTupleQueryInfoBean extends DefaultTupleQueryInfoBean<OrganizationEntity, ObjectNode> {
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-	@Inject
-	public void setBeanContext(OrganizationTupleQueryInfoBeanContext beanContext) {
-		super.setBeanContext(beanContext);
-	}
+import com.evanzeimet.queryinfo.DefaultQueryInfo;
+
+@Path("generic")
+public interface GenericResource {
+
+	@Path("{entityUri}")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	<E> Response query(@PathParam("entityUri") String entityUri, DefaultQueryInfo queryInfo);
+
 }

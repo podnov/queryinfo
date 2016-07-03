@@ -22,10 +22,7 @@ package com.evanzeimet.queryinfo.jpa.bean.entity;
  * #L%
  */
 
-import javax.persistence.EntityManager;
-
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBeanContext;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.result.DefaultEntityQueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultEntityQueryInfoSelectionSetter;
@@ -34,20 +31,11 @@ import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		extends AbstractQueryInfoBeanContext<RootEntity, RootEntity, RootEntity> {
 
-	private final QueryInfoResultConverter<RootEntity, RootEntity> resultConveter = new DefaultEntityQueryInfoResultConverter<>();
-	private final QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
+	private QueryInfoResultConverter<RootEntity, RootEntity> resultConverter = new DefaultEntityQueryInfoResultConverter<>();
+	private QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
 
 	public AbstractEntityQueryInfoBeanContext() {
 		super();
-	}
-
-	public AbstractEntityQueryInfoBeanContext(EntityManager entityManager) {
-		super(entityManager);
-	}
-
-	public AbstractEntityQueryInfoBeanContext(EntityManager entityManager,
-			QueryInfoEntityContextRegistry entityContextRegistry) {
-		super(entityManager, entityContextRegistry);
 	}
 
 	@Override
@@ -57,7 +45,11 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 
 	@Override
 	public QueryInfoResultConverter<RootEntity, RootEntity> getResultConverter() {
-		return resultConveter;
+		return resultConverter;
+	}
+
+	public void setResultConverter(QueryInfoResultConverter<RootEntity, RootEntity> resultConverter) {
+		this.resultConverter = resultConverter;
 	}
 
 	@Override
@@ -65,4 +57,7 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		return selectionSetter;
 	}
 
+	public void setSelectionSetter(QueryInfoSelectionSetter<RootEntity> selectionSetter) {
+		this.selectionSetter = selectionSetter;
+	}
 }

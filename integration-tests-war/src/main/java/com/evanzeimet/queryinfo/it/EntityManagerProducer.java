@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it;
  * #L%
  */
 
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
@@ -32,8 +31,8 @@ import javax.persistence.PersistenceContext;
 public class EntityManagerProducer {
 
 	@Produces
-	@QueryInfoEntityManager
+	@QueryInfoTest
 	@PersistenceContext(unitName = "queryinfo_test")
-	private EntityManager queryinfoTestEntityManager;
+	private EntityManager queryInfoTestEntityManager;
 
 }

@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,28 +22,32 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * #L%
  */
 
+
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
-import com.evanzeimet.queryinfo.jpa.result.TupleToObjectNodeQueryInfoResultConverter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public abstract class AbstractTupleToJSONQueryInfoBeanContext<RootEntity>
-		extends AbstractTupleQueryInfoBeanContext<RootEntity, ObjectNode> {
+public class DefaultTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> extends AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> {
 
-	private QueryInfoResultConverter<Tuple, ObjectNode> resultConverter = new TupleToObjectNodeQueryInfoResultConverter();
-
-	public AbstractTupleToJSONQueryInfoBeanContext() {
-		super();
-	}
+	private QueryInfoResultConverter<Tuple, QueryInfoResult> resultConverter;
+	private Class<RootEntity> rootEntityClass;
 
 	@Override
-	public QueryInfoResultConverter<Tuple, ObjectNode> getResultConverter() {
+	public QueryInfoResultConverter<Tuple, QueryInfoResult> getResultConverter() {
 		return resultConverter;
 	}
 
-	public void setResultConverter(QueryInfoResultConverter<Tuple, ObjectNode> resultConverter) {
+	public void setResultConverter(QueryInfoResultConverter<Tuple, QueryInfoResult> resultConverter) {
 		this.resultConverter = resultConverter;
+	}
+
+	@Override
+	public Class<RootEntity> getRootEntityClass() {
+		return rootEntityClass;
+	}
+
+	public void setRootEntityClass(Class<RootEntity> rootEntityClass) {
+		this.rootEntityClass = rootEntityClass;
 	}
 
 }

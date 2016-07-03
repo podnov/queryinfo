@@ -23,17 +23,12 @@ package com.evanzeimet.queryinfo.jpa.bean.entity;
  */
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
 
 public class DefaultEntityQueryInfoBean<RootEntity>
 		extends AbstractQueryInfoBean<RootEntity, RootEntity, RootEntity> {
 
 	public DefaultEntityQueryInfoBean() {
 		super();
-	}
-
-	public DefaultEntityQueryInfoBean(QueryInfoBeanContext<RootEntity, RootEntity, RootEntity> context) {
-		super(context);
 	}
 
 }

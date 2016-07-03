@@ -23,34 +23,35 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  */
 
 
-import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Tuple;
 
-import com.evanzeimet.queryinfo.it.QueryInfoEntityManager;
+import com.evanzeimet.queryinfo.it.QueryInfoTest;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.bean.tuple.AbstractTupleQueryInfoBeanContext;
+import com.evanzeimet.queryinfo.jpa.result.DefaultTupleToPojoQueryInfoResultConverter;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 
 @Stateless
 public class OrganizationEmployeeQueryInfoBeanContext
-		extends AbstractTupleQueryInfoBeanContext<OrganizationEntity, OrganizationEmployee> {
+		extends AbstractTupleQueryInfoBeanContext<OrganizationEntity, DefaultOrganizationEmployee> {
+
+	private DefaultTupleToPojoQueryInfoResultConverter<DefaultOrganizationEmployee> resultConverter = new DefaultTupleToPojoQueryInfoResultConverter<DefaultOrganizationEmployee>(DefaultOrganizationEmployee.class);
+
+	public OrganizationEmployeeQueryInfoBeanContext() {
+		setSelectionSetter(new OrganizationEmployeeQueryInfoBeanSelectionSetter());
+	}
 
 	@Inject
-	@QueryInfoEntityManager
-	private EntityManager entityManager;
-
-	private OrganizationEmployeeQueryInfoBeanResultConverter resultConverter;
-
 	@Override
-	public EntityManager getEntityManager() {
-		return entityManager;
+	public void setEntityManager(@QueryInfoTest EntityManager entityManager) {
+		super.setEntityManager(entityManager);
 	}
 
 	@Override
-	public QueryInfoResultConverter<Tuple, OrganizationEmployee> getResultConverter() {
+	public QueryInfoResultConverter<Tuple, DefaultOrganizationEmployee> getResultConverter() {
 		return resultConverter;
 	}
 
@@ -59,13 +60,4 @@ public class OrganizationEmployeeQueryInfoBeanContext
 		return OrganizationEntity.class;
 	}
 
-	@PostConstruct
-	protected void postConstruct() {
-		setParts();
-	}
-
-	protected void setParts() {
-		resultConverter = new OrganizationEmployeeQueryInfoBeanResultConverter();
-		selectionSetter = new OrganizationEmployeeQueryInfoBeanSelectionSetter();
-	}
 }
