@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
+import com.evanzeimet.queryinfo.selection.Selection;
 import com.evanzeimet.queryinfo.sort.Sort;
 
 public interface QueryInfo {
@@ -34,17 +35,17 @@ public interface QueryInfo {
 
 	void setConditionGroup(ConditionGroup conditionGroup);
 
-	List<String> getGroupByFields();
+	List<String> getGroupByAttributePaths();
 
-	void setGroupByFields(List<String> groupByFields);
+	void setGroupByAttributePaths(List<String> groupByAttributePaths);
 
 	PaginationInfo getPaginationInfo();
 
 	void setPaginationInfo(PaginationInfo paginationInfo);
 
-	List<String> getRequestedFields();
+	List<Selection> getSelections();
 
-	void setRequestedFields(List<String> requestedFields);
+	void setSelections(List<Selection> selections);
 
 	List<Sort> getSorts();
 

@@ -40,6 +40,6 @@ public interface GenericResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	<E> Response query(@PathParam("entityUri") String entityUri, DefaultQueryInfo queryInfo);
+	Response query(@PathParam("entityUri") String entityUri, DefaultQueryInfo queryInfo);
 
 }

@@ -30,6 +30,7 @@ import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupBuilder;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfoBuilder;
+import com.evanzeimet.queryinfo.selection.Selection;
 import com.evanzeimet.queryinfo.sort.Sort;
 
 public class QueryInfoBuilder {
@@ -44,9 +45,9 @@ public class QueryInfoBuilder {
 		DefaultQueryInfo result = createDefaultInstance();
 
 		result.setConditionGroup(builderReferenceInstance.getConditionGroup());
-		result.setGroupByFields(builderReferenceInstance.getGroupByFields());
+		result.setGroupByAttributePaths(builderReferenceInstance.getGroupByAttributePaths());
 		result.setPaginationInfo(builderReferenceInstance.getPaginationInfo());
-		result.setRequestedFields(builderReferenceInstance.getRequestedFields());
+		result.setSelections(builderReferenceInstance.getSelections());
 		result.setSorts(builderReferenceInstance.getSorts());
 
 		return result;
@@ -92,8 +93,8 @@ public class QueryInfoBuilder {
 				.conditionGroup(conditionGroup);
 	}
 
-	public QueryInfoBuilder groupByFields(List<String> groupByFields) {
-		builderReferenceInstance.setGroupByFields(groupByFields);
+	public QueryInfoBuilder groupByAttributePaths(List<String> groupByAttributePaths) {
+		builderReferenceInstance.setGroupByAttributePaths(groupByAttributePaths);
 		return this;
 	}
 
@@ -112,8 +113,8 @@ public class QueryInfoBuilder {
 		return paginationInfo(paginationInfo);
 	}
 
-	public QueryInfoBuilder requestedFields(List<String> requestedFields) {
-		builderReferenceInstance.setRequestedFields(requestedFields);
+	public QueryInfoBuilder selections(List<Selection> selections) {
+		builderReferenceInstance.setSelections(selections);
 		return this;
 	}
 

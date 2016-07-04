@@ -34,10 +34,10 @@ public interface QueryInfoPathFactory<RootEntity> {
 
 	Class<RootEntity> getEntityClass();
 
-	<T> Expression<T> getPathForField(QueryInfoEntityContextRegistry entityContextRegistry,
+	<T> Expression<T> getPathForAttribute(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
-			String fieldName,
+			String attributePath,
 			QueryInfoAttributePurpose purpose) throws QueryInfoException;
 
 }

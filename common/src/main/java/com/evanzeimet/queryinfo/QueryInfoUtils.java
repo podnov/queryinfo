@@ -11,9 +11,9 @@ package com.evanzeimet.queryinfo;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,6 +34,7 @@ import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.DefaultConditionGroup;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
+import com.evanzeimet.queryinfo.selection.Selection;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JavaType;
@@ -56,45 +57,10 @@ public class QueryInfoUtils {
 		this.defaultPageSize = defaultPageSize;
 	}
 
-	public QueryInfo coalesceQueryInfo(QueryInfo queryInfo) {
-		QueryInfo result;
-
-		if (queryInfo == null) {
-			result = new DefaultQueryInfo();
-		} else {
-			result = queryInfo;
-		}
-
+	public void coalesceConditionGroup(QueryInfo result) {
 		ConditionGroup conditionGroup = result.getConditionGroup();
 		conditionGroup = coalesceConditionGroup(conditionGroup);
 		result.setConditionGroup(conditionGroup);
-
-		PaginationInfo paginationInfo = result.getPaginationInfo();
-		paginationInfo = coalescePaginationInfo(paginationInfo);
-		result.setPaginationInfo(paginationInfo);
-
-		/*
-		 * don't coalesce requested fields, null value means
-		 * "give me everything"
-		 */
-
-		List<Sort> sorts = result.getSorts();
-		sorts = coalesceSorts(sorts);
-		result.setSorts(sorts);
-
-		return result;
-	}
-
-	public List<Sort> coalesceSorts(List<Sort> sorts) {
-		List<Sort> result;
-
-		if (sorts == null) {
-			result = new ArrayList<>();
-		} else {
-			result = sorts;
-		}
-
-		return result;
 	}
 
 	public ConditionGroup coalesceConditionGroup(ConditionGroup conditionGroup) {
@@ -131,6 +97,37 @@ public class QueryInfoUtils {
 		return result;
 	}
 
+
+	public List<String> coalesceGroupByAttributePaths(QueryInfo queryInfo) {
+		List<String> result = queryInfo.getGroupByAttributePaths();
+
+		result = coalesceGroupByAttributePaths(result);
+		queryInfo.setGroupByAttributePaths(result);
+
+		return result;
+	}
+
+	public List<String> coalesceGroupByAttributePaths(List<String> groupByAttributePaths) {
+		List<String> result;
+
+		if (groupByAttributePaths == null) {
+			result = new ArrayList<>();
+		} else {
+			result = groupByAttributePaths;
+		}
+
+		return result;
+	}
+
+	public PaginationInfo coalescePaginationInfo(QueryInfo queryInfo) {
+		PaginationInfo result = queryInfo.getPaginationInfo();
+
+		result = coalescePaginationInfo(result);
+		queryInfo.setPaginationInfo(result);
+
+		return result;
+	}
+
 	public PaginationInfo coalescePaginationInfo(PaginationInfo paginationInfo) {
 		PaginationInfo result;
 
@@ -155,6 +152,71 @@ public class QueryInfoUtils {
 		return result;
 	}
 
+	public QueryInfo coalesceQueryInfo(QueryInfo queryInfo) {
+		QueryInfo result;
+
+		if (queryInfo == null) {
+			result = new DefaultQueryInfo();
+		} else {
+			result = queryInfo;
+		}
+
+		coalesceConditionGroup(result);
+		coalesceGroupByAttributePaths(result);
+		coalescePaginationInfo(result);
+
+		/*
+		 * don't coalesce selections, null value means
+		 * "give me everything"
+		 */
+
+		coalesceSorts(result);
+
+		return result;
+	}
+
+	public List<Selection> coalesceSelections(QueryInfo queryInfo) {
+		List<Selection> result = queryInfo.getSelections();
+
+		result = coalesceSelections(result);
+		queryInfo.setSelections(result);
+
+		return result;
+	}
+
+	public List<Selection> coalesceSelections(List<Selection> selections) {
+		List<Selection> result;
+
+		if (selections == null) {
+			result = new ArrayList<>();
+		} else {
+			result = selections;
+		}
+
+		return result;
+	}
+
+	public List<Sort> coalesceSorts(QueryInfo queryInfo) {
+		List<Sort> result = queryInfo.getSorts();
+
+		result = coalesceSorts(result);
+		queryInfo.setSorts(result);
+
+		return result;
+	}
+
+	public List<Sort> coalesceSorts(List<Sort> sorts) {
+		List<Sort> result;
+
+		if (sorts == null) {
+			result = new ArrayList<>();
+		} else {
+			result = sorts;
+		}
+
+		return result;
+	}
+
 	public ObjectMapper createObjectMapper() {
 		ObjectMapper result = new ObjectMapper();
 
@@ -165,6 +227,11 @@ public class QueryInfoUtils {
 		result.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 		return result;
+	}
+
+	public boolean hasRequestedAllFields(QueryInfo queryInfo) {
+		List<Selection> selections = queryInfo.getSelections();
+		return (selections == null);
 	}
 
 	public <T> T objectify(String json, Class<T> clazz) throws QueryInfoException {

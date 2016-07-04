@@ -25,6 +25,105 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 	| I'm       | Unemployed |                          |
 
+Scenario: Group by with avg aggregate function
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"selections": [
+			{
+				"attributePath": "yearFounded",
+				"aggregateFunction": "avg"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| yearFounded |
+	| 1961.7143   |
+
+Scenario: Group by with aggregate function on joined attribute
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "active",
+					"operator": "=",
+					"rightHandSide": true
+				}
+			]
+		},
+		"groupByAttributePaths": [
+			"name"
+		],
+		"selections": [
+			{
+				"attributePath": "name"
+			},
+			{
+				"attributePath": "employees.firstName",
+				"aggregateFunction": "count"
+			}
+		],
+		"sorts":[
+			{
+				"attributePath": "name",
+				"direction": "desc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| name      | employees.firstName |
+	| U.S. Navy | 4                   |
+	| Google    | 1                   |
+	| Facebook  | 1                   |
+	| Epic      | 1                   |
+	| CDW       | 1                   |
+	| Amazon    | 1                   |
+
+
+Scenario: Group by with count aggregate function
+
+	Given the organizations query info web service
+	When I send the query:
+	"""
+	{
+		"groupByAttributePaths": [
+			"state"
+		],
+		"selections": [
+			{
+				"attributePath": "state"
+			},
+			{
+				"attributePath": "name",
+				"aggregateFunction": "count"
+			}
+		],
+		"sorts":[
+			{
+				"attributePath": "state",
+				"direction": "desc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these tuples:
+	| state   | name |
+	| WI      | 1    |
+	| WA      | 1    |
+	| IL      | 1    |
+	| DC      | 1    |
+	| CA      | 3    |
 
 Scenario: Generic entity resource test
 
@@ -34,11 +133,11 @@ Scenario: Generic entity resource test
 	{
 		"sorts":[
 			{
-				"fieldName": "lastName",
+				"attributePath": "lastName",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "firstName",
+				"attributePath": "firstName",
 				"direction": "asc"
 			}
 		]
@@ -67,7 +166,7 @@ Scenario: Generic entity resource test
 	{
 		"sorts":[
 			{
-				"fieldName": "name",
+				"attributePath": "name",
 				"direction": "asc"
 			}
 		]
@@ -90,17 +189,21 @@ Scenario: Tuple to pojo conversion with requested fields
 	When I send the query:
 	"""
 	{
-		"requestedFields": [
-			"employees.lastName",
-			"name"
+		"selections": [
+			{
+				"attributePath": "employees.lastName"
+			},
+			{
+				"attributePath": "name"
+			}
 		],
 		"sorts":[
 			{
-				"fieldName": "name",
+				"attributePath": "name",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "employees.lastName",
+				"attributePath": "employees.lastName",
 				"direction": "asc"
 			}
 		]
@@ -128,11 +231,11 @@ Scenario: Tuple to pojo conversion
 	{
 		"sorts":[
 			{
-				"fieldName": "name",
+				"attributePath": "name",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "employees.lastName",
+				"attributePath": "employees.lastName",
 				"direction": "asc"
 			}
 		]
@@ -158,15 +261,17 @@ Scenario: Basic group by
 	When I send the query:
 	"""
 	{
-		"groupByFields": [
+		"groupByAttributePaths": [
 			"state"
 		],
-		"requestedFields": [
-			"state"
+		"selections": [
+			{
+				"attributePath": "state"
+			}
 		],
 		"sorts":[
 			{
-				"fieldName": "state",
+				"attributePath": "state",
 				"direction": "desc"
 			}
 		]
@@ -187,19 +292,27 @@ Scenario: Use nested requested fields, one-to-many join
 	When I send the query:
 	"""
 	{
-		"requestedFields": [
-			"name",
-			"state",
-			"employees.firstName",
-			"employees.lastName"
+		"selections": [
+			{
+				"attributePath": "name"
+			},
+			{
+				"attributePath": "state"
+			},
+			{
+				"attributePath": "employees.firstName"
+			},
+			{
+				"attributePath": "employees.lastName"
+			}
 		],
 		"sorts":[
 			{
-				"fieldName": "name",
+				"attributePath": "name",
 				"direction": "desc"
 			},
 			{
-				"fieldName": "employees.lastName",
+				"attributePath": "employees.lastName",
 				"direction": "asc"
 			}
 		]
@@ -225,10 +338,16 @@ Scenario: Use nested requested fields, one-to-one join
 	When I send the query:
 	"""
 	{
-		"requestedFields": [
-			"firstName",
-			"lastName",
-			"employer"
+		"selections": [
+			{
+				"attributePath": "firstName"
+			},
+			{
+				"attributePath": "lastName"
+			},
+			{
+				"attributePath": "employer"
+			}
 		]
 	}
 	"""
@@ -252,11 +371,19 @@ Scenario: Use nested requested fields, one-to-one join
 	When I send the query:
 	"""
 	{
-		"requestedFields": [
-			"firstName",
-			"lastName",
-			"employer.name",
-			"employer.state"
+		"selections": [
+			{
+				"attributePath": "firstName"
+			},
+			{
+				"attributePath": "lastName"
+			},
+			{
+				"attributePath": "employer.name"
+			},
+			{
+				"attributePath": "employer.state"
+			}
 		]
 	}
 	"""
@@ -280,8 +407,10 @@ Scenario: Use requested fields
 	When I send the query:
 	"""
 	{
-		"requestedFields": [
-			"firstName"
+		"selections": [
+			{
+				"attributePath": "firstName"
+			}
 		]
 	}
 	"""
@@ -311,11 +440,11 @@ Scenario: Paginate some sorted stuff (page 2)
 		},
 		"sorts": [
 			{
-				"fieldName": "state",
+				"attributePath": "state",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "zip",
+				"attributePath": "zip",
 				"direction": "desc"
 			}
 		]
@@ -338,11 +467,11 @@ Scenario: Paginate some sorted stuff (page 1)
 		},
 		"sorts": [
 			{
-				"fieldName": "state",
+				"attributePath": "state",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "zip",
+				"attributePath": "zip",
 				"direction": "desc"
 			}
 		]
@@ -367,11 +496,11 @@ Scenario: Paginate some sorted stuff (page 0)
 		},
 		"sorts": [
 			{
-				"fieldName": "state",
+				"attributePath": "state",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "zip",
+				"attributePath": "zip",
 				"direction": "desc"
 			}
 		]
@@ -392,11 +521,11 @@ Scenario: Sort some stuff
 	{
 		"sorts": [
 			{
-				"fieldName": "state",
+				"attributePath": "state",
 				"direction": "asc"
 			},
 			{
-				"fieldName": "zip",
+				"attributePath": "zip",
 				"direction": "desc"
 			}
 		]

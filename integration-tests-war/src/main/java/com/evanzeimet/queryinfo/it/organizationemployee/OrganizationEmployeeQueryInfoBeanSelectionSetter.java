@@ -27,27 +27,29 @@ import java.util.List;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity_;
 import com.evanzeimet.queryinfo.it.people.PersonEntity_;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributeNameBuilder;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributePathBuilder;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.selection.DefaultTupleQueryInfoSelectionSetter;
 import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
+import com.evanzeimet.queryinfo.selection.DefaultSelection;
+import com.evanzeimet.queryinfo.selection.Selection;
 
 public class OrganizationEmployeeQueryInfoBeanSelectionSetter
 		extends DefaultTupleQueryInfoSelectionSetter<OrganizationEntity>
 		implements QueryInfoSelectionSetter<OrganizationEntity> {
 
-	protected QueryInfoFieldUtils fieldUtils = new QueryInfoFieldUtils();
+	protected QueryInfoUtils utils = new QueryInfoUtils();
 
 	@Override
 	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<OrganizationEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
-		boolean hasRequestedAllFields = fieldUtils.hasRequestedAllFields(queryInfo);
+		boolean hasRequestedAllFields = utils.hasRequestedAllFields(queryInfo);
 
 		if (hasRequestedAllFields) {
 			setRequestedAllFieldsSelection(entityContextRegistry, jpaContext);
@@ -58,45 +60,48 @@ public class OrganizationEmployeeQueryInfoBeanSelectionSetter
 
 	protected void setRequestedAllFieldsSelection(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<OrganizationEntity> jpaContext) throws QueryInfoException {
-		List<String> requestedFields = new ArrayList<>();
+		List<Selection> selections = new ArrayList<>();
 
-		QueryInfoJPAAttributeNameBuilder<OrganizationEntity, OrganizationEntity> attributeNameBuilder = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		QueryInfoJPAAttributePathBuilder<OrganizationEntity, OrganizationEntity> attributePathBuilder = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(OrganizationEntity.class);
 
 		for (OrganizationEmployeeField field : OrganizationEmployeeField.values()) {
-			String fieldName = null;
+			String attributePath = null;
 
 			switch (field) {
 				case EMPLOYEE_FIRST_NAME:
-					fieldName = attributeNameBuilder.clear()
+					attributePath = attributePathBuilder.clear()
 							.add(OrganizationEntity_.employeeEntities)
 							.add(PersonEntity_.firstName)
 							.buildString();
 					break;
 
 				case EMPLOYEE_LAST_NAME:
-					fieldName = attributeNameBuilder.clear()
+					attributePath = attributePathBuilder.clear()
 							.add(OrganizationEntity_.employeeEntities)
 							.add(PersonEntity_.lastName)
 							.buildString();
 					break;
 
 				case NAME:
-					fieldName = attributeNameBuilder.clear()
+					attributePath = attributePathBuilder.clear()
 							.add(OrganizationEntity_.name)
 							.buildString();
 					break;
 			}
 
-			if (fieldName == null) {
+			if (attributePath == null) {
 				String message = String.format("No field name set for field [%s]", field);
 				throw new QueryInfoException(message);
 			}
 
-			requestedFields.add(fieldName);
+			Selection selection = new DefaultSelection();
+			selection.setAttributePath(attributePath);
+
+			selections.add(selection);
 		}
 
-		setFieldNamesSelection(entityContextRegistry, jpaContext, requestedFields);
+		setExplicitSelections(entityContextRegistry, jpaContext, selections);
 	}
 
 }

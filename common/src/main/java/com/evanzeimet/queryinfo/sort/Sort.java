@@ -22,15 +22,14 @@ package com.evanzeimet.queryinfo.sort;
  * #L%
  */
 
-
 public interface Sort {
+
+	String getAttributePath();
+
+	void setAttributePath(String attributePath);
 
 	String getDirection();
 
 	void setDirection(String direction);
-
-	String getFieldName();
-
-	void setFieldName(String fieldName);
 
 }

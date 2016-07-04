@@ -1,7 +1,7 @@
 {
   "sorts" : [
     {
-      "fieldName" : "field2"
+      "attributePath" : "field2"
     }
   ]
 }

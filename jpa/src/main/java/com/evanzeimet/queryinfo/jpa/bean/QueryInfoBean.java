@@ -26,14 +26,14 @@ import java.util.List;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributeNameBuilder;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributePathBuilder;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 
 public interface QueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	Long count(QueryInfo queryInfo) throws QueryInfoException;
 
-	QueryInfoJPAAttributeNameBuilder<RootEntity, RootEntity> createJpaAttributeNameBuilder();
+	QueryInfoJPAAttributePathBuilder<RootEntity, RootEntity> createJpaAttributePathBuilder();
 
 	List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException;
 

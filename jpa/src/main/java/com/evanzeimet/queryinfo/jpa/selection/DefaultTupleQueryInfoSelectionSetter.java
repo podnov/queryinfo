@@ -22,99 +22,58 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
-import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
-import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
-import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
 
 public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 		implements QueryInfoSelectionSetter<RootEntity> {
 
-	protected QueryInfoFieldUtils fieldUtils = new QueryInfoFieldUtils();
+	protected QueryInfoUtils utils = new QueryInfoUtils();
+	protected QueryInfoSelectionUtils selectionUtils = new QueryInfoSelectionUtils();
 
 	public DefaultTupleQueryInfoSelectionSetter() {
 
 	}
 
-	protected void setRequestAllSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext)
-				throws QueryInfoException {
-		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getAttributeContext();
-
-		Map<String, QueryInfoFieldInfo> fields = queryInfoAttributeContext.getFields();
-		Iterator<QueryInfoFieldInfo> iterator = fields.values().iterator();
-
-		int selectionCount = fields.size();
-		List<String> fieldNames = new ArrayList<>(selectionCount);
-
-		while (iterator.hasNext()) {
-			QueryInfoFieldInfo fieldInfo = iterator.next();
-			String fieldName = fieldInfo.getName();
-			fieldNames.add(fieldName);
-		}
-
-		setFieldNamesSelection(entityContextRegistry, jpaContext, fieldNames);
+	protected void setAllFieldSelections(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<RootEntity> jpaContext) throws QueryInfoException {
+		List<com.evanzeimet.queryinfo.selection.Selection> selections = selectionUtils.createAllFieldQueryInfoSelections(entityContextRegistry, jpaContext);
+		setExplicitSelections(entityContextRegistry, jpaContext, selections);
 	}
 
-	protected void setFieldNamesSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected void setExplicitSelections(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<RootEntity> jpaContext,
-			List<String> requestedFields) throws QueryInfoException {
-		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
-		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
+			List<com.evanzeimet.queryinfo.selection.Selection> selections) throws QueryInfoException {
+		List<Selection<?>> jpaSelections = selectionUtils.createJpaSelections(entityContextRegistry, jpaContext, selections);
 
-		int selectionCount = requestedFields.size();
-
-		Root<RootEntity> root = jpaContext.getRoot();
-		List<Selection<?>> selections = new ArrayList<>(selectionCount);
-
-		for (String requestedField : requestedFields) {
-			Expression<?> path = pathFactory.getPathForField(entityContextRegistry,
-					jpaContext,
-					root,
-					requestedField,
-					QueryInfoAttributePurpose.SELECT);
-			path.alias(requestedField);
-			selections.add(path);
-		}
-
-		CriteriaQuery<Object> criteriaQuery = jpaContext.getCriteriaQuery();
-		criteriaQuery.multiselect(selections);
+		CriteriaQuery<?> criteriaQuery = jpaContext.getCriteriaQuery();
+		criteriaQuery.multiselect(jpaSelections);
 	}
 
-	protected void setRequestedFieldsSelection(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected void setExplicitSelections(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
-		List<String> fieldNames = fieldUtils.coalesceRequestedFields(queryInfo);
-		setFieldNamesSelection(entityContextRegistry, jpaContext, fieldNames);
+		List<com.evanzeimet.queryinfo.selection.Selection> selections = utils.coalesceSelections(queryInfo);
+		setExplicitSelections(entityContextRegistry, jpaContext, selections);
 	}
 
 	@Override
 	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
-		boolean hasRequestedAllFields = fieldUtils.hasRequestedAllFields(queryInfo);
+		boolean hasRequestedAllFields = utils.hasRequestedAllFields(queryInfo);
 
 		if (hasRequestedAllFields) {
-			setRequestAllSelection(entityContextRegistry, jpaContext);
+			setAllFieldSelections(entityContextRegistry, jpaContext);
 		} else {
-			setRequestedFieldsSelection(entityContextRegistry, jpaContext, queryInfo);
+			setExplicitSelections(entityContextRegistry, jpaContext, queryInfo);
 		}
 	}
 }

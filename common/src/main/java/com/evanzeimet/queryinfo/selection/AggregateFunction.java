@@ -1,4 +1,6 @@
-package com.evanzeimet.queryinfo.sort;
+package com.evanzeimet.queryinfo.selection;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /*
  * #%L
@@ -6,7 +8,7 @@ package com.evanzeimet.queryinfo.sort;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,30 +24,14 @@ package com.evanzeimet.queryinfo.sort;
  * #L%
  */
 
-public enum SortDirection {
 
-	ASC,
-	DESC;
+@JsonDeserialize(using = AggregateFunctionDeserializer.class)
+public enum AggregateFunction {
 
-	public String getText() {
-		return name().toLowerCase();
-	}
+	AVG,
+	COUNT,
+	MAX,
+	MIN,
+	SUM;
 
-	public static SortDirection fromSort(Sort sort) {
-		String direction = sort.getDirection();
-		return fromText(direction);
-	}
-
-	public static SortDirection fromText(String text) {
-		SortDirection result = null;
-
-		for (SortDirection sortDirection : SortDirection.values()) {
-			if (sortDirection.getText().equals(text)) {
-				result = sortDirection;
-				break;
-			}
-		}
-
-		return result;
-	}
 }

@@ -35,19 +35,26 @@
 		],
 		"operator": "and"
 	},
+	"groupByAttributePaths" : [
+		"a" 
+	],
 	"paginationInfo": {
 		"pageIndex": 24,
 		"pageSize": 42
 	},
-	"requestedFields": [
-		"a",
-		"b",
-		"c"
+	"selections": [
+		{
+			"attributePath" : "a"
+		},
+		{
+			"aggregateFunction" : "COUNT",
+			"attributePath" : "b"
+		}
 	],
 	"sorts": [
 		{
-			"direction": "asc",
-			"fieldName": "sortField"
+			"attributePath": "sortField",
+			"direction": "asc"
 		}
 	]
 }

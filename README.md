@@ -38,15 +38,23 @@ The purpose of this code is to easily create and execute dynamic queries against
 		"pageSize": 9223372036854775807
 	},
 	"requestedFields": [
-		"name",
-		"address",
-		"city",
-		"state"
+		{
+			"attributePath": "name"
+		},
+		{
+			"attributePath": "address"
+		},
+		{
+			"attributePath": "city"
+		},
+		{
+			"attributePath": "state"
+		}
 	],
 	"sorts": [
 		{
-			"direction": "desc",
-			"fieldName": "name"
+			"attribuePath": "name",
+			"direction": "desc"
 		}
 	]
 }

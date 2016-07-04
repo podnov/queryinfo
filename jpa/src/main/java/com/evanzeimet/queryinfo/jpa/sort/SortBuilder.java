@@ -41,6 +41,29 @@ public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 		this.entityContextRegistry = entityContextRegistry;
 	}
 
+	public <T> AttributeHostBuilder<T> attributeHost(Class<T> attributeHost) {
+		return new AttributeHostBuilder<T>(this, attributeHost);
+	}
+
+	public SortBuilder attributePath(Attribute<?, ?> attribute) {
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry, attribute);
+		return attributePath(name);
+	}
+
+	protected <T> SortBuilder attributePath(Class<T> attributeHost,
+			Attribute<? super T, ?> attribute) {
+		String name = attributeUtils.getFieldAttributeName(entityContextRegistry,
+				attributeHost,
+				attribute);
+		return attributePath(name);
+	}
+
+	@Override
+	public SortBuilder attributePath(String attributePath) {
+		super.attributePath(attributePath);
+		return this;
+	}
+
 	@Override
 	public SortBuilder builderReferenceInstance(Sort builderReferenceInstance) {
 		super.builderReferenceInstance(builderReferenceInstance);
@@ -67,29 +90,6 @@ public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 		return this;
 	}
 
-	public SortBuilder fieldName(Attribute<?, ?> attribute) {
-		String name = attributeUtils.getFieldAttributeName(entityContextRegistry, attribute);
-		return fieldName(name);
-	}
-
-	protected <T> SortBuilder fieldName(Class<T> attributeHost,
-			Attribute<? super T, ?> attribute) {
-		String name = attributeUtils.getFieldAttributeName(entityContextRegistry,
-				attributeHost,
-				attribute);
-		return fieldName(name);
-	}
-
-	public <T> AttributeHostBuilder<T> fieldNameHost(Class<T> attributeHost) {
-		return new AttributeHostBuilder<T>(this, attributeHost);
-	}
-
-	@Override
-	public SortBuilder fieldName(String fieldName) {
-		super.fieldName(fieldName);
-		return this;
-	}
-
 	public static class AttributeHostBuilder<T> {
 
 		private final Class<T> attributeHost;
@@ -100,8 +100,8 @@ public class SortBuilder extends com.evanzeimet.queryinfo.sort.SortBuilder {
 			this.attributeHost = attributeHost;
 		}
 
-		public SortBuilder fieldName(Attribute<? super T, ?> leftHandSide) {
-			return sort.fieldName(attributeHost, leftHandSide);
+		public SortBuilder attributePath(Attribute<? super T, ?> attribute) {
+			return sort.attributePath(attributeHost, attribute);
 		}
 
 	}

@@ -67,7 +67,7 @@ public class DefaultQueryInfoPredicateFactory<RootEntity> implements QueryInfoPr
 		CriteriaBuilder criteriaBuilder = jpaContext.getCriteriaBuilder();
 		Root<RootEntity> root = jpaContext.getRoot();
 
-		Expression<?> path = pathFactory.getPathForField(entityContextRegistry,
+		Expression<?> path = pathFactory.getPathForAttribute(entityContextRegistry,
 				jpaContext,
 				root,
 				fieldName,

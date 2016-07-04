@@ -30,15 +30,19 @@
     "pageIndex" : 0,
     "pageSize" : 2147483647
   },
-  "requestedFields" : [
-    "a",
-    "b",
-    "c"
+  "selections" : [
+    {
+      "aggregateFunction" : "COUNT",
+      "attributePath" : "a"
+    },
+    {
+      "attributePath" : "b"
+    }
   ],
   "sorts" : [
     {
-      "direction" : "asc",
-      "fieldName" : "x"
+      "attributePath" : "x",
+      "direction" : "asc"
     }
   ]
 }

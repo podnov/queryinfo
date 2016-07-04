@@ -11,9 +11,9 @@ package com.evanzeimet.queryinfo.jpa.bean;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributeNameBuilder;
+import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributePathBuilder;
 import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
@@ -116,10 +116,10 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 	}
 
 	@Override
-	public QueryInfoJPAAttributeNameBuilder<RootEntity, RootEntity> createJpaAttributeNameBuilder() {
+	public QueryInfoJPAAttributePathBuilder<RootEntity, RootEntity> createJpaAttributePathBuilder() {
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		Class<RootEntity> rootEntityClass = beanContext.getRootEntityClass();
-		return QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		return QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(rootEntityClass);
 	}
 

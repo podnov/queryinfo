@@ -39,7 +39,7 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 
-public class QueryInfoJPAAttributeNameBuilder<R, T> {
+public class QueryInfoJPAAttributePathBuilder<R, T> {
 
 	private static final QueryInfoAttributeUtils attributeUtils = new QueryInfoAttributeUtils();
 
@@ -47,14 +47,14 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 	private final List<Attribute<?, ?>> attributes;
 	private final Class<R> root;
 
-	protected QueryInfoJPAAttributeNameBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected QueryInfoJPAAttributePathBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
 			Class<R> root) {
 		this.entityContextRegistry = entityContextRegistry;
 		this.root = root;
 		this.attributes = Collections.emptyList();
 	}
 
-	protected QueryInfoJPAAttributeNameBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected QueryInfoJPAAttributePathBuilder(QueryInfoEntityContextRegistry entityContextRegistry,
 			Class<R> root,
 			List<Attribute<?, ?>> parents,
 			Attribute<?, ?> attribute) {
@@ -63,15 +63,15 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 		this.attributes = asAttributeList(parents, attribute);
 	}
 
-	public <NT> QueryInfoJPAAttributeNameBuilder<R, NT> add(PluralAttribute<? super T, ?, NT> attribute) {
-		return new QueryInfoJPAAttributeNameBuilder<R, NT>(entityContextRegistry,
+	public <NT> QueryInfoJPAAttributePathBuilder<R, NT> add(PluralAttribute<? super T, ?, NT> attribute) {
+		return new QueryInfoJPAAttributePathBuilder<R, NT>(entityContextRegistry,
 				root,
 				attributes,
 				attribute);
 	}
 
-	public <NT> QueryInfoJPAAttributeNameBuilder<R, NT> add(SingularAttribute<? super T, NT> attribute) {
-		return new QueryInfoJPAAttributeNameBuilder<R, NT>(entityContextRegistry,
+	public <NT> QueryInfoJPAAttributePathBuilder<R, NT> add(SingularAttribute<? super T, NT> attribute) {
+		return new QueryInfoJPAAttributePathBuilder<R, NT>(entityContextRegistry,
 				root,
 				attributes,
 				attribute);
@@ -139,8 +139,8 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 		return StringUtils.join(attributeNames, ".");
 	}
 
-	public QueryInfoJPAAttributeNameBuilder<R, R> clear() {
-		return new QueryInfoJPAAttributeNameBuilder<R, R>(entityContextRegistry,
+	public QueryInfoJPAAttributePathBuilder<R, R> clear() {
+		return new QueryInfoJPAAttributePathBuilder<R, R>(entityContextRegistry,
 				root);
 	}
 
@@ -206,8 +206,8 @@ public class QueryInfoJPAAttributeNameBuilder<R, T> {
 			this.entityContextRegistry = entityContextRegistry;
 		}
 
-		public <T> QueryInfoJPAAttributeNameBuilder<T, T> root(Class<T> root) {
-			return new QueryInfoJPAAttributeNameBuilder<T, T>(entityContextRegistry, root);
+		public <T> QueryInfoJPAAttributePathBuilder<T, T> root(Class<T> root) {
+			return new QueryInfoJPAAttributePathBuilder<T, T>(entityContextRegistry, root);
 		}
 
 	}

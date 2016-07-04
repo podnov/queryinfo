@@ -52,8 +52,8 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 			Sort sort) throws QueryInfoException {
 		Order result;
 
-		String fieldName = sort.getFieldName();
-		Expression<?> path = getPathForField(entityContextRegistry, jpaContext, fieldName);
+		String attributePath = sort.getAttributePath();
+		Expression<?> path = getPathForAttribute(entityContextRegistry, jpaContext, attributePath);
 
 		CriteriaBuilder criteriaBuilder = jpaContext.getCriteriaBuilder();
 		SortDirection direction = SortDirection.fromSort(sort);
@@ -96,17 +96,17 @@ public class DefaultQueryInfoOrderFactory<RootEntity> implements QueryInfoOrderF
 		return result;
 	}
 
-	protected Expression<?> getPathForField(QueryInfoEntityContextRegistry entityContextRegistry,
+	protected Expression<?> getPathForAttribute(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<RootEntity> jpaContext,
-			String fieldName) throws QueryInfoException {
+			String attributePath) throws QueryInfoException {
 		QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
 		Root<RootEntity> root = jpaContext.getRoot();
 
-		return pathFactory.getPathForField(entityContextRegistry,
+		return pathFactory.getPathForAttribute(entityContextRegistry,
 				jpaContext,
 				root,
-				fieldName,
+				attributePath,
 				QueryInfoAttributePurpose.ORDER);
 	}
 }
