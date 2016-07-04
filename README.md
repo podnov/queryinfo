@@ -37,7 +37,7 @@ The purpose of this code is to easily create and execute dynamic queries against
 		"pageIndex": 0,
 		"pageSize": 9223372036854775807
 	},
-	"requestedFields": [
+	"selections": [
 		{
 			"attributePath": "name"
 		},
