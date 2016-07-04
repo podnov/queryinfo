@@ -277,19 +277,27 @@ public class OrganizationEntity extends DefaultOrganization {
 			}
 		]
 	},
-	"requestedFields": [
-		"name",
-		"state",
-		"employees.firstName",
-		"employees.lastName"
+	"selections": [
+		{
+			"attributePath": "name"
+		},
+		{
+			"attributePath": "state"
+		},
+		{
+			"attributePath": "employees.firstName"
+		},
+		{
+			"attributePath": "employees.lastName"
+		}
 	],
 	"sorts": [
 		{
-			"fieldName": "name",
+			"attributePath": "name",
 			"direction": "desc"
 		},
 		{
-			"fieldName": "employees.lastName",
+			"attributePath": "employees.lastName",
 			"direction": "asc"
 		}
 	]
