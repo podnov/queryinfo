@@ -113,7 +113,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 
 		String joinFieldName = pathParts.toString();
 
-		return joinPathFactory.getPathForField(entityContextRegistry,
+		return joinPathFactory.getPathForAttribute(entityContextRegistry,
 				jpaContext,
 				join,
 				joinFieldName,
@@ -129,7 +129,7 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 	}
 
 	@Override
-	public <T> Expression<T> getPathForField(QueryInfoEntityContextRegistry entityContextRegistry,
+	public <T> Expression<T> getPathForAttribute(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<?> jpaContext,
 			From<?, RootEntity> from,
 			String fieldName,

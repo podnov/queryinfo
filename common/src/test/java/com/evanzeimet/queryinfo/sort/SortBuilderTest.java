@@ -42,15 +42,15 @@ public class SortBuilderTest {
 
 	@Test
 	public void build() {
-		String givenFieldName = "my field name";
+		String givenAttributePath = "myAttributePath";
 		SortDirection givenDirection = SortDirection.ASC;
 
-		Sort actualSort = builder.direction(givenDirection)
-				.fieldName(givenFieldName)
+		Sort actualSort = builder.attributePath(givenAttributePath)
+				.direction(givenDirection)
 				.build();
 
-		String actualFieldName = actualSort.getFieldName();
-		assertEquals(givenFieldName, actualFieldName);
+		String actualAttributePath = actualSort.getAttributePath();
+		assertEquals(givenAttributePath, actualAttributePath);
 
 		String actualDirection = actualSort.getDirection();
 		String expectedDirection = givenDirection.getText();

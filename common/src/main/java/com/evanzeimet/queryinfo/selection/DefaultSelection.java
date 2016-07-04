@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.sort;
+package com.evanzeimet.queryinfo.selection;
 
 /*
  * #%L
@@ -6,7 +6,7 @@ package com.evanzeimet.queryinfo.sort;
  * $Id:$
  * $HeadURL:$
  * %%
- * Copyright (C) 2015 Evan Zeimet
+ * Copyright (C) 2015 - 2016 Evan Zeimet
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,30 +22,34 @@ package com.evanzeimet.queryinfo.sort;
  * #L%
  */
 
-public enum SortDirection {
 
-	ASC,
-	DESC;
+public class DefaultSelection implements Selection {
 
-	public String getText() {
-		return name().toLowerCase();
+	private AggregateFunction aggregateFunction;
+	private String attributePath;
+
+	public DefaultSelection() {
+
 	}
 
-	public static SortDirection fromSort(Sort sort) {
-		String direction = sort.getDirection();
-		return fromText(direction);
+	@Override
+	public AggregateFunction getAggregateFunction() {
+		return aggregateFunction;
 	}
 
-	public static SortDirection fromText(String text) {
-		SortDirection result = null;
-
-		for (SortDirection sortDirection : SortDirection.values()) {
-			if (sortDirection.getText().equals(text)) {
-				result = sortDirection;
-				break;
-			}
-		}
-
-		return result;
+	@Override
+	public void setAggregateFunction(AggregateFunction aggregateFunction) {
+		this.aggregateFunction = aggregateFunction;
 	}
+
+	@Override
+	public String getAttributePath() {
+		return attributePath;
+	}
+
+	@Override
+	public void setAttributePath(String attributePath) {
+		this.attributePath = attributePath;
+	}
+
 }

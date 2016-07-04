@@ -48,14 +48,14 @@ public class GenericResourceBean implements GenericResource {
 	protected EntityURIToClassMap uriToClassMap;
 
 	@Override
-	public <E> Response query(String entityUri, DefaultQueryInfo queryInfo) {
+	public Response query(String entityUri, DefaultQueryInfo queryInfo) {
 		Response result;
-		Class<E> entityClass = uriToClassMap.get(entityUri);
+		Class<?> entityClass = uriToClassMap.get(entityUri);
 
 		if (entityClass == null) {
 			result = Response.status(Status.BAD_REQUEST).build();
 		} else {
-			List<E> queryResults = null;
+			List<?> queryResults = null;
 			QueryInfoException exception = null;
 
 			try {

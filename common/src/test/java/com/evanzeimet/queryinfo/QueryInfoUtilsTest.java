@@ -24,11 +24,19 @@ package com.evanzeimet.queryinfo;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.evanzeimet.queryinfo.selection.Selection;
+import com.evanzeimet.queryinfo.selection.SelectionBuilder;
 
 public class QueryInfoUtilsTest {
 
@@ -82,5 +90,49 @@ public class QueryInfoUtilsTest {
 				"QueryInfoUtilsTest_coalesceQueryInfo_populated_expected.json");
 
 		assertEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void hasRequestedAllFields_emptyList() {
+		QueryInfo queryInfo = new DefaultQueryInfo();
+
+		List<Selection> selections = Collections.emptyList();
+
+		queryInfo.setSelections(selections);
+
+		boolean actual = utils.hasRequestedAllFields(queryInfo);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void hasRequestedAllFields_notEmptyList() {
+		QueryInfo queryInfo = new DefaultQueryInfo();
+
+		List<Selection> selections = new ArrayList<>();
+
+		Selection selection = SelectionBuilder.create()
+				.attributePath("field1")
+				.build();
+		selections.add(selection);
+
+		queryInfo.setSelections(selections);
+
+		boolean actual = utils.hasRequestedAllFields(queryInfo);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void hasRequestedAllFields_null() {
+		QueryInfo queryInfo = new DefaultQueryInfo();
+
+		List<Selection> selections = null;
+
+		queryInfo.setSelections(selections);
+
+		boolean actual = utils.hasRequestedAllFields(queryInfo);
+
+		assertTrue(actual);
 	}
 }

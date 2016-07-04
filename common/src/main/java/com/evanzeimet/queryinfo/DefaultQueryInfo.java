@@ -28,6 +28,8 @@ import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.DefaultConditionGroup;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
+import com.evanzeimet.queryinfo.selection.DefaultSelection;
+import com.evanzeimet.queryinfo.selection.Selection;
 import com.evanzeimet.queryinfo.sort.DefaultSort;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -36,10 +38,11 @@ public class DefaultQueryInfo implements QueryInfo {
 
 	@JsonDeserialize(as = DefaultConditionGroup.class)
 	private ConditionGroup conditionGroup;
-	private List<String> groupByFields;
+	private List<String> groupByAttributePaths;
 	@JsonDeserialize(as = DefaultPaginationInfo.class)
 	private PaginationInfo paginationInfo;
-	private List<String> requestedFields;
+	@JsonDeserialize(contentAs = DefaultSelection.class)
+	private List<Selection> selections;
 	@JsonDeserialize(contentAs = DefaultSort.class)
 	private List<Sort> sorts;
 
@@ -58,13 +61,13 @@ public class DefaultQueryInfo implements QueryInfo {
 	}
 
 	@Override
-	public List<String> getGroupByFields() {
-		return groupByFields;
+	public List<String> getGroupByAttributePaths() {
+		return groupByAttributePaths;
 	}
 
 	@Override
-	public void setGroupByFields(List<String> groupByFields) {
-		this.groupByFields = groupByFields;
+	public void setGroupByAttributePaths(List<String> groupByAttributePaths) {
+		this.groupByAttributePaths = groupByAttributePaths;
 	}
 
 	@Override
@@ -78,13 +81,13 @@ public class DefaultQueryInfo implements QueryInfo {
 	}
 
 	@Override
-	public List<String> getRequestedFields() {
-		return requestedFields;
+	public List<Selection> getSelections() {
+		return selections;
 	}
 
 	@Override
-	public void setRequestedFields(List<String> requestedFields) {
-		this.requestedFields = requestedFields;
+	public void setSelections(List<Selection> selections) {
+		this.selections = selections;
 	}
 
 	@Override

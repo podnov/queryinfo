@@ -29,9 +29,9 @@ import javax.inject.Inject;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.it.people.entity.PersonEntityQueryInfoBean;
 import com.evanzeimet.queryinfo.it.people.tuple.PersonTupleQueryInfoBean;
-import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldUtils;
 
 @Stateless
 public class PeopleQueryInfoBeanSelector {
@@ -42,17 +42,17 @@ public class PeopleQueryInfoBeanSelector {
 	@Inject
 	private PersonTupleQueryInfoBean tupleQueryInfoBean;
 
-	private QueryInfoFieldUtils queryInfoFieldUtils;
+	private QueryInfoUtils utils;
 
 	@PostConstruct
 	protected void postConstruct() {
-		queryInfoFieldUtils = new QueryInfoFieldUtils();
+		utils = new QueryInfoUtils();
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T query(QueryInfo queryInfo) throws QueryInfoException {
 		T result;
-		boolean useEntityBean = queryInfoFieldUtils.hasRequestedAllFields(queryInfo);
+		boolean useEntityBean = utils.hasRequestedAllFields(queryInfo);
 
 		if (useEntityBean) {
 			result = (T) entityQueryInfoBean.query(queryInfo);

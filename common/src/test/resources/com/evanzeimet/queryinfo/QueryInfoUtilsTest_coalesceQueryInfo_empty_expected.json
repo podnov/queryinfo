@@ -4,6 +4,7 @@
     "conditions" : [ ],
     "operator" : "and"
   },
+  "groupByAttributePaths" : [ ],
   "paginationInfo" : {
     "pageIndex" : 0,
     "pageSize" : 42

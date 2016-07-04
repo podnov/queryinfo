@@ -24,11 +24,21 @@ package com.evanzeimet.queryinfo.sort;
 
 public class DefaultSort implements Sort {
 
+	private String attributePath;
 	private String direction;
-	private String fieldName;
 
 	public DefaultSort() {
 
+	}
+
+	@Override
+	public String getAttributePath() {
+		return attributePath;
+	}
+
+	@Override
+	public void setAttributePath(String attributePath) {
+		this.attributePath = attributePath;
 	}
 
 	@Override
@@ -39,16 +49,6 @@ public class DefaultSort implements Sort {
 	@Override
 	public void setDirection(String direction) {
 		this.direction = direction;
-	}
-
-	@Override
-	public String getFieldName() {
-		return fieldName;
-	}
-
-	@Override
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.sort;
+package com.evanzeimet.queryinfo.selection;
 
 /*
  * #%L
@@ -11,9 +11,9 @@ package com.evanzeimet.queryinfo.sort;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,55 +23,44 @@ package com.evanzeimet.queryinfo.sort;
  */
 
 
-public class SortBuilder {
+public class SelectionBuilder {
 
-	private Sort builderReferenceInstance = createDefaultInstance();
+	private Selection builderReferenceInstance = createDefaultInstance();
 
-	public SortBuilder() {
+	public SelectionBuilder() {
 
 	}
 
-	public SortBuilder attributePath(String attributePath) {
+	public SelectionBuilder aggregateFunction(AggregateFunction aggregateFunction) {
+		builderReferenceInstance.setAggregateFunction(aggregateFunction);
+		return this;
+	}
+
+	public SelectionBuilder attributePath(String attributePath) {
 		builderReferenceInstance.setAttributePath(attributePath);
 		return this;
 	}
 
-	public Sort build() {
-		DefaultSort result = createDefaultInstance();
+	public Selection build() {
+		DefaultSelection result = createDefaultInstance();
 
+		result.setAggregateFunction(builderReferenceInstance.getAggregateFunction());
 		result.setAttributePath(builderReferenceInstance.getAttributePath());
-		result.setDirection(builderReferenceInstance.getDirection());
 
 		return result;
 	}
 
-	public SortBuilder builderReferenceInstance(Sort builderReferenceInstance) {
+	public SelectionBuilder builderReferenceInstance(Selection builderReferenceInstance) {
 		this.builderReferenceInstance = builderReferenceInstance;
 		return this;
 	}
 
-	public static SortBuilder create() {
-		return new SortBuilder();
+	public static SelectionBuilder create() {
+		return new SelectionBuilder();
 	}
 
-	protected DefaultSort createDefaultInstance() {
-		return new DefaultSort();
+	protected DefaultSelection createDefaultInstance() {
+		return new DefaultSelection();
 	}
 
-	public SortBuilder direction(SortDirection direction) {
-		String rawDirection;
-
-		if (direction == null) {
-			rawDirection = null;
-		} else {
-			rawDirection = direction.getText();
-		}
-
-		return direction(rawDirection);
-	}
-
-	public SortBuilder direction(String direction) {
-		builderReferenceInstance.setDirection(direction);
-		return this;
-	}
 }

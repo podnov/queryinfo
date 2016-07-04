@@ -45,23 +45,23 @@ public class DefaultQueryInfoGroupByFactory<RootEntity>
 			QueryInfoJPAContext<RootEntity> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		List<Expression<?>> result;
-		List<String> groupByFields = queryInfo.getGroupByFields();
-		boolean hasGroupByFields = groupByFields != null && !groupByFields.isEmpty();
+		List<String> groupByAttributePaths = queryInfo.getGroupByAttributePaths();
+		boolean hasGroupByAttributePaths = ((groupByAttributePaths != null) && !groupByAttributePaths.isEmpty());
 
-		if (hasGroupByFields) {
+		if (hasGroupByAttributePaths) {
 			QueryInfoEntityContext<RootEntity> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 
 			Root<RootEntity> root = jpaContext.getRoot();
 			QueryInfoPathFactory<RootEntity> pathFactory = entityContext.getPathFactory();
 
-			int groupByFieldCount = groupByFields.size();
-			result = new ArrayList<Expression<?>>(groupByFieldCount);
+			int groupByAttributeCount = groupByAttributePaths.size();
+			result = new ArrayList<Expression<?>>(groupByAttributeCount);
 
-			for (String groupByField : groupByFields) {
-				Expression<?> path = pathFactory.getPathForField(entityContextRegistry,
+			for (String groupByAttributePath : groupByAttributePaths) {
+				Expression<?> path = pathFactory.getPathForAttribute(entityContextRegistry,
 						jpaContext,
 						root,
-						groupByField,
+						groupByAttributePath,
 						QueryInfoAttributePurpose.GROUP_BY);
 
 				result.add(path);

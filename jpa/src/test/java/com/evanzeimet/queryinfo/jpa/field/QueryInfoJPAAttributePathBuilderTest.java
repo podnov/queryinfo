@@ -36,13 +36,13 @@ import com.evanzeimet.queryinfo.jpa.test.entity.TestOrganizationEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestPersonEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestQueryInfoEntityContextRegistry;
 
-public class QueryInfoJPAAttributeNameBuilderTest {
+public class QueryInfoJPAAttributePathBuilderTest {
 
 	@Test
 	public void buildList_entityContextRegistry() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		List<String> actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		List<String> actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -56,7 +56,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 
 	@Test
 	public void buildList_noEntityContextRegistry() {
-		List<String> actual = QueryInfoJPAAttributeNameBuilder.create()
+		List<String> actual = QueryInfoJPAAttributePathBuilder.create()
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -72,7 +72,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_clear() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 	
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -90,7 +90,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_entityContextRegistry() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -105,7 +105,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_leafAttributeType_field() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -119,7 +119,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_leafAttributeType_join() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -133,7 +133,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_leafAttributeType_unspecified_preferField() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -147,7 +147,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_leafAttributeType_unspecified_fallbackToJoin() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.buildString();
@@ -158,7 +158,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 
 	@Test
 	public void buildString_noEntityContextRegistry() {
-		String actual = QueryInfoJPAAttributeNameBuilder.create()
+		String actual = QueryInfoJPAAttributePathBuilder.create()
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -173,7 +173,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 	public void buildString_entityContextRegistry_mappedSuperclass() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		String actual = QueryInfoJPAAttributeNameBuilder.create(entityContextRegistry)
+		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)
@@ -186,7 +186,7 @@ public class QueryInfoJPAAttributeNameBuilderTest {
 
 	@Test
 	public void buildString_noEntityContextRegistry_mappedSuperclass() {
-		String actual = QueryInfoJPAAttributeNameBuilder.create()
+		String actual = QueryInfoJPAAttributePathBuilder.create()
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
 				.add(TestEmployeeEntity_.spouse)

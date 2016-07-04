@@ -32,6 +32,9 @@ import com.evanzeimet.queryinfo.condition.ConditionGroupOperator;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfoBuilder;
+import com.evanzeimet.queryinfo.selection.AggregateFunction;
+import com.evanzeimet.queryinfo.selection.Selection;
+import com.evanzeimet.queryinfo.selection.SelectionBuilder;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.evanzeimet.queryinfo.sort.SortBuilder;
 import com.evanzeimet.queryinfo.sort.SortDirection;
@@ -40,6 +43,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -92,18 +96,29 @@ public class QueryInfoBuilderTest {
 				.build();
 
 		PaginationInfo givenPaginationInfo = PaginationInfoBuilder.createForAll().build();
-		List<String> givenRequestedFields = Arrays.asList("a", "b", "c");
+		List<Selection> givenSelections = new ArrayList<>();
+
+		Selection givenSelection = SelectionBuilder.create()
+				.aggregateFunction(AggregateFunction.COUNT)
+				.attributePath("a")
+				.build();
+		givenSelections.add(givenSelection);
+
+		givenSelection = SelectionBuilder.create()
+				.attributePath("b")
+				.build();
+		givenSelections.add(givenSelection);
 
 		Sort givenSort = SortBuilder.create()
+				.attributePath("x")
 				.direction(SortDirection.ASC)
-				.fieldName("x")
 				.build();
 
 		List<Sort> givenSorts = Arrays.asList(givenSort);
 
 		QueryInfo actualQueryInfo = builder.conditionGroup(givenConditionGroup)
 				.paginationInfo(givenPaginationInfo)
-				.requestedFields(givenRequestedFields)
+				.selections(givenSelections)
 				.sorts(givenSorts)
 				.build();
 
