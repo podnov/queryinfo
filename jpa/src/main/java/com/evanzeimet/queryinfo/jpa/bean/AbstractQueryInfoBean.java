@@ -31,6 +31,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
@@ -108,6 +109,8 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 
 		QueryInfoJPAContext<RootEntity> jpaContext = createJpaContext(criteriaQuery);
+		setCountSelection(criteriaBuilder, criteriaQuery, jpaContext);
+
 		setQueryPredicates(jpaContext, queryInfo);
 
 		TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
@@ -204,6 +207,15 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		}
 
 		return result;
+	}
+
+	protected void setCountSelection(CriteriaBuilder criteriaBuilder,
+			CriteriaQuery<Long> criteriaQuery,
+			QueryInfoJPAContext<RootEntity> jpaContext) {
+		Root<RootEntity> root = jpaContext.getRoot();
+
+		Expression<Long> countSelection = criteriaBuilder.count(root);
+		criteriaQuery.select(countSelection);
 	}
 
 	protected void setPaginationInfo(TypedQuery<?> typedQuery,
