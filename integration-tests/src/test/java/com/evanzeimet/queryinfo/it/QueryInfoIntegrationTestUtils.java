@@ -1,7 +1,6 @@
 package com.evanzeimet.queryinfo.it;
 
 import java.lang.reflect.Type;
-
 /*
  * #%L
  * queryinfo-integration-tests
@@ -23,9 +22,8 @@ import java.lang.reflect.Type;
  * limitations under the License.
  * #L%
  */
-
-
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -38,7 +36,7 @@ import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 
 public class QueryInfoIntegrationTestUtils {
 
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
 
 	public QueryInfoIntegrationTestUtils(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -53,6 +51,11 @@ public class QueryInfoIntegrationTestUtils {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("queryinfo_test_it");
 		EntityManager entityManager = factory.createEntityManager();
 		return entityManager;
+	}
+
+	public String formatJson(String json) throws QueryInfoException {
+		Object object = objectify(json, Object.class);
+		return stringify(object);
 	}
 
 	public String getEntityTable(Class<?> entityClass) {
@@ -91,6 +94,10 @@ public class QueryInfoIntegrationTestUtils {
 
 			transaction.commit();
 		}
+	}
+
+	public String stringify(Object object) {
+		return QueryInfoTestUtils.stringify(object);
 	}
 
 	public void truncateTable(Class<?> entityClass) {

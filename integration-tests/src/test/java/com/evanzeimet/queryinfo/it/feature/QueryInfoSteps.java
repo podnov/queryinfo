@@ -36,13 +36,15 @@ import org.apache.commons.beanutils.PropertyUtils;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.it.QueryInfoIntegrationTestUtils;
+import com.evanzeimet.queryinfo.it.cucumber.CucumberUtils;
 import com.evanzeimet.queryinfo.it.organizations.DefaultOrganization;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
-import com.evanzeimet.queryinfo.it.cucumber.CucumberUtils;
 import com.evanzeimet.queryinfo.it.people.DefaultPerson;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.it.people.PersonToEmployerOrganizationIdMapper;
 import com.evanzeimet.queryinfo.it.people.TestPerson;
+import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
+import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jayway.restassured.RestAssured;
@@ -76,17 +78,23 @@ public class QueryInfoSteps {
 	private static final Type ORGANIZATION_LIST_RESULT_TYPE = new TypeReference<List<DefaultOrganization>>() {
 	}.getType();
 
+	private static final Type ORGANIZATION_PAGINATED_RESULT_TYPE = new TypeReference<DefaultPaginatedResult<DefaultOrganization>>() {
+	}.getType();
+
 	private static final Type PERSON_LIST_RESULT_TYPE = new TypeReference<List<DefaultPerson>>() {
+	}.getType();
+
+	private static final Type PERSON_PAGINATED_RESULT_TYPE = new TypeReference<DefaultPaginatedResult<DefaultPerson>>() {
 	}.getType();
 
 	private static boolean needToPersistOrganizations = true;
 	private static boolean needToPersistPeople = true;
 
 	private Response actualResponse;
-	private CucumberUtils cucumberUtils;
+	private final CucumberUtils cucumberUtils;
 	private String path;
-	private PersonToEmployerOrganizationIdMapper personToEmployerOrganizationIdMapper = new PersonToEmployerOrganizationIdMapper();
-	private QueryInfoIntegrationTestUtils testUtils;
+	private final PersonToEmployerOrganizationIdMapper personToEmployerOrganizationIdMapper = new PersonToEmployerOrganizationIdMapper();
+	private final QueryInfoIntegrationTestUtils testUtils;
 
 	public QueryInfoSteps() {
 		setUpRestAssured();
@@ -157,6 +165,28 @@ public class QueryInfoSteps {
 		assertEquals(expected, actual);
 	}
 
+	@Then("^I should receive this json:$")
+	public void I_should_receive_this_json(String expected)
+			throws QueryInfoException {
+		String actual = actualResponse.getBody().asString();
+		actual = testUtils.formatJson(actual);
+
+		assertEquals(expected, actual);
+	}
+
+	@Then("^I should receive these paginated organizations:$")
+	public void Then_I_should_receive_these_paginated_organizations(DataTable expected)
+			throws QueryInfoException {
+		String actualReponseJson = actualResponse.getBody().asString();
+
+		PaginatedResult<DefaultOrganization> actualPaginatedResult = testUtils.objectify(actualReponseJson,
+				ORGANIZATION_PAGINATED_RESULT_TYPE);
+
+		List<DefaultOrganization> actual = actualPaginatedResult.getPageResults();
+
+		cucumberUtils.assertEquals(expected, actual, ORGANIZATION_FIELDS);
+	}
+
 	@Then("^I should receive these organizations:$")
 	public void Then_I_should_receive_these_organizations(DataTable expected)
 			throws QueryInfoException {
@@ -166,6 +196,19 @@ public class QueryInfoSteps {
 				ORGANIZATION_LIST_RESULT_TYPE);
 
 		cucumberUtils.assertEquals(expected, actual, ORGANIZATION_FIELDS);
+	}
+
+	@Then("^I should receive these paginated people:$")
+	public void Then_I_should_receive_these_paginated_people(DataTable expected)
+			throws QueryInfoException {
+		String actualReponseJson = actualResponse.getBody().asString();
+
+		PaginatedResult<DefaultPerson> actualPaginatedResult = testUtils.objectify(actualReponseJson,
+				PERSON_PAGINATED_RESULT_TYPE);
+
+		List<DefaultPerson> actual = actualPaginatedResult.getPageResults();
+
+		cucumberUtils.assertEquals(expected, actual, PERSON_FIELDS);
 	}
 
 	@Then("^I should receive these people:$")

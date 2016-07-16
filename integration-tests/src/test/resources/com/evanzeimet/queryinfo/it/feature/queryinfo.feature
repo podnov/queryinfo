@@ -25,6 +25,160 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 	| I'm       | Unemployed |                          |
 
+Scenario: First Page
+
+	Given the generic query info web service for the "organizationEntity"
+	When I send the query:
+	"""
+	{
+		"paginationInfo": {
+			"pageIndex": 0,
+			"pageSize": 2
+		},
+		"sorts":[
+			{
+				"attributePath": "name",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive this json:
+	"""
+	{
+	  "pageResults" : [
+	    {
+	      "@id" : 1,
+	      "active" : true,
+	      "address1" : "410 Terry Ave. N",
+	      "address2" : "",
+	      "city" : "Seattle",
+	      "dateCreated" : 1444694400000,
+	      "id" : 5,
+	      "name" : "Amazon",
+	      "state" : "WA",
+	      "yearFounded" : 1994,
+	      "zip" : "98109",
+	      "employees" : null
+	    },
+	    {
+	      "@id" : 2,
+	      "active" : true,
+	      "address1" : "200 N. Milwaukee Ave.",
+	      "address2" : "",
+	      "city" : "Vernon Hills",
+	      "dateCreated" : 1444348800000,
+	      "id" : 1,
+	      "name" : "CDW",
+	      "state" : "IL",
+	      "yearFounded" : 1984,
+	      "zip" : "60061",
+	      "employees" : null
+	    }
+	  ],
+	  "totalCount" : 7
+	}
+	"""
+
+Scenario: Middle Page
+
+	Given the generic query info web service for the "organizationEntity"
+	When I send the query:
+	"""
+	{
+		"paginationInfo": {
+			"pageIndex": 1,
+			"pageSize": 2
+		},
+		"sorts":[
+			{
+				"attributePath": "name",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive this json:
+	"""
+	{
+	  "pageResults" : [
+	    {
+	      "@id" : 1,
+	      "active" : true,
+	      "address1" : "1979 Milky Way",
+	      "address2" : "",
+	      "city" : "Verona",
+	      "dateCreated" : 1444521600000,
+	      "id" : 3,
+	      "name" : "Epic",
+	      "state" : "WI",
+	      "yearFounded" : 1979,
+	      "zip" : "53593",
+	      "employees" : null
+	    },
+	    {
+	      "@id" : 2,
+	      "active" : true,
+	      "address1" : "1 Hacker Way",
+	      "address2" : "",
+	      "city" : "Menlo Park",
+	      "dateCreated" : 1444780800000,
+	      "id" : 6,
+	      "name" : "Facebook",
+	      "state" : "CA",
+	      "yearFounded" : 2004,
+	      "zip" : "94025",
+	      "employees" : null
+	    }
+	  ],
+	  "totalCount" : 7
+	}
+	"""
+
+Scenario: Last Page
+
+	Given the generic query info web service for the "organizationEntity"
+	When I send the query:
+	"""
+	{
+		"paginationInfo": {
+			"pageIndex": 3,
+			"pageSize": 2
+		},
+		"sorts":[
+			{
+				"attributePath": "name",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive this json:
+	"""
+	{
+	  "pageResults" : [
+	    {
+	      "@id" : 1,
+	      "active" : true,
+	      "address1" : "The Pentagon",
+	      "address2" : "",
+	      "city" : "Washington",
+	      "dateCreated" : 1444867200000,
+	      "id" : 7,
+	      "name" : "U.S. Navy",
+	      "state" : "DC",
+	      "yearFounded" : 1775,
+	      "zip" : "20001",
+	      "employees" : null
+	    }
+	  ],
+	  "totalCount" : 7
+	}
+	"""
+
 Scenario: Group by with avg aggregate function
 
 	Given the organizations query info web service
@@ -144,7 +298,7 @@ Scenario: Generic entity resource test
 	}
 	"""
 	Then the http response code should be 200
-	And I should receive these people:
+	And I should receive these paginated people:
 	| firstName | lastName                  |
 	| Jeff      | Bezos                     |
 	| Nick      | Bradshaw                  |
@@ -173,7 +327,7 @@ Scenario: Generic entity resource test
 	}
 	"""
 	Then the http response code should be 200
-	And I should receive these organizations:
+	And I should receive these paginated organizations:
 	| name      | address1                  | address2 | city          | state | zip   | yearFounded | active |
 	| Amazon    | 410 Terry Ave. N          |          | Seattle       | WA    | 98109 | 1994        | true   |
 	| CDW       | 200 N. Milwaukee Ave.     |          | Vernon Hills  | IL    | 60061 | 1984        | true   |
