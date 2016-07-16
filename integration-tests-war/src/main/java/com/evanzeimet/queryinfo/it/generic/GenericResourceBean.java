@@ -22,8 +22,6 @@ package com.evanzeimet.queryinfo.it.generic;
  * #L%
  */
 
-
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
@@ -34,6 +32,7 @@ import org.slf4j.Logger;
 import com.evanzeimet.queryinfo.DefaultQueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.it.QueryInfoITUtils;
+import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 
 @Stateless
 public class GenericResourceBean implements GenericResource {
@@ -55,11 +54,11 @@ public class GenericResourceBean implements GenericResource {
 		if (entityClass == null) {
 			result = Response.status(Status.BAD_REQUEST).build();
 		} else {
-			List<?> queryResults = null;
+			PaginatedResult<?> queryResults = null;
 			QueryInfoException exception = null;
 
 			try {
-				queryResults = genericQueryInfoBean.query(entityClass, queryInfo);
+				queryResults = genericQueryInfoBean.queryForPaginatedResult(entityClass, queryInfo);
 			} catch (QueryInfoException e) {
 				exception = e;
 			}

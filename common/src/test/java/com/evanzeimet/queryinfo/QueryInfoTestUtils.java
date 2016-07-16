@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
+
 import org.apache.commons.io.FileUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,12 +85,12 @@ public class QueryInfoTestUtils {
 		return new QueryInfoUtils().objectify(json, typeOfT);
 	}
 
-	public static String stringify(Object actual) {
+	public static String stringify(Object object) {
 		String result;
 		ObjectWriter writer = createObjectWriter();
 
 		try {
-			result = writer.writeValueAsString(actual);
+			result = writer.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			throw new QueryInfoRuntimeException("Could not stringify", e);
 		}
