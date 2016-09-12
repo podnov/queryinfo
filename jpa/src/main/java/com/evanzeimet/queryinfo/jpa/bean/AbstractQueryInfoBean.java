@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.bean;
 
+import java.util.Iterator;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -41,6 +43,7 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributePathBuilder;
 import com.evanzeimet.queryinfo.jpa.group.QueryInfoGroupByFactory;
+import com.evanzeimet.queryinfo.jpa.iterator.AllPaginatedResultsIterator;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
@@ -171,6 +174,11 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		QueryInfoResultConverter<CriteriaQueryResult, QueryInfoResult> resultConveter = beanContext.getResultConverter();
 
 		return resultConveter.convert(criteriaQueryResults);
+	}
+
+	@Override
+	public Iterator<QueryInfoResult> queryForIterator(QueryInfo queryInfo) throws QueryInfoException {
+		return new AllPaginatedResultsIterator<>(this, queryInfo);
 	}
 
 	@Override

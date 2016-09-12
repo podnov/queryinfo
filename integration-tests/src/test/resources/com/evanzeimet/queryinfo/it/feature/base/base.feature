@@ -25,6 +25,7 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 	| I'm       | Unemployed |                          |
 
+
 Scenario: First Page
 
 	Given the generic query info web service for the "organizationEntity"

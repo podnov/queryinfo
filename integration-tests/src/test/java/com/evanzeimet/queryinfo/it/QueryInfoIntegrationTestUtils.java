@@ -42,6 +42,10 @@ public class QueryInfoIntegrationTestUtils {
 		this.entityManager = entityManager;
 	}
 
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
 	public static QueryInfoIntegrationTestUtils create() {
 		EntityManager entityManager = createEntityManager();
 		return new QueryInfoIntegrationTestUtils(entityManager);

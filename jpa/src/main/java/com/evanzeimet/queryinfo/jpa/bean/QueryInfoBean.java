@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.bean;
 
+import java.util.Iterator;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -36,6 +38,8 @@ public interface QueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult>
 	QueryInfoJPAAttributePathBuilder<RootEntity, RootEntity> createJpaAttributePathBuilder();
 
 	List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException;
+
+	Iterator<QueryInfoResult> queryForIterator(QueryInfo queryInfo) throws QueryInfoException;
 
 	QueryInfoResult queryForOne(QueryInfo queryInfo) throws QueryInfoException;
 
