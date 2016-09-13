@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -40,13 +39,13 @@ import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public class PageIteratorTest {
+public class PaginatedResultIteratorTest {
 
-	private PaginatedResultIterator<Result> givenIterator;
 	private DefaultPaginatedResult<Result> givenLastResult;
 	private PaginationInfo givenPaginationInfo;
 	private DefaultQueryInfo givenQueryInfo;
 	private QueryInfoBean<?, ?, Result> givenQueryInfoBean;
+	private PaginatedResultIterator<Result> iterator;
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -58,27 +57,27 @@ public class PageIteratorTest {
 		givenQueryInfo = new DefaultQueryInfo();
 		givenQueryInfo.setPaginationInfo(givenPaginationInfo);
 
-		givenIterator = new PaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
-		givenIterator = spy(givenIterator);
+		iterator = new PaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
+		iterator = spy(iterator);
 
 		givenLastResult = new DefaultPaginatedResult<>();
-		givenIterator.lastResult = givenLastResult;
+		iterator.lastResult = givenLastResult;
 	}
 
 	@Test
 	public void hasNext_true_hasLastResult() {
 		Integer givenPageIndex = 0;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(1);
 
 		DefaultPaginatedResult<Result> givenLastResult = new DefaultPaginatedResult<>();
-		givenIterator.lastResult = givenLastResult;
+		iterator.lastResult = givenLastResult;
 
 		givenLastResult.setTotalCount(100L);
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
@@ -86,17 +85,17 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_true_hasLastResult_pageSizeOverTotalCount() {
 		Integer givenPageIndex = 0;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(100);
 
 		DefaultPaginatedResult<Result> givenLastResult = new DefaultPaginatedResult<>();
-		givenIterator.lastResult = givenLastResult;
+		iterator.lastResult = givenLastResult;
 
 		givenLastResult.setTotalCount(20L);
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
@@ -104,17 +103,17 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_false_hasLastResult_exactCount() {
 		Integer givenPageIndex = 1;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(1);
 
 		DefaultPaginatedResult<Result> givenLastResult = new DefaultPaginatedResult<>();
-		givenIterator.lastResult = givenLastResult;
+		iterator.lastResult = givenLastResult;
 
 		givenLastResult.setTotalCount(1L);
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertFalse(actual);
 	}
@@ -122,14 +121,14 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_false_hasLastResult_nextOverTotal() {
 		Integer givenPageIndex = 2;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(5);
 
 		givenLastResult.setTotalCount(7L);
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertFalse(actual);
 	}
@@ -137,7 +136,7 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_true_noLastResult() throws QueryInfoException {
 		Integer givenPageIndex = 0;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(1);
@@ -145,9 +144,9 @@ public class PageIteratorTest {
 		doReturn(100L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
 
-		givenIterator.lastResult = null;
+		iterator.lastResult = null;
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
@@ -155,17 +154,17 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_true_noLastResult_pageSizeOverTotalCount() throws QueryInfoException {
 		Integer givenPageIndex = 0;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(100);
 
-		givenIterator.lastResult = null;
+		iterator.lastResult = null;
 
 		doReturn(20L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
@@ -173,7 +172,7 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_false_noLastResult_exactCount() throws QueryInfoException {
 		Integer givenPageIndex = 1;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(1);
@@ -181,9 +180,9 @@ public class PageIteratorTest {
 		doReturn(1L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
 
-		givenIterator.lastResult = null;
+		iterator.lastResult = null;
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertFalse(actual);
 	}
@@ -191,7 +190,7 @@ public class PageIteratorTest {
 	@Test
 	public void hasNext_false_noLastResult_nextOverTotal() throws QueryInfoException {
 		Integer givenPageIndex = 2;
-		givenIterator.nextPageIndex = givenPageIndex;
+		iterator.nextPageIndex = givenPageIndex;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(5);
@@ -199,23 +198,23 @@ public class PageIteratorTest {
 		doReturn(7L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
 
-		givenIterator.lastResult = null;
+		iterator.lastResult = null;
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertFalse(actual);
 	}
 
 	@Test
 	public void next_setsNextPageIndex() {
-		givenIterator.nextPageIndex = 1;
+		iterator.nextPageIndex = 1;
 
-		doReturn(true).when(givenIterator)
+		doReturn(true).when(iterator)
 				.hasNext();
 
-		givenIterator.next();
+		iterator.next();
 
-		Integer actual = givenIterator.nextPageIndex;
+		Integer actual = iterator.nextPageIndex;
 		Integer expected = 2;
 
 		assertEquals(expected,
