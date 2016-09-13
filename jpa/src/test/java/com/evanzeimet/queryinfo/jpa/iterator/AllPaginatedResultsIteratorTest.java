@@ -11,9 +11,9 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * limitations under the License.
  * #L%
  */
-
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -41,13 +40,13 @@ import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBean;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 
-public class ResultIteratorTest {
+public class AllPaginatedResultsIteratorTest {
 
-	private AllPaginatedResultsIterator<Result> givenIterator;
+	private Iterator<Result> givenCurrentPageResultsIterator;
 	private PaginatedResultIterator<Result> givenPageIterator;
 	private QueryInfo givenQueryInfo;
 	private QueryInfoBean<?, ?, Result> givenQueryInfoBean;
-	private Iterator<Result> givenCurrentPageResultsIterator;
+	private AllPaginatedResultsIterator<Result> iterator;
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -58,14 +57,14 @@ public class ResultIteratorTest {
 				.paginationInfoForAll()
 				.build();
 
-		givenIterator = new AllPaginatedResultsIterator<Result>(givenQueryInfoBean, givenQueryInfo);
-		givenIterator = spy(givenIterator);
+		iterator = new AllPaginatedResultsIterator<Result>(givenQueryInfoBean, givenQueryInfo);
+		iterator = spy(iterator);
 
 		givenPageIterator = mock(PaginatedResultIterator.class);
-		givenIterator.pageIterator = givenPageIterator;
+		iterator.pageIterator = givenPageIterator;
 
 		givenCurrentPageResultsIterator = mock(Iterator.class);
-		givenIterator.currentPageResultsIterator = givenCurrentPageResultsIterator;
+		iterator.currentPageResultsIterator = givenCurrentPageResultsIterator;
 	}
 
 	@Test
@@ -79,7 +78,7 @@ public class ResultIteratorTest {
 		doReturn(true).when(givenNextPageResultsIterator)
 				.hasNext();
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
@@ -91,7 +90,7 @@ public class ResultIteratorTest {
 		doReturn(false).when(givenPageIterator)
 				.hasNext();
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertFalse(actual);
 	}
@@ -103,19 +102,19 @@ public class ResultIteratorTest {
 		doReturn(false).when(givenPageIterator)
 				.hasNext();
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
 
 	@Test
 	public void hasNext_zeroPages() {
-		givenIterator.currentPageResultsIterator = null;
+		iterator.currentPageResultsIterator = null;
 
 		doReturn(false).when(givenPageIterator)
 				.hasNext();
 
-		boolean actual = givenIterator.hasNext();
+		boolean actual = iterator.hasNext();
 
 		assertFalse(actual);
 	}
