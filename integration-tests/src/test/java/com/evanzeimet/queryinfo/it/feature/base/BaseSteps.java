@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.feature;
+package com.evanzeimet.queryinfo.it.feature.base;
 
 /*
  * #%L
@@ -57,7 +57,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class QueryInfoSteps {
+public class BaseSteps {
 
 	private static final String[] ORGANIZATION_FIELDS = new String[] {
 			"name",
@@ -90,13 +90,13 @@ public class QueryInfoSteps {
 	private static boolean needToPersistOrganizations = true;
 	private static boolean needToPersistPeople = true;
 
-	private Response actualResponse;
+	private Response actualRestResponse;
 	private final CucumberUtils cucumberUtils;
 	private String path;
 	private final PersonToEmployerOrganizationIdMapper personToEmployerOrganizationIdMapper = new PersonToEmployerOrganizationIdMapper();
 	private final QueryInfoIntegrationTestUtils testUtils;
 
-	public QueryInfoSteps() {
+	public BaseSteps() {
 		setUpRestAssured();
 		cucumberUtils = new CucumberUtils();
 		testUtils = QueryInfoIntegrationTestUtils.create();
@@ -151,7 +151,7 @@ public class QueryInfoSteps {
 
 	@When("^I send the query:$")
 	public void When_I_send_the_query(String rawQueryInfo) throws QueryInfoException {
-		actualResponse = given()
+		actualRestResponse = given()
 				.contentType(ContentType.JSON)
 				.body(rawQueryInfo)
 				.when()
@@ -160,7 +160,7 @@ public class QueryInfoSteps {
 
 	@Then("^the http response code should be (\\d*)$")
 	public void Then_the_http_response_code_should_be(int expected) {
-		int actual = actualResponse.getStatusCode();
+		int actual = actualRestResponse.getStatusCode();
 
 		assertEquals(expected, actual);
 	}
@@ -168,7 +168,8 @@ public class QueryInfoSteps {
 	@Then("^I should receive this json:$")
 	public void I_should_receive_this_json(String expected)
 			throws QueryInfoException {
-		String actual = actualResponse.getBody().asString();
+		String actual = actualRestResponse.getBody()
+				.asString();
 		actual = testUtils.formatJson(actual);
 
 		assertEquals(expected, actual);
@@ -177,7 +178,8 @@ public class QueryInfoSteps {
 	@Then("^I should receive these paginated organizations:$")
 	public void Then_I_should_receive_these_paginated_organizations(DataTable expected)
 			throws QueryInfoException {
-		String actualReponseJson = actualResponse.getBody().asString();
+		String actualReponseJson = actualRestResponse.getBody()
+				.asString();
 
 		PaginatedResult<DefaultOrganization> actualPaginatedResult = testUtils.objectify(actualReponseJson,
 				ORGANIZATION_PAGINATED_RESULT_TYPE);
@@ -190,7 +192,8 @@ public class QueryInfoSteps {
 	@Then("^I should receive these organizations:$")
 	public void Then_I_should_receive_these_organizations(DataTable expected)
 			throws QueryInfoException {
-		String actualReponseJson = actualResponse.getBody().asString();
+		String actualReponseJson = actualRestResponse.getBody()
+				.asString();
 
 		List<DefaultOrganization> actual = testUtils.objectify(actualReponseJson,
 				ORGANIZATION_LIST_RESULT_TYPE);
@@ -201,7 +204,8 @@ public class QueryInfoSteps {
 	@Then("^I should receive these paginated people:$")
 	public void Then_I_should_receive_these_paginated_people(DataTable expected)
 			throws QueryInfoException {
-		String actualReponseJson = actualResponse.getBody().asString();
+		String actualReponseJson = actualRestResponse.getBody()
+				.asString();
 
 		PaginatedResult<DefaultPerson> actualPaginatedResult = testUtils.objectify(actualReponseJson,
 				PERSON_PAGINATED_RESULT_TYPE);
@@ -214,7 +218,8 @@ public class QueryInfoSteps {
 	@Then("^I should receive these people:$")
 	public void Then_I_should_receive_these_people(DataTable expected)
 			throws QueryInfoException {
-		String actualReponseJson = actualResponse.getBody().asString();
+		String actualReponseJson = actualRestResponse.getBody()
+				.asString();
 
 		List<DefaultPerson> actual = testUtils.objectify(actualReponseJson,
 				PERSON_LIST_RESULT_TYPE);
@@ -225,7 +230,8 @@ public class QueryInfoSteps {
 	@Then("^I should receive these tuples:$")
 	public void Then_I_should_receive_these_tuples(DataTable expected)
 			throws QueryInfoException, JsonProcessingException, IOException {
-		String actualReponseJson = actualResponse.getBody().asString();
+		String actualReponseJson = actualRestResponse.getBody()
+				.asString();
 
 		DataTable actual = cucumberUtils.readJsonArray(actualReponseJson);
 

@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.jpa.test.entity;
+package com.evanzeimet.queryinfo.it;
 
 /*
  * #%L
@@ -25,6 +25,8 @@ package com.evanzeimet.queryinfo.jpa.test.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evanzeimet.queryinfo.it.organizations.entity.OrganizationEntityContext;
+import com.evanzeimet.queryinfo.it.people.entity.PersonEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.DefaultQueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 
@@ -47,9 +49,8 @@ public class TestQueryInfoEntityContextRegistry extends DefaultQueryInfoEntityCo
 	public static TestQueryInfoEntityContextRegistry create() {
 		List<QueryInfoEntityContext<?>> entityContexts = new ArrayList<QueryInfoEntityContext<?>>();
 
-		entityContexts.add(new TestEmployeeEntityContext());
-		entityContexts.add(new TestOrganizationEntityContext());
-		entityContexts.add(new TestPersonEntityContext());
+		entityContexts.add(new OrganizationEntityContext());
+		entityContexts.add(new PersonEntityContext());
 
 		return new TestQueryInfoEntityContextRegistry(entityContexts);
 	}

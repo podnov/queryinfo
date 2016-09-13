@@ -1,4 +1,4 @@
-package com.evanzeimet.queryinfo.it.feature;
+package com.evanzeimet.queryinfo.it.feature.iterator;
 
 /*
  * #%L
@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.feature;
  * #L%
  */
 
-
 import org.junit.runner.RunWith;
 
 import cucumber.api.CucumberOptions;
@@ -30,6 +29,6 @@ import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = { "pretty", "html:target/cucumber" })
-public class QueryInfoFeatureIT {
+public class IteratorFeatureIT {
 
 }
