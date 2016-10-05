@@ -316,7 +316,7 @@ public class OrganizationEntity extends DefaultOrganization {
 | CDW           | IL      | Evan                | Zeimet             |
 ```
 
-In the integration-tests module, see the [Cucumber Feature File](integration-tests/src/test/resources/com/evanzeimet/queryinfo/it/feature/queryinfo.feature) for more query examples.
+In the integration-tests module, see the [base features Cucumber Feature File](integration-tests/src/test/resources/com/evanzeimet/queryinfo/it/feature/base/base.feature) for more query examples.
 
 
 ## The Glue
@@ -327,7 +327,7 @@ The default way to declare the fields on JPA entities that are in-scope for quer
 
 ### QueryInfoEntityContext
 
-[QueryInfoEntityContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContext.java)s contain the runtime information needed to execute queries against a single entity. This information consists of a reference to the JPA entity class, a [QueryInfoPathFactory](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/path/QueryInfoPathFactory.java) that can create JPA paths for QueryInfo field names, and a [QueryInfoAttributeContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/attribute/QueryInfoAttributeContext.java) that contains information about the QueryInfo fields and joins that exist on an entity.
+[QueryInfoEntityContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/entity/QueryInfoEntityContext.java)s contain the runtime information needed to execute queries against a single entity. This information consists of a reference to the JPA entity class, a [QueryInfoPathFactory](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/path/QueryInfoPathFactory.java) that can create JPA paths for QueryInfo fields, and a [QueryInfoAttributeContext](jpa/src/main/java/com/evanzeimet/queryinfo/jpa/attribute/QueryInfoAttributeContext.java) that contains information about the QueryInfo fields and joins that exist on an entity.
 
 ### QueryInfoEntityContextRegistry
 
