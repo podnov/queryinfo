@@ -28,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +38,12 @@ import org.junit.Test;
 
 import com.evanzeimet.queryinfo.selection.Selection;
 import com.evanzeimet.queryinfo.selection.SelectionBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 public class QueryInfoUtilsTest {
+
+	protected static Type STRING_LIST_TYPE = new TypeReference<ArrayList<String>>() {
+	}.getType();
 
 	private QueryInfoUtils utils;
 	private final Integer defaultPageSize = 42;
@@ -90,6 +95,25 @@ public class QueryInfoUtilsTest {
 				"QueryInfoUtilsTest_coalesceQueryInfo_populated_expected.json");
 
 		assertEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void createSelectionsForAttributePaths() throws IOException,
+			QueryInfoException {
+		String givenJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoUtilsTest_createSelectionsForAttributePaths_given.json");
+
+		List<String> givenAttributePaths = QueryInfoTestUtils.objectify(givenJson,
+				STRING_LIST_TYPE);
+
+		List<Selection> actualSelections = utils.createSelectionsForAttributePaths(givenAttributePaths);
+
+		String actualJson = QueryInfoTestUtils.createActualJson(actualSelections);
+		String expectedJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"QueryInfoUtilsTest_createSelectionsForAttributePaths_expected.json");
+
+		assertEquals(expectedJson,
+				actualJson);
 	}
 
 	@Test

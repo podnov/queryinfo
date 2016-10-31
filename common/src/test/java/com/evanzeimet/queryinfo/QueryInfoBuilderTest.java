@@ -22,8 +22,16 @@ package com.evanzeimet.queryinfo;
  * #L%
  */
 
-import com.evanzeimet.queryinfo.QueryInfo;
-import com.evanzeimet.queryinfo.QueryInfoBuilder;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionBuilder;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
@@ -39,16 +47,6 @@ import com.evanzeimet.queryinfo.sort.Sort;
 import com.evanzeimet.queryinfo.sort.SortBuilder;
 import com.evanzeimet.queryinfo.sort.SortDirection;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.*;
-
 public class QueryInfoBuilderTest {
 
 	private QueryInfoBuilder builder;
@@ -60,7 +58,8 @@ public class QueryInfoBuilderTest {
 
 	@Test
 	public void build()
-			throws IOException {
+			throws IOException,
+			QueryInfoException {
 		Condition givenNestedConditionGroupCondition1 = ConditionBuilder.create()
 				.leftHandSide("category")
 				.operator(ConditionOperator.EQUAL_TO)

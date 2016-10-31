@@ -31,6 +31,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 
 public class ConditionGroupBuilderTest {
@@ -43,7 +44,8 @@ public class ConditionGroupBuilderTest {
 	}
 
 	@Test
-	public void build() throws IOException {
+	public void build() throws IOException,
+			QueryInfoException {
 		List<ConditionGroup> givenConditionGroups = new ArrayList<ConditionGroup>();
 
 		Condition givenCondition1 = ConditionBuilder.create()
@@ -80,7 +82,8 @@ public class ConditionGroupBuilderTest {
 	}
 
 	@Test
-	public void createForCondition() throws IOException {
+	public void createForCondition() throws IOException,
+			QueryInfoException {
 		Condition givenCondition = ConditionBuilder.create()
 				.leftHandSide("lhs1")
 				.operator("op1")
@@ -98,7 +101,8 @@ public class ConditionGroupBuilderTest {
 	}
 
 	@Test
-	public void createForConditionGroup() throws IOException {
+	public void createForConditionGroup() throws IOException,
+			QueryInfoException {
 		List<Condition> givenConditions = new ArrayList<Condition>();
 
 		Condition givenCondition = ConditionBuilder.create()
