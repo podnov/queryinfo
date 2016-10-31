@@ -36,6 +36,7 @@ import javax.persistence.TupleElement;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +56,8 @@ public class TupleToObjectNodeQueryInfoResultConverterTest {
 	}
 
 	@Test
-	public void convertTuple_nestedPojo() throws IOException {
+	public void convertTuple_nestedPojo() throws IOException,
+			QueryInfoException {
 		Tuple tuple = mock(Tuple.class);
 
 		List<TupleElement<?>> tupleElements = new ArrayList<>();

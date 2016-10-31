@@ -35,6 +35,7 @@ import com.evanzeimet.queryinfo.condition.DefaultConditionGroup;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 import com.evanzeimet.queryinfo.selection.Selection;
+import com.evanzeimet.queryinfo.selection.SelectionBuilder;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JavaType;
@@ -225,6 +226,20 @@ public class QueryInfoUtils {
 		result.setDateFormat(dateFormat);
 
 		result.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+		return result;
+	}
+
+	public List<Selection> createSelectionsForAttributePaths(List<String> attributePaths) {
+		int attributePathCount = attributePaths.size();
+		List<Selection> result = new ArrayList<>(attributePathCount);
+		SelectionBuilder selectionBuilder = SelectionBuilder.create();
+
+		for (String attributePath : attributePaths) {
+			Selection selection = selectionBuilder.attributePath(attributePath)
+					.build();
+			result.add(selection);
+		}
 
 		return result;
 	}

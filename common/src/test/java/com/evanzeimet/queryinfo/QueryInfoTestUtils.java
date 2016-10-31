@@ -69,8 +69,16 @@ public class QueryInfoTestUtils {
 	}
 
 	public static String getFormattedJson(Class<?> clazz, String filename)
-			throws IOException {
+			throws IOException,
+			QueryInfoException {
 		URL url = clazz.getResource(filename);
+
+		if (url == null) {
+			String message = String.format("Resource not found at [%s]",
+					filename);
+			throw new QueryInfoException(message);
+		}
+
 		File file = new File(url.getPath());
 		String rawContents = FileUtils.readFileToString(file);
 
