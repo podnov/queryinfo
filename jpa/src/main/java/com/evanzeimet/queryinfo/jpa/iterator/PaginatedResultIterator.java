@@ -24,6 +24,8 @@ package com.evanzeimet.queryinfo.jpa.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
@@ -33,6 +35,8 @@ import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
 public class PaginatedResultIterator<T> implements Iterator<PaginatedResult<T>> {
+
+	private final static Logger logger = Logger.getLogger(PaginatedResultIterator.class.getName());
 
 	protected PaginatedResult<T> lastResult;
 	protected Integer nextPageIndex;
@@ -92,12 +96,15 @@ public class PaginatedResultIterator<T> implements Iterator<PaginatedResult<T>> 
 		PaginationInfo paginationInfo = queryInfo.getPaginationInfo();
 		paginationInfo.setPageIndex(nextPageIndex);
 
+		String message = String.format("Querying for page index [%s]", nextPageIndex);
+		logger.log(Level.FINE, message);
+
 		PaginatedResult<T> result;
 
 		try {
 			result = queryInfoBean.queryForPaginatedResult(queryInfo);
 		} catch (QueryInfoException e) {
-			String message = String.format("Could not query for page [%s]",
+			message = String.format("Could not query for page index [%s]",
 					nextPageIndex);
 			throw new QueryInfoRuntimeException(message, e);
 		}
