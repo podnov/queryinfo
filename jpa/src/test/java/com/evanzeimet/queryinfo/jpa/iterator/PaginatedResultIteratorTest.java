@@ -25,15 +25,22 @@ package com.evanzeimet.queryinfo.jpa.iterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.evanzeimet.queryinfo.DefaultQueryInfo;
+import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBean;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
@@ -65,7 +72,7 @@ public class PaginatedResultIteratorTest {
 	}
 
 	@Test
-	public void hasNext_true_hasLastResult() {
+	public void hasNext_true_hasLastResult() throws QueryInfoException {
 		Integer givenPageIndex = 0;
 		iterator.nextPageIndex = givenPageIndex;
 
@@ -80,6 +87,8 @@ public class PaginatedResultIteratorTest {
 		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
+
+		verify(givenQueryInfoBean, never()).count(any(QueryInfo.class));
 	}
 
 	@Test
@@ -221,7 +230,27 @@ public class PaginatedResultIteratorTest {
 				actual);
 	}
 
+	@Test
+	public void queryForNextPage_hasLastResult_dontCount() throws QueryInfoException {
+		givenQueryInfoBean = new TestQueryInfoBean();
+		givenQueryInfoBean = spy(givenQueryInfoBean);
+
+		doReturn(42L).when(givenQueryInfoBean).count(any(QueryInfo.class));
+		doReturn(Collections.emptyList()).when(givenQueryInfoBean).query(any(QueryInfo.class));
+
+		iterator = new PaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
+		iterator.lastResult = givenLastResult;
+
+		iterator.queryForNextPage();
+
+		verify(givenQueryInfoBean, never()).count(any(QueryInfo.class));
+	}
+
 	private static class Result {
+
+	}
+
+	private static class TestQueryInfoBean extends AbstractQueryInfoBean<Result, Result, Result> {
 
 	}
 }
