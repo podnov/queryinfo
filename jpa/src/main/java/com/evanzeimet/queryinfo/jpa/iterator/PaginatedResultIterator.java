@@ -23,6 +23,7 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  */
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,7 @@ import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBean;
+import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
@@ -93,18 +95,49 @@ public class PaginatedResultIterator<T> implements Iterator<PaginatedResult<T>> 
 	}
 
 	protected PaginatedResult<T> queryForNextPage() {
+		PaginatedResult<T> result;
 		PaginationInfo paginationInfo = queryInfo.getPaginationInfo();
 		paginationInfo.setPageIndex(nextPageIndex);
 
 		String message = String.format("Querying for page index [%s]", nextPageIndex);
 		logger.log(Level.FINE, message);
 
+		if (lastResult == null) {
+			result = queryForPaginatedResult();
+		} else {
+			Long totalCount = lastResult.getTotalCount();
+			result = queryForPageResults(totalCount);
+		}
+
+		return result;
+	}
+
+	protected PaginatedResult<T> queryForPageResults(Long totalCount) {
+		List<T> pageResults;
+
+		try {
+			pageResults = queryInfoBean.query(queryInfo);
+		} catch (QueryInfoException e) {
+			String message = String.format("Could not query for page index [%s]",
+					nextPageIndex);
+			throw new QueryInfoRuntimeException(message, e);
+		}
+
+		PaginatedResult<T> result = new DefaultPaginatedResult<>();
+
+		result.setTotalCount(totalCount);
+		result.setPageResults(pageResults);
+
+		return result;
+	}
+
+	protected PaginatedResult<T> queryForPaginatedResult() {
 		PaginatedResult<T> result;
 
 		try {
 			result = queryInfoBean.queryForPaginatedResult(queryInfo);
 		} catch (QueryInfoException e) {
-			message = String.format("Could not query for page index [%s]",
+			String message = String.format("Could not query for page index [%s]",
 					nextPageIndex);
 			throw new QueryInfoRuntimeException(message, e);
 		}
