@@ -42,17 +42,15 @@ import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBean;
-import com.evanzeimet.queryinfo.pagination.DefaultPaginatedResult;
 import com.evanzeimet.queryinfo.pagination.DefaultPaginationInfo;
 import com.evanzeimet.queryinfo.pagination.PaginationInfo;
 
-public class PaginatedResultIteratorTest {
+public class AscendingPaginatedResultIteratorTest {
 
-	private DefaultPaginatedResult<Result> givenLastResult;
 	private PaginationInfo givenPaginationInfo;
 	private DefaultQueryInfo givenQueryInfo;
 	private QueryInfoBean<?, ?, Result> givenQueryInfoBean;
-	private PaginatedResultIterator<Result> iterator;
+	private AscendingPaginatedResultIterator<Result> iterator;
 
 	@SuppressWarnings("unchecked")
 	@Before
@@ -64,25 +62,95 @@ public class PaginatedResultIteratorTest {
 		givenQueryInfo = new DefaultQueryInfo();
 		givenQueryInfo.setPaginationInfo(givenPaginationInfo);
 
-		iterator = new PaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
+		iterator = new AscendingPaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
 		iterator = spy(iterator);
-
-		givenLastResult = new DefaultPaginatedResult<>();
-		iterator.lastResult = givenLastResult;
 	}
 
 	@Test
-	public void hasNext_true_hasLastResult() throws QueryInfoException {
-		Integer givenPageIndex = 0;
+	public void hasNext_false_hasTotalCount_exactCount() {
+		Integer givenPageIndex = 1;
+		Integer givenPageSize = 1;
+		Long givenTotalCount = 1L;
+	
 		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
+	
+		givenPaginationInfo.setPageIndex(givenPageIndex);
+		givenPaginationInfo.setPageSize(givenPageSize);
+	
+		boolean actual = iterator.hasNext();
+	
+		assertFalse(actual);
+	}
+
+	@Test
+	public void hasNext_false_hasTotalCount_nextOverTotal() {
+		Integer givenPageIndex = 2;
+		Integer givenPageSize = 5;
+		Long givenTotalCount = 1L;
+	
+		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
+	
+		givenPaginationInfo.setPageIndex(givenPageIndex);
+		givenPaginationInfo.setPageSize(givenPageSize);
+	
+		boolean actual = iterator.hasNext();
+	
+		assertFalse(actual);
+	}
+
+	@Test
+	public void hasNext_false_noTotalCount_exactCount() throws QueryInfoException {
+		Integer givenPageIndex = 1;
+		Integer givenPageSize = 1;
+		Long givenTotalCount = null;
+	
+		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
+	
+		givenPaginationInfo.setPageIndex(givenPageIndex);
+		givenPaginationInfo.setPageSize(givenPageSize);
+	
+		doReturn(1L).when(givenQueryInfoBean)
+				.count(givenQueryInfo);
+	
+		boolean actual = iterator.hasNext();
+	
+		assertFalse(actual);
+	}
+
+	@Test
+	public void hasNext_false_noTotalCount_nextOverTotal() throws QueryInfoException {
+		Integer givenPageIndex = 2;
+		Integer givenPageSize = 5;
+		Long givenTotalCount = null;
+	
+		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
+	
+		givenPaginationInfo.setPageIndex(givenPageIndex);
+		givenPaginationInfo.setPageSize(givenPageSize);
+	
+		doReturn(7L).when(givenQueryInfoBean)
+				.count(givenQueryInfo);
+	
+		boolean actual = iterator.hasNext();
+	
+		assertFalse(actual);
+	}
+
+	@Test
+	public void hasNext_true_hasTotalCount() throws QueryInfoException {
+		Integer givenPageIndex = 0;
+		Integer givenPageSize = 1;
+		Long  givenTotalCount = 100L;
+
+		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(1);
-
-		DefaultPaginatedResult<Result> givenLastResult = new DefaultPaginatedResult<>();
-		iterator.lastResult = givenLastResult;
-
-		givenLastResult.setTotalCount(100L);
+		givenPaginationInfo.setPageSize(givenPageSize);
 
 		boolean actual = iterator.hasNext();
 
@@ -92,17 +160,16 @@ public class PaginatedResultIteratorTest {
 	}
 
 	@Test
-	public void hasNext_true_hasLastResult_pageSizeOverTotalCount() {
+	public void hasNext_true_hasTotalCount_pageSizeOverTotalCount() {
 		Integer givenPageIndex = 0;
+		Integer givenPageSize = 100;
+		Long givenTotalCount = 20L;
+
 		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(100);
-
-		DefaultPaginatedResult<Result> givenLastResult = new DefaultPaginatedResult<>();
-		iterator.lastResult = givenLastResult;
-
-		givenLastResult.setTotalCount(20L);
+		givenPaginationInfo.setPageSize(givenPageSize);
 
 		boolean actual = iterator.hasNext();
 
@@ -110,65 +177,36 @@ public class PaginatedResultIteratorTest {
 	}
 
 	@Test
-	public void hasNext_false_hasLastResult_exactCount() {
-		Integer givenPageIndex = 1;
-		iterator.nextPageIndex = givenPageIndex;
-
-		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(1);
-
-		DefaultPaginatedResult<Result> givenLastResult = new DefaultPaginatedResult<>();
-		iterator.lastResult = givenLastResult;
-
-		givenLastResult.setTotalCount(1L);
-
-		boolean actual = iterator.hasNext();
-
-		assertFalse(actual);
-	}
-
-	@Test
-	public void hasNext_false_hasLastResult_nextOverTotal() {
-		Integer givenPageIndex = 2;
-		iterator.nextPageIndex = givenPageIndex;
-
-		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(5);
-
-		givenLastResult.setTotalCount(7L);
-
-		boolean actual = iterator.hasNext();
-
-		assertFalse(actual);
-	}
-
-	@Test
-	public void hasNext_true_noLastResult() throws QueryInfoException {
+	public void hasNext_true_noTotalCount() throws QueryInfoException {
 		Integer givenPageIndex = 0;
+		Integer givenPageSize = 1;
+		Long givenTotalCount = null;
+
 		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(1);
+		givenPaginationInfo.setPageSize(givenPageSize);
 
 		doReturn(100L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
 
-		iterator.lastResult = null;
-
 		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
 	}
 
 	@Test
-	public void hasNext_true_noLastResult_pageSizeOverTotalCount() throws QueryInfoException {
+	public void hasNext_true_noTotalCount_pageSizeOverTotalCount() throws QueryInfoException {
 		Integer givenPageIndex = 0;
+		Integer givenPageSize = 100;
+		Long givenTotalCount = null;
+
 		iterator.nextPageIndex = givenPageIndex;
+		iterator.totalCount = givenTotalCount;
 
 		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(100);
-
-		iterator.lastResult = null;
+		givenPaginationInfo.setPageSize(givenPageSize);
 
 		doReturn(20L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
@@ -176,42 +214,6 @@ public class PaginatedResultIteratorTest {
 		boolean actual = iterator.hasNext();
 
 		assertTrue(actual);
-	}
-
-	@Test
-	public void hasNext_false_noLastResult_exactCount() throws QueryInfoException {
-		Integer givenPageIndex = 1;
-		iterator.nextPageIndex = givenPageIndex;
-
-		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(1);
-
-		doReturn(1L).when(givenQueryInfoBean)
-				.count(givenQueryInfo);
-
-		iterator.lastResult = null;
-
-		boolean actual = iterator.hasNext();
-
-		assertFalse(actual);
-	}
-
-	@Test
-	public void hasNext_false_noLastResult_nextOverTotal() throws QueryInfoException {
-		Integer givenPageIndex = 2;
-		iterator.nextPageIndex = givenPageIndex;
-
-		givenPaginationInfo.setPageIndex(givenPageIndex);
-		givenPaginationInfo.setPageSize(5);
-
-		doReturn(7L).when(givenQueryInfoBean)
-				.count(givenQueryInfo);
-
-		iterator.lastResult = null;
-
-		boolean actual = iterator.hasNext();
-
-		assertFalse(actual);
 	}
 
 	@Test
@@ -231,15 +233,17 @@ public class PaginatedResultIteratorTest {
 	}
 
 	@Test
-	public void queryForNextPage_hasLastResult_dontCount() throws QueryInfoException {
+	public void queryForNextPage_hasTotalCount_dontCount() throws QueryInfoException {
+		Long givenTotalCount = 42L;
+
 		givenQueryInfoBean = new TestQueryInfoBean();
 		givenQueryInfoBean = spy(givenQueryInfoBean);
 
 		doReturn(42L).when(givenQueryInfoBean).count(any(QueryInfo.class));
 		doReturn(Collections.emptyList()).when(givenQueryInfoBean).query(any(QueryInfo.class));
 
-		iterator = new PaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
-		iterator.lastResult = givenLastResult;
+		iterator = new AscendingPaginatedResultIterator<Result>(givenQueryInfoBean, givenQueryInfo);
+		iterator.totalCount = givenTotalCount;
 
 		iterator.queryForNextPage();
 

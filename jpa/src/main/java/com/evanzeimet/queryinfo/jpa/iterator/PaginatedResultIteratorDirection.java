@@ -23,10 +23,9 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  */
 
 
-import java.util.Iterator;
+public enum PaginatedResultIteratorDirection {
 
-import com.evanzeimet.queryinfo.pagination.PaginatedResult;
-
-public interface PaginatedResultIterator<T> extends Iterator<PaginatedResult<T>> {
+	ASCENDING,
+	DESCENDING;
 
 }

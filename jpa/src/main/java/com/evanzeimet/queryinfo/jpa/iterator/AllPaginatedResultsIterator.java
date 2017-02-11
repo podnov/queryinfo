@@ -33,8 +33,12 @@ public class AllPaginatedResultsIterator<T> implements Iterator<T> {
 	protected Iterator<T> currentPageResultsIterator;
 	protected PaginatedResultIterator<T> pageIterator;
 
-	public AllPaginatedResultsIterator(QueryInfoBean<?, ?, T> queryInfoBean, QueryInfo queryInfo) {
-		pageIterator = new PaginatedResultIterator<T>(queryInfoBean, queryInfo);
+	public AllPaginatedResultsIterator(QueryInfoBean<?, ?, T> queryInfoBean, QueryInfo queryInfo, PaginatedResultIteratorDirection direction) {
+		if (PaginatedResultIteratorDirection.DESCENDING.equals(direction)) {
+			pageIterator = new DescendingPaginatedResultIterator<T>(queryInfoBean, queryInfo);
+		} else {
+			pageIterator = new AscendingPaginatedResultIterator<T>(queryInfoBean, queryInfo);
+		}
 	}
 
 	@Override
