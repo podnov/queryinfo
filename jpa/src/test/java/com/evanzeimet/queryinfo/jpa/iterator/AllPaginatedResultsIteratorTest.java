@@ -43,7 +43,7 @@ import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 public class AllPaginatedResultsIteratorTest {
 
 	private Iterator<Result> givenCurrentPageResultsIterator;
-	private PaginatedResultIterator<Result> givenPageIterator;
+	private AscendingPaginatedResultIterator<Result> givenPageIterator;
 	private QueryInfo givenQueryInfo;
 	private QueryInfoBean<?, ?, Result> givenQueryInfoBean;
 	private AllPaginatedResultsIterator<Result> iterator;
@@ -57,10 +57,10 @@ public class AllPaginatedResultsIteratorTest {
 				.paginationInfoForAll()
 				.build();
 
-		iterator = new AllPaginatedResultsIterator<Result>(givenQueryInfoBean, givenQueryInfo);
+		iterator = new AllPaginatedResultsIterator<Result>(givenQueryInfoBean, givenQueryInfo, PaginatedResultIteratorDirection.ASCENDING);
 		iterator = spy(iterator);
 
-		givenPageIterator = mock(PaginatedResultIterator.class);
+		givenPageIterator = mock(AscendingPaginatedResultIterator.class);
 		iterator.pageIterator = givenPageIterator;
 
 		givenCurrentPageResultsIterator = mock(Iterator.class);

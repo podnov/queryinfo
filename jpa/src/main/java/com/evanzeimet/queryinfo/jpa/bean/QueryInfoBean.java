@@ -29,6 +29,7 @@ import java.util.List;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributePathBuilder;
+import com.evanzeimet.queryinfo.jpa.iterator.PaginatedResultIteratorDirection;
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;
 
 public interface QueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult> {
@@ -39,7 +40,7 @@ public interface QueryInfoBean<RootEntity, CriteriaQueryResult, QueryInfoResult>
 
 	List<QueryInfoResult> query(QueryInfo queryInfo) throws QueryInfoException;
 
-	Iterator<QueryInfoResult> queryForIterator(QueryInfo queryInfo) throws QueryInfoException;
+	Iterator<QueryInfoResult> queryForIterator(QueryInfo queryInfo, PaginatedResultIteratorDirection direction) throws QueryInfoException;
 
 	QueryInfoResult queryForOne(QueryInfo queryInfo) throws QueryInfoException;
 

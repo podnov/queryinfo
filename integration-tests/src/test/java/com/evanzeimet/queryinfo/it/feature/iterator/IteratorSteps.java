@@ -43,6 +43,7 @@ import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.it.people.PersonToEmployerOrganizationIdMapper;
 import com.evanzeimet.queryinfo.it.people.TestPerson;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBean;
+import com.evanzeimet.queryinfo.jpa.iterator.PaginatedResultIteratorDirection;
 import com.google.common.collect.Lists;
 
 import cucumber.api.DataTable;
@@ -107,12 +108,13 @@ public class IteratorSteps {
 		queryInfoBean = TestQueryInfoBeanFactory.createOrganizationEntityQueryInfoBean(entityManager);
 	}
 
-	@When("^I execute this query for an iterator:$")
-	public void When_I_execute_this_query_for_an_iterator(String rawQueryInfo) throws QueryInfoException {
+	@When("^I execute this query for an? \"([^\"]*)\" iterator:$")
+	public void When_I_execute_this_query_for_an_iterator(PaginatedResultIteratorDirection direction,
+			String rawQueryInfo) throws QueryInfoException {
 		DefaultQueryInfo queryInfo = testUtils.objectify(rawQueryInfo,
 				DefaultQueryInfo.class);
 
-		Iterator<? extends Object> iterator = queryInfoBean.queryForIterator(queryInfo);
+		Iterator<? extends Object> iterator = queryInfoBean.queryForIterator(queryInfo, direction);
 
 		actualQueryResults = Lists.newArrayList(iterator);
 	}
