@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * #L%
  */
 
-
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
@@ -60,7 +59,7 @@ public class AscendingPaginatedResultIterator<T> implements PaginatedResultItera
 				throw new QueryInfoRuntimeException(e);
 			}
 		}
-	
+
 		return totalCount;
 	}
 

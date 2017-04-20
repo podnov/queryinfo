@@ -27,9 +27,12 @@ import org.hamcrest.TypeSafeMatcher;
 
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class QueryInfoMatchers {
+
+	private static final QueryInfoUtils queryInfoUtils = new QueryInfoUtils();
 
 	public static TypeSafeMatcher<Condition> equalsCondition(final Condition expected) {
 		return new TypeSafeMatcher<Condition>() {
@@ -40,15 +43,14 @@ public class QueryInfoMatchers {
 
 			@Override
 			protected boolean matchesSafely(Condition actual) {
-				String expectedLhs = expected.getLeftHandSide();
-				String actualLhs = actual.getLeftHandSide();
+				JsonNode expectedLhsNode = expected.getLeftHandSide();
+				JsonNode actualLhsNode = actual.getLeftHandSide();
 
-				leftHandSideMatches = matchString(expectedLhs, actualLhs);
+				leftHandSideMatches = matchString(expectedLhsNode, actualLhsNode);
 
 				String expectedOperator = expected.getOperator();
 				String actualOperator = actual.getOperator();
 				operatorMatches = matchString(expectedOperator, actualOperator);
-
 
 				String expectedRhs = expected.getRightHandSide().toString();
 				String actualRhs = actual.getRightHandSide().toString();
@@ -158,6 +160,13 @@ public class QueryInfoMatchers {
 				return result;
 			}
 		};
+	}
+
+	protected static boolean matchString(JsonNode expected, JsonNode actual) {
+		String rawExpected = queryInfoUtils.stringifyJsonNode(expected);
+		String rawActual = queryInfoUtils.stringifyJsonNode(actual);
+
+		return matchString(rawExpected, rawActual);
 	}
 
 	protected static boolean matchString(String expected, String actual) {

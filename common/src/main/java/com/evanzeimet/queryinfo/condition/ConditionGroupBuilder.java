@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +38,8 @@ public class ConditionGroupBuilder {
 
 		result.setConditionGroups(builderReferenceInstance.getConditionGroups());
 		result.setConditions(builderReferenceInstance.getConditions());
+		result.setDirective(builderReferenceInstance.getDirective());
+		result.setDirectiveConfig(builderReferenceInstance.getDirectiveConfig());
 		result.setOperator(builderReferenceInstance.getOperator());
 
 		return result;
@@ -81,6 +82,16 @@ public class ConditionGroupBuilder {
 
 		return create()
 				.conditionGroups(conditionGroups);
+	}
+
+	public ConditionGroupBuilder directive(String directive) {
+		builderReferenceInstance.setDirective(directive);
+		return this;
+	}
+
+	public ConditionGroupBuilder directiveConfig(String directiveConfig) {
+		builderReferenceInstance.setDirectiveConfig(directiveConfig);
+		return this;
 	}
 
 	public ConditionGroupBuilder operator(ConditionGroupOperator operator) {

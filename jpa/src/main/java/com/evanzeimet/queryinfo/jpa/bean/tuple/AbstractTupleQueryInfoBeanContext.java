@@ -31,7 +31,7 @@ import com.evanzeimet.queryinfo.jpa.selection.QueryInfoSelectionSetter;
 public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
 		extends AbstractQueryInfoBeanContext<RootEntity, Tuple, QueryInfoResult> {
 
-	private QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>();
+	private QueryInfoSelectionSetter<RootEntity, Tuple> selectionSetter = new DefaultTupleQueryInfoSelectionSetter<>();
 
 	@Override
 	public Class<Tuple> getCriteriaQueryResultClass() {
@@ -39,11 +39,11 @@ public abstract class AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoRes
 	}
 
 	@Override
-	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
+	public QueryInfoSelectionSetter<RootEntity, Tuple> getSelectionSetter() {
 		return selectionSetter;
 	}
 
-	public void setSelectionSetter(QueryInfoSelectionSetter<RootEntity> selectionSetter) {
+	public void setSelectionSetter(QueryInfoSelectionSetter<RootEntity, Tuple> selectionSetter) {
 		this.selectionSetter = selectionSetter;
 	}
 

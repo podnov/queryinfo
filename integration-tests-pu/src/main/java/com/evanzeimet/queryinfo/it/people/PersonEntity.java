@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
+
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoin;
@@ -48,11 +49,11 @@ public class PersonEntity extends DefaultPerson {
 
 	@JsonIgnore
 	@QueryInfoField(name = "employer",
-		isOrderable = false,
-		isPredicateable = false,
-		joinType = QueryInfoJoinType.LEFT)
+			isOrderable = false,
+			isPredicateable = true,
+			joinType = QueryInfoJoinType.LEFT)
 	@QueryInfoJoin(name = "employer",
-		joinType = QueryInfoJoinType.LEFT)
+			joinType = QueryInfoJoinType.LEFT)
 	@ManyToOne
 	@JoinColumn(name = "employer_organization_id",
 			referencedColumnName = "id",
@@ -67,6 +68,7 @@ public class PersonEntity extends DefaultPerson {
 	}
 
 	@Override
+	@QueryInfoField
 	@Column(name = "employer_organization_id")
 	public Long getEmployerOrganizationId() {
 		return super.getEmployerOrganizationId();

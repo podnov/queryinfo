@@ -26,22 +26,46 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class DefaultCondition implements Condition {
 
-	private String leftHandSide;
+	private JsonNode leftHandSide;
+	private OperandType leftHandSideType;
+	private String leftHandSideTypeConfig;
 	private String operator;
 	private JsonNode rightHandSide;
+	private OperandType rightHandSideType;
+	private String rightHandSideTypeConfig;
 
 	public DefaultCondition() {
 
 	}
 
 	@Override
-	public String getLeftHandSide() {
+	public JsonNode getLeftHandSide() {
 		return leftHandSide;
 	}
 
 	@Override
-	public void setLeftHandSide(String leftHandSide) {
+	public void setLeftHandSide(JsonNode leftHandSide) {
 		this.leftHandSide = leftHandSide;
+	}
+
+	@Override
+	public OperandType getLeftHandSideType() {
+		return leftHandSideType;
+	}
+
+	@Override
+	public void setLeftHandSideType(OperandType leftHandSideType) {
+		this.leftHandSideType = leftHandSideType;
+	}
+
+	@Override
+	public String getLeftHandSideTypeConfig() {
+		return leftHandSideTypeConfig;
+	}
+
+	@Override
+	public void setLeftHandSideTypeConfig(String leftHandSideTypeConfig) {
+		this.leftHandSideTypeConfig = leftHandSideTypeConfig;
 	}
 
 	@Override
@@ -63,4 +87,25 @@ public class DefaultCondition implements Condition {
 	public void setRightHandSide(JsonNode rightHandSide) {
 		this.rightHandSide = rightHandSide;
 	}
+
+	@Override
+	public OperandType getRightHandSideType() {
+		return rightHandSideType;
+	}
+
+	@Override
+	public void setRightHandSideType(OperandType rightHandSideType) {
+		this.rightHandSideType = rightHandSideType;
+	}
+
+	@Override
+	public String getRightHandSideTypeConfig() {
+		return rightHandSideTypeConfig;
+	}
+
+	@Override
+	public void setRightHandSideTypeConfig(String rightHandSideTypeConfig) {
+		this.rightHandSideTypeConfig = rightHandSideTypeConfig;
+	}
+
 }

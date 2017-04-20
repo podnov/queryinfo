@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-
 public enum QueryInfoAttributeType {
 	FIELD,
 	JOIN

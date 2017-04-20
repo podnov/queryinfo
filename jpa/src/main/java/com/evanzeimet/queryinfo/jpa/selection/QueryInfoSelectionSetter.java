@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.selection;
 
+import javax.persistence.criteria.CriteriaQuery;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -27,10 +29,10 @@ import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public interface QueryInfoSelectionSetter<RootEntity> {
+public interface QueryInfoSelectionSetter<RootEntity, CriteriaQueryResult> {
 
 	void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResult>> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
 
 }

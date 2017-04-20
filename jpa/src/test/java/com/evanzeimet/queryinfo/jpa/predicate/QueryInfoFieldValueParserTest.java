@@ -22,8 +22,6 @@ package com.evanzeimet.queryinfo.jpa.predicate;
  * #L%
  */
 
-
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -31,7 +29,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.criteria.Expression;
 
@@ -43,15 +43,15 @@ import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class FieldValueParserTest {
+public class QueryInfoFieldValueParserTest {
 
-	private FieldValueParser parser;
+	private QueryInfoFieldValueParser parser;
 	private Expression<?> path;
 	private QueryInfoUtils utils;
 
 	@Before
 	public void setUp() {
-		parser = new FieldValueParser();
+		parser = new QueryInfoFieldValueParser();
 
 		path = mock(Expression.class);
 
@@ -59,14 +59,14 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_boolean_false() throws QueryInfoException {
+	public void parseForExpression_boolean_false() throws QueryInfoException {
 		Boolean givenTypedFieldValue = false;
-		
+
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(Boolean.class).when(path).getJavaType();
 
-		Boolean actual = (Boolean) parser.parse(path,
+		Boolean actual = (Boolean) parser.parseLiteralForExpression(path,
 				ConditionOperator.EQUAL_TO,
 				givenFieldValue);
 
@@ -74,7 +74,7 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_boolean_somethingElse() {
+	public void parseForExpression_boolean_somethingElse() {
 		String givenTypedFieldValue = "somethingElse";
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
@@ -84,7 +84,7 @@ public class FieldValueParserTest {
 		QueryInfoException actualException = null;
 
 		try {
-			parser.parse(path,
+			parser.parseLiteralForExpression(path,
 					ConditionOperator.EQUAL_TO,
 					givenFieldValue);
 		} catch (QueryInfoException e) {
@@ -100,14 +100,14 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_boolean_true() throws QueryInfoException {
+	public void parseForExpression_boolean_true() throws QueryInfoException {
 		Boolean givenTypedFieldValue = true;
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(Boolean.class).when(path).getJavaType();
 
-		Boolean actual = (Boolean) parser.parse(path,
+		Boolean actual = (Boolean) parser.parseLiteralForExpression(path,
 				ConditionOperator.EQUAL_TO,
 				givenFieldValue);
 
@@ -115,14 +115,14 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_date() throws QueryInfoException {
+	public void parseForExpression_date() throws QueryInfoException {
 		String givenTypedFieldValue = "1982-05-09T00:00:00";
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(Date.class).when(path).getJavaType();
 
-		Date actual = (Date) parser.parse(path,
+		Date actual = (Date) parser.parseLiteralForExpression(path,
 				ConditionOperator.EQUAL_TO,
 				givenFieldValue);
 
@@ -133,31 +133,32 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_in_integer() throws QueryInfoException {
+	public void parseForExpression_in_integer() throws QueryInfoException {
 		Integer[] givenTypedFieldValue = { 1, 2, 3 };
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(Integer.class).when(path).getJavaType();
 
-		Integer[] actual = (Integer[]) parser.parse(path,
+		@SuppressWarnings("unchecked")
+		List<Integer> actual = (List<Integer>) parser.parseLiteralForExpression(path,
 				ConditionOperator.IN,
 				givenFieldValue);
 
-		Integer[] expected = givenTypedFieldValue;
+		List<Integer> expected = Arrays.asList(givenTypedFieldValue);
 
-		assertArrayEquals(expected, actual);
+		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void parse_integer() throws QueryInfoException {
+	public void parseForExpression_integer() throws QueryInfoException {
 		Integer givenTypedFieldValue = 1;
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(Integer.class).when(path).getJavaType();
 
-		Integer actual = (Integer) parser.parse(path,
+		Integer actual = (Integer) parser.parseLiteralForExpression(path,
 				ConditionOperator.EQUAL_TO, 
 				givenFieldValue);
 
@@ -167,33 +168,98 @@ public class FieldValueParserTest {
 	}
 
 	@Test
-	public void parse_notIn_String() throws QueryInfoException {
+	public void parseForExpression_notIn_String() throws QueryInfoException {
 		String[] givenTypedFieldValue = { "a", "b", "c" };
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(String.class).when(path).getJavaType();
 
-		String[] actual = (String[]) parser.parse(path,
+		@SuppressWarnings("unchecked")
+		List<String> actual = (List<String>) parser.parseLiteralForExpression(path,
 				ConditionOperator.NOT_IN,
 				givenFieldValue);
 
-		String[] expected = givenTypedFieldValue;
+		List<String> expected = Arrays.asList(givenTypedFieldValue);
 
-		assertArrayEquals(expected, actual);
+		assertEquals(expected, actual);
 	}
 
 	@Test
-	public void parse_string() throws QueryInfoException {
+	public void parseForExpression_string() throws QueryInfoException {
 		String givenTypedFieldValue = "abc";
 
 		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
 
 		doReturn(String.class).when(path).getJavaType();
 
-		String actual = (String) parser.parse(path,
+		String actual = (String) parser.parseLiteralForExpression(path,
 				ConditionOperator.EQUAL_TO,
 				givenFieldValue);
+
+		String expected = givenTypedFieldValue;
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void parseLiteral_array() throws QueryInfoException {
+		Integer[] givenTypedFieldValue = new Integer[] { 1, 2, 3 };
+
+		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
+
+		@SuppressWarnings("unchecked")
+		List<Integer> actual = (List<Integer>) parser.parseLiteral(givenFieldValue);
+
+		List<Integer> expected = Arrays.asList(givenTypedFieldValue);
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void parseLiteral_boolean() throws QueryInfoException {
+		Boolean givenTypedFieldValue = false;
+
+		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
+
+		Boolean actual = (Boolean) parser.parseLiteral(givenFieldValue);
+
+		assertFalse(actual);
+	}
+
+	@Test
+	public void parseLiteral_integer() throws QueryInfoException {
+		Integer givenTypedFieldValue = 1;
+
+		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
+
+		Integer actual = (Integer) parser.parseLiteral(givenFieldValue);
+
+		Integer expected = givenTypedFieldValue;
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void parseLiteral_null() throws QueryInfoException {
+		Integer givenTypedFieldValue = null;
+
+		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
+
+		Integer actual = (Integer) parser.parseLiteral(givenFieldValue);
+
+		Integer expected = givenTypedFieldValue;
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void parseLiteral_string() throws QueryInfoException {
+		String givenTypedFieldValue = "abc";
+
+		JsonNode givenFieldValue = utils.treeify(givenTypedFieldValue);
+
+		String actual = (String) parser.parseLiteral(givenFieldValue);
 
 		String expected = givenTypedFieldValue;
 

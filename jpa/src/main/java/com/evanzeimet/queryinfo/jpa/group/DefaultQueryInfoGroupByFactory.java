@@ -42,7 +42,7 @@ public class DefaultQueryInfoGroupByFactory<RootEntity>
 
 	@Override
 	public List<Expression<?>> createGroupByExpressions(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, ?> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		List<Expression<?>> result;
 		List<String> groupByAttributePaths = queryInfo.getGroupByAttributePaths();

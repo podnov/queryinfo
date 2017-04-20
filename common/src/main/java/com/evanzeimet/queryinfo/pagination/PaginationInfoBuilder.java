@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.pagination;
  * #L%
  */
 
-
 public class PaginationInfoBuilder {
 
 	private PaginationInfo builderReferenceInstance = createDefaultInstance();

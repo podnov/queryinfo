@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.selection;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

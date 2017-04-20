@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.result;
  * #L%
  */
 
-
 public interface QueryInfoBaseInstanceFactory<T> {
 
 	T create();

@@ -24,104 +24,173 @@ package com.evanzeimet.queryinfo.condition;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoTestUtils;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class ConditionBuilderTest {
 
 	private ConditionBuilder builder;
+	private PodamFactoryImpl podam;
 	private QueryInfoUtils utils;
 
 	@Before
 	public void setUp() {
 		builder = new ConditionBuilder();
-
+		podam = new PodamFactoryImpl();
 		utils = new QueryInfoUtils();
 	}
 
 	@Test
-	public void build() {
-		String givenLhs = "lhs";
-		ConditionOperator givenOperator = ConditionOperator.EQUAL_TO;
-		String givenRhs = "rhs";
+	public void build_allFields() throws IOException, QueryInfoException {
+		DefaultCondition givenCondition = podam.manufacturePojo(DefaultCondition.class);
 
-		Condition actualCondition = builder.leftHandSide(givenLhs)
-				.operator(givenOperator)
-				.rightHandSide(givenRhs)
+		Condition actualCondition = builder.builderReferenceInstance(givenCondition)
 				.build();
 
-		String actualLhs = actualCondition.getLeftHandSide();
-		assertEquals(givenLhs, actualLhs);
+		String actualJson = QueryInfoTestUtils.createActualJson(actualCondition);
+		String expectedJson = QueryInfoTestUtils.createActualJson(givenCondition);
 
-		String expectedOperator = givenOperator.getText();
-		String actualOperator = actualCondition.getOperator();
-		assertEquals(expectedOperator, actualOperator);
+		assertEquals(expectedJson, actualJson);
+	}
 
-		JsonNode actualRhs = actualCondition.getRightHandSide();
+	@Test
+	public void build_fieldValues() throws IOException, QueryInfoException {
+		String givenLhs = "lhs";
+		OperandType givenLhsType = OperandType.LITERAL;
+		String givenLhsTypeConfig = "lhsTypeConfig";
+		ConditionOperator givenOperator = ConditionOperator.EQUAL_TO;
+		String givenRhs = "rhs";
+		OperandType givenRhsType = OperandType.ATTRIBUTE_PATH;
+		String rightHandSideTypeConfig = "rhsTypeConfig";
 
-		String actualRawRhs = actualRhs.toString();
-		String expectedRawRhs = "\"rhs\"";
+		Condition actualCondition = builder.leftHandSide(givenLhs)
+				.leftHandSideType(givenLhsType)
+				.leftHandSideTypeConfig(givenLhsTypeConfig)
+				.operator(givenOperator)
+				.rightHandSide(givenRhs)
+				.rightHandSideType(givenRhsType)
+				.rightHandSideTypeConfig(rightHandSideTypeConfig)
+				.build();
 
-		assertEquals(expectedRawRhs, actualRawRhs);
+		String actualJson = QueryInfoTestUtils.createActualJson(actualCondition);
+		String expectedJson = QueryInfoTestUtils.getFormattedJson(getClass(),
+				"ConditionBuilderTest_build_expected.json");
+
+		assertEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void leftHandSide_object_notNull() {
+		Object givenLhs = "meh";
+
+		Condition actualCondition = builder.leftHandSide(givenLhs).build();
+
+		JsonNode actualLhs = actualCondition.getLeftHandSide();
+
+		String actualRawLhs = actualLhs.asText();
+		String expectedRawLhs = givenLhs.toString();
+		assertEquals(expectedRawLhs, actualRawLhs);
+	}
+
+	@Test
+	public void leftHandSide_object_null() {
+		Object givenLhs = null;
+
+		Condition actualCondition = builder.leftHandSide(givenLhs).build();
+
+		JsonNode actualLhs = actualCondition.getLeftHandSide();
+
+		JsonNode actualRawLhs = actualLhs;
+		JsonNode expectedRawLhs = null;
+		assertEquals(expectedRawLhs, actualRawLhs);
+	}
+
+	@Test
+	public void leftHandSide_jsonNode_notNull() {
+		String givenRawLhs = "abc";
+		JsonNode givenLhs = utils.treeify(givenRawLhs);
+
+		Condition actualCondition = builder.leftHandSide(givenLhs).build();
+
+		JsonNode actualLhs = actualCondition.getLeftHandSide();
+
+		String actualRawLhs = actualLhs.asText();
+		String expectedRawLhs = givenRawLhs;
+		assertEquals(expectedRawLhs, actualRawLhs);
+	}
+
+	@Test
+	public void leftHandSide_jsonNode_null() {
+		JsonNode givenLhs = null;
+
+		Condition actualCondition = builder.leftHandSide(givenLhs).build();
+
+		JsonNode actualLhs = actualCondition.getLeftHandSide();
+
+		JsonNode actualRawLhs = actualLhs;
+		JsonNode expectedRawLhs = null;
+		assertEquals(expectedRawLhs, actualRawLhs);
 	}
 
 	@Test
 	public void rightHandSide_object_notNull() {
-		Object rightHandSide = "meh";
+		Object givenRhs = "meh";
 
-		Condition actualCondition = builder.rightHandSide(rightHandSide).build();
+		Condition actualCondition = builder.rightHandSide(givenRhs).build();
 
-		JsonNode actualRightHandSide = actualCondition.getRightHandSide();
+		JsonNode actualRhs = actualCondition.getRightHandSide();
 
-		String actualRawRightHandSide = actualRightHandSide.toString();
-		String expectedRawRightHandSide = "\"meh\"";
-
-		assertEquals(expectedRawRightHandSide, actualRawRightHandSide);
+		String actualRawRhs = actualRhs.asText();
+		String expectedRawRhs = givenRhs.toString();
+		assertEquals(expectedRawRhs, actualRawRhs);
 	}
 
 	@Test
 	public void rightHandSide_object_null() {
-		Object rightHandSide = null;
+		Object givenRhs = null;
 
-		Condition actualCondition = builder.rightHandSide(rightHandSide).build();
+		Condition actualCondition = builder.rightHandSide(givenRhs).build();
 
-		JsonNode actualRightHandSide = actualCondition.getRightHandSide();
+		JsonNode actualRhs = actualCondition.getRightHandSide();
 
-		JsonNode actualRawRightHandSide = actualRightHandSide;
-		JsonNode expectedRawRightHandSide = null;
-
-		assertEquals(expectedRawRightHandSide, actualRawRightHandSide);
+		JsonNode actualRawRhs = actualRhs;
+		JsonNode expectedRawRhs = null;
+		assertEquals(expectedRawRhs, actualRawRhs);
 	}
-
 
 	@Test
 	public void rightHandSide_jsonNode_notNull() {
-		JsonNode rightHandSide = utils.treeify("abc");
+		String givenRawRhs = "abc";
+		JsonNode givenRhs = utils.treeify(givenRawRhs);
 
-		Condition actualCondition = builder.rightHandSide(rightHandSide).build();
+		Condition actualCondition = builder.rightHandSide(givenRhs).build();
 
-		JsonNode actualRightHandSide = actualCondition.getRightHandSide();
+		JsonNode actualRhs = actualCondition.getRightHandSide();
 
-		String actualRawRightHandSide = actualRightHandSide.toString();
-		String expectedRawRightHandSide = "\"abc\"";
-
-		assertEquals(expectedRawRightHandSide, actualRawRightHandSide);
+		String actualRawRhs = actualRhs.asText();
+		String expectedRawRhs = givenRawRhs;
+		assertEquals(expectedRawRhs, actualRawRhs);
 	}
 
 	@Test
 	public void rightHandSide_jsonNode_null() {
-		JsonNode rightHandSide = null;
+		JsonNode givenRhs = null;
 
-		Condition actualCondition = builder.rightHandSide(rightHandSide).build();
+		Condition actualCondition = builder.rightHandSide(givenRhs).build();
 
-		JsonNode actualRightHandSide = actualCondition.getRightHandSide();
+		JsonNode actualRhs = actualCondition.getRightHandSide();
 
-		JsonNode actualRawRightHandSide = actualRightHandSide;
-		JsonNode expectedRawRightHandSide = null;
-
-		assertEquals(expectedRawRightHandSide, actualRawRightHandSide);
+		JsonNode actualRawRhs = actualRhs;
+		JsonNode expectedRawRhs = null;
+		assertEquals(expectedRawRhs, actualRawRhs);
 	}
 }

@@ -22,12 +22,12 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * #L%
  */
 
-
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
 
-public class DefaultTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> extends AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> {
+public class DefaultTupleQueryInfoBeanContext<RootEntity, QueryInfoResult>
+		extends AbstractTupleQueryInfoBeanContext<RootEntity, QueryInfoResult> {
 
 	private QueryInfoResultConverter<Tuple, QueryInfoResult> resultConverter;
 	private Class<RootEntity> rootEntityClass;

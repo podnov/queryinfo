@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.result;
  * #L%
  */
 
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

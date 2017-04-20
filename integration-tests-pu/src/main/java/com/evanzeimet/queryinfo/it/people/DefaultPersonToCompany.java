@@ -22,8 +22,6 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
-
 public class DefaultPersonToCompany implements PersonToCompany {
 
 	private Long companyId;

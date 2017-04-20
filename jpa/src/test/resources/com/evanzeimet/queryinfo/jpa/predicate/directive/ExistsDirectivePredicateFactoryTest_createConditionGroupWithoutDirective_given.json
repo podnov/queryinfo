@@ -1,0 +1,23 @@
+{
+  "directive": "EXISTS",
+  "directiveConfig": {
+    "subqueryName": "subqueryName",
+    "subqueryRootAttributePath": "joinedEntityPath"
+  },
+  "conditionGroups" : [
+    {
+      "conditionGroups" : [
+        {
+          "conditions" : [
+            {
+              "leftHandSide" : "field2"
+            }
+          ],
+          "operator" : "and"
+        }
+      ],
+      "operator" : "and"
+    }
+  ],
+  "operator" : "and"
+}

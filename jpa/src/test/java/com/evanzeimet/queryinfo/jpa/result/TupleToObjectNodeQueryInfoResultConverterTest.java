@@ -44,7 +44,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TupleToObjectNodeQueryInfoResultConverterTest {
 
-
 	private TupleToObjectNodeQueryInfoResultConverter converter;
 	private ObjectMapper objectMapper;
 

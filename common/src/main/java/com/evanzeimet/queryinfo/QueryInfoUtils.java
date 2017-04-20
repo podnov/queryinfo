@@ -58,6 +58,18 @@ public class QueryInfoUtils {
 		this.defaultPageSize = defaultPageSize;
 	}
 
+	public <T> T coalesce(T given, T defaultValue) {
+		T result;
+
+		if (given == null) {
+			result = defaultValue;
+		} else {
+			result = given;
+		}
+
+		return result;
+	}
+
 	public void coalesceConditionGroup(QueryInfo result) {
 		ConditionGroup conditionGroup = result.getConditionGroup();
 		conditionGroup = coalesceConditionGroup(conditionGroup);
@@ -97,7 +109,6 @@ public class QueryInfoUtils {
 
 		return result;
 	}
-
 
 	public List<String> coalesceGroupByAttributePaths(QueryInfo queryInfo) {
 		List<String> result = queryInfo.getGroupByAttributePaths();
@@ -276,8 +287,25 @@ public class QueryInfoUtils {
 		return result;
 	}
 
+	public String stringifyJsonNode(JsonNode jsonNode) {
+		return stringifyJsonNode(jsonNode, null);
+	}
+
+	protected String stringifyJsonNode(JsonNode jsonNode, String defaultValue) {
+		String result;
+
+		if (jsonNode == null) {
+			result = defaultValue;
+		} else {
+			result = jsonNode.asText();
+		}
+
+		return result;
+	}
+
 	public JsonNode treeify(Object object) {
 		ObjectMapper objectMapper = createObjectMapper();
 		return objectMapper.valueToTree(object);
 	}
+
 }

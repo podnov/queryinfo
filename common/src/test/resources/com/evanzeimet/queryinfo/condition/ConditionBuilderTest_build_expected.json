@@ -1,0 +1,9 @@
+{
+  "leftHandSide" : "lhs",
+  "leftHandSideType" : "LITERAL",
+  "leftHandSideTypeConfig" : "lhsTypeConfig",
+  "operator" : "=",
+  "rightHandSide" : "rhs",
+  "rightHandSideType" : "ATTRIBUTE_PATH",
+  "rightHandSideTypeConfig" : "rhsTypeConfig"
+}

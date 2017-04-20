@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.it.people.entity;
 
-
-
 /*
  * #%L
  * queryinfo-integration-tests
@@ -23,7 +21,6 @@ package com.evanzeimet.queryinfo.it.people.entity;
  * limitations under the License.
  * #L%
  */
-
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;

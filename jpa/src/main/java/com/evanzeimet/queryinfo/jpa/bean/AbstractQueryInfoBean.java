@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -39,6 +40,7 @@ import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
+import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoJPAAttributePathBuilder;
@@ -47,6 +49,7 @@ import com.evanzeimet.queryinfo.jpa.iterator.AllPaginatedResultsIterator;
 import com.evanzeimet.queryinfo.jpa.iterator.PaginatedResultIteratorDirection;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContextFactory;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContexts;
 import com.evanzeimet.queryinfo.jpa.order.QueryInfoOrderFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.result.QueryInfoResultConverter;
@@ -112,10 +115,10 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 
 		CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
 
-		QueryInfoJPAContext<RootEntity> jpaContext = createJpaContext(criteriaQuery);
-		setCountSelection(criteriaBuilder, criteriaQuery, jpaContext);
+		QueryInfoJPAContexts<RootEntity, Long> jpaContexts = createJpaContexts(criteriaQuery);
 
-		setQueryPredicates(jpaContext, queryInfo);
+		setCountSelection(criteriaBuilder, criteriaQuery, jpaContexts);
+		setQueryPredicates(jpaContexts, queryInfo);
 
 		TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
 
@@ -130,14 +133,20 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 				.root(rootEntityClass);
 	}
 
-	protected QueryInfoJPAContext<RootEntity> createJpaContext(CriteriaQuery<?> criteriaQuery) {
+	protected <CriteriaQueryResultType> QueryInfoJPAContexts<RootEntity, CriteriaQueryResultType> createJpaContexts(CriteriaQuery<CriteriaQueryResultType> criteriaQuery) {
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = beanContext.getJpaContextFactory();
+		QueryInfoJPAContextFactory jpaContextFactory = beanContext.getJpaContextFactory();
+		Class<RootEntity> rootEntityClass = beanContext.getRootEntityClass();
 
-		return jpaContextFactory.createJpaContext(criteriaBuilder,
-				beanContext,
+		QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResultType>> rootContext = jpaContextFactory.createJpaContext(criteriaBuilder,
+				rootEntityClass,
 				criteriaQuery);
+
+		QueryInfoJPAContexts<RootEntity, CriteriaQueryResultType> result = new QueryInfoJPAContexts<>();
+		result.setRootContext(rootContext);
+
+		return result;
 	}
 
 	public QueryInfoEntityContext<RootEntity> getRootEntityContext() {
@@ -159,12 +168,12 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		Boolean distinct = beanContext.getUseDistinctSelections();
 		criteriaQuery.distinct(distinct);
 
-		QueryInfoJPAContext<RootEntity> jpaContext = createJpaContext(criteriaQuery);
+		QueryInfoJPAContexts<RootEntity, CriteriaQueryResult> jpaContexts = createJpaContexts(criteriaQuery);
 
-		setQuerySelections(jpaContext, queryInfo);
-		setQueryPredicates(jpaContext, queryInfo);
-		setQueryGroupBy(jpaContext, queryInfo);
-		setQueryOrders(jpaContext, queryInfo);
+		setQuerySelections(jpaContexts, queryInfo);
+		setQueryPredicates(jpaContexts, queryInfo);
+		setQueryGroupBy(jpaContexts, queryInfo);
+		setQueryOrders(jpaContexts, queryInfo);
 
 		TypedQuery<CriteriaQueryResult> typedQuery = entityManager.createQuery(criteriaQuery);
 
@@ -220,8 +229,9 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 
 	protected void setCountSelection(CriteriaBuilder criteriaBuilder,
 			CriteriaQuery<Long> criteriaQuery,
-			QueryInfoJPAContext<RootEntity> jpaContext) {
-		Root<RootEntity> root = jpaContext.getRoot();
+			QueryInfoJPAContexts<RootEntity, Long> jpaContexts) {
+		QueryInfoJPAContext<RootEntity, CriteriaQuery<Long>> rootContext = jpaContexts.getRootContext();
+		Root<RootEntity> root = rootContext.getRoot();
 
 		Expression<Long> countSelection = criteriaBuilder.count(root);
 		criteriaQuery.select(countSelection);
@@ -257,51 +267,58 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		typedQuery.setMaxResults(maxResults);
 	}
 
-	protected void setQueryGroupBy(QueryInfoJPAContext<RootEntity> jpaContext, QueryInfo queryInfo) throws QueryInfoException {
+	protected void setQueryGroupBy(QueryInfoJPAContexts<RootEntity, CriteriaQueryResult> jpaContexts,
+			QueryInfo queryInfo) throws QueryInfoException {
+		QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResult>> rootContext = jpaContexts.getRootContext();
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		QueryInfoGroupByFactory<RootEntity> groupByFactory = beanContext.getGroupByFactory();
 
 		List<Expression<?>> groupByExpressions = groupByFactory.createGroupByExpressions(entityContextRegistry,
-				jpaContext,
+				rootContext,
 				queryInfo);
 
-		CriteriaQuery<?> criteriaQuery = jpaContext.getCriteriaQuery();
+		AbstractQuery<?> criteriaQuery = rootContext.getCriteriaQuery();
 
 		criteriaQuery.groupBy(groupByExpressions);
 	}
 
-	protected void setQueryOrders(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected void setQueryOrders(QueryInfoJPAContexts<RootEntity, CriteriaQueryResult> jpaContexts,
 			QueryInfo queryInfo) throws QueryInfoException {
+		QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResult>> rootContext = jpaContexts.getRootContext();
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		QueryInfoOrderFactory<RootEntity> orderFactory = beanContext.getOrderFactory();
 
-		List<Order> orders = orderFactory.createOrders(entityContextRegistry, jpaContext, queryInfo);
+		List<Order> orders = orderFactory.createOrders(entityContextRegistry, rootContext, queryInfo);
 
-		CriteriaQuery<?> criteriaQuery = jpaContext.getCriteriaQuery();
+		CriteriaQuery<?> criteriaQuery = rootContext.getCriteriaQuery();
 
 		criteriaQuery.orderBy(orders);
 	}
 
-	protected void setQueryPredicates(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected <CriteriaQueryResultType> void setQueryPredicates(QueryInfoJPAContexts<RootEntity, CriteriaQueryResultType> jpaContexts,
 			QueryInfo queryInfo) throws QueryInfoException {
+		QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResultType>> rootContext = jpaContexts.getRootContext();
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		QueryInfoPredicateFactory<RootEntity> predicateFactory = beanContext.getPredicateFactory();
+		ConditionGroup conditionGroup = queryInfo.getConditionGroup();
 
 		Predicate[] predicates = predicateFactory.createPredicates(entityContextRegistry,
-				jpaContext,
-				queryInfo);
+				jpaContexts,
+				rootContext,
+				conditionGroup);
 
-		CriteriaQuery<?> criteriaQuery = jpaContext.getCriteriaQuery();
+		AbstractQuery<?> criteriaQuery = rootContext.getCriteriaQuery();
 
 		criteriaQuery.where(predicates);
 	}
 
-	protected void setQuerySelections(QueryInfoJPAContext<RootEntity> jpaContext,
+	protected void setQuerySelections(QueryInfoJPAContexts<RootEntity, CriteriaQueryResult> jpaContexts,
 			QueryInfo queryInfo) throws QueryInfoException {
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
-		QueryInfoSelectionSetter<RootEntity> selectionSetter = beanContext.getSelectionSetter();
+		QueryInfoSelectionSetter<RootEntity, CriteriaQueryResult> selectionSetter = beanContext.getSelectionSetter();
+		QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResult>> rootContext = jpaContexts.getRootContext();
 
-		selectionSetter.setSelection(entityContextRegistry, jpaContext, queryInfo);
+		selectionSetter.setSelection(entityContextRegistry, rootContext, queryInfo);
 	}
 
 }

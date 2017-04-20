@@ -34,7 +34,7 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 public interface QueryInfoGroupByFactory<RootEntity> {
 
 	List<Expression<?>> createGroupByExpressions(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, ?> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
 
 }

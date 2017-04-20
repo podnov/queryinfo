@@ -22,11 +22,12 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-
-
 public enum QueryInfoAttributePurpose {
+
 	GROUP_BY,
 	ORDER,
 	PREDICATE,
-	SELECT;
+	SELECT,
+	SUBQUERY_ROOT;
+
 }

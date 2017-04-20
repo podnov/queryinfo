@@ -71,15 +71,15 @@ public class AscendingPaginatedResultIteratorTest {
 		Integer givenPageIndex = 1;
 		Integer givenPageSize = 1;
 		Long givenTotalCount = 1L;
-	
+
 		iterator.nextPageIndex = givenPageIndex;
 		iterator.totalCount = givenTotalCount;
-	
+
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(givenPageSize);
-	
+
 		boolean actual = iterator.hasNext();
-	
+
 		assertFalse(actual);
 	}
 
@@ -88,15 +88,15 @@ public class AscendingPaginatedResultIteratorTest {
 		Integer givenPageIndex = 2;
 		Integer givenPageSize = 5;
 		Long givenTotalCount = 1L;
-	
+
 		iterator.nextPageIndex = givenPageIndex;
 		iterator.totalCount = givenTotalCount;
-	
+
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(givenPageSize);
-	
+
 		boolean actual = iterator.hasNext();
-	
+
 		assertFalse(actual);
 	}
 
@@ -105,18 +105,18 @@ public class AscendingPaginatedResultIteratorTest {
 		Integer givenPageIndex = 1;
 		Integer givenPageSize = 1;
 		Long givenTotalCount = null;
-	
+
 		iterator.nextPageIndex = givenPageIndex;
 		iterator.totalCount = givenTotalCount;
-	
+
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(givenPageSize);
-	
+
 		doReturn(1L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
-	
+
 		boolean actual = iterator.hasNext();
-	
+
 		assertFalse(actual);
 	}
 
@@ -125,18 +125,18 @@ public class AscendingPaginatedResultIteratorTest {
 		Integer givenPageIndex = 2;
 		Integer givenPageSize = 5;
 		Long givenTotalCount = null;
-	
+
 		iterator.nextPageIndex = givenPageIndex;
 		iterator.totalCount = givenTotalCount;
-	
+
 		givenPaginationInfo.setPageIndex(givenPageIndex);
 		givenPaginationInfo.setPageSize(givenPageSize);
-	
+
 		doReturn(7L).when(givenQueryInfoBean)
 				.count(givenQueryInfo);
-	
+
 		boolean actual = iterator.hasNext();
-	
+
 		assertFalse(actual);
 	}
 

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * #L%
  */
 
-
 import javax.persistence.Tuple;
 
 import com.evanzeimet.queryinfo.jpa.bean.AbstractQueryInfoBean;

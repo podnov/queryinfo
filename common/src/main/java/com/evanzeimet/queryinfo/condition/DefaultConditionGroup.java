@@ -24,14 +24,21 @@ package com.evanzeimet.queryinfo.condition;
 
 import java.util.List;
 
+import com.evanzeimet.queryinfo.util.JSONToStringDeserializer;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public class DefaultConditionGroup implements ConditionGroup {
+public class DefaultConditionGroup
+		implements ConditionGroup {
 
 	@JsonDeserialize(contentAs = DefaultConditionGroup.class)
 	private List<ConditionGroup> conditionGroups;
 	@JsonDeserialize(contentAs = DefaultCondition.class)
 	private List<Condition> conditions;
+	private String directive;
+	@JsonRawValue
+	@JsonDeserialize(using = JSONToStringDeserializer.class)
+	private String directiveConfig;
 	private String operator = ConditionGroupOperator.AND.getText();
 
 	public DefaultConditionGroup() {
@@ -56,6 +63,26 @@ public class DefaultConditionGroup implements ConditionGroup {
 	@Override
 	public void setConditions(List<Condition> conditions) {
 		this.conditions = conditions;
+	}
+
+	@Override
+	public String getDirective() {
+		return directive;
+	}
+
+	@Override
+	public void setDirective(String directive) {
+		this.directive = directive;
+	}
+
+	@Override
+	public String getDirectiveConfig() {
+		return directiveConfig;
+	}
+
+	@Override
+	public void setDirectiveConfig(String directiveConfig) {
+		this.directiveConfig = directiveConfig;
 	}
 
 	@Override

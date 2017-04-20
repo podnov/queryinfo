@@ -50,4 +50,5 @@ public interface QueryInfo {
 	List<Sort> getSorts();
 
 	void setSorts(List<Sort> sorts);
+
 }

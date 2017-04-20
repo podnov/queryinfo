@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.attribute;
 
-
-
 /*
  * #%L
  * queryinfo-jpa
@@ -23,7 +21,6 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * limitations under the License.
  * #L%
  */
-
 
 import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;

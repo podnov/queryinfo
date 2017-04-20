@@ -29,7 +29,8 @@ import javax.persistence.criteria.From;
 
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
-public class DefaultQueryInfoEntityContextRegistry implements QueryInfoEntityContextRegistry {
+public class DefaultQueryInfoEntityContextRegistry 
+		implements QueryInfoEntityContextRegistry {
 
 	protected List<QueryInfoEntityContext<?>> entityContexts;
 
@@ -65,11 +66,12 @@ public class DefaultQueryInfoEntityContextRegistry implements QueryInfoEntityCon
 	}
 
 	@Override
-	public <T> QueryInfoEntityContext<T> getContextForRoot(QueryInfoJPAContext<T> jpaContext) {
+	public <T> QueryInfoEntityContext<T> getContextForRoot(QueryInfoJPAContext<T, ?> jpaContext) {
 		Class<T> rootEntityClass = jpaContext.getRoot().getModel().getBindableJavaType();
 		return getContext(rootEntityClass);
 	}
 
+	@Override
 	public List<QueryInfoEntityContext<?>> getContexts() {
 		return entityContexts;
 	}

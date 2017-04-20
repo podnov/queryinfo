@@ -33,5 +33,4 @@ public interface QueryInfoEntityContext<Entity> {
 
 	QueryInfoPathFactory<Entity> getPathFactory();
 
-
 }

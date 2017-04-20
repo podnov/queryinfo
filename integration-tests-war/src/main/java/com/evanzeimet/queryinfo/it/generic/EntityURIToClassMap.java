@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.generic;
  * #L%
  */
 
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

@@ -42,7 +42,7 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 
 	QueryInfoGroupByFactory<RootEntity> getGroupByFactory();
 
-	QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory();
+	QueryInfoJPAContextFactory getJpaContextFactory();
 
 	QueryInfoOrderFactory<RootEntity> getOrderFactory();
 
@@ -52,7 +52,7 @@ public interface QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfo
 
 	Class<RootEntity> getRootEntityClass();
 
-	QueryInfoSelectionSetter<RootEntity> getSelectionSetter();
+	QueryInfoSelectionSetter<RootEntity, CriteriaQueryResult> getSelectionSetter();
 
 	Boolean getUseDistinctSelections();
 

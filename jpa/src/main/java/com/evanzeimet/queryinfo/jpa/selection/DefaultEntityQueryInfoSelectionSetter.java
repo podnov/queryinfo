@@ -31,11 +31,11 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultEntityQueryInfoSelectionSetter<RootEntity>
-		implements QueryInfoSelectionSetter<RootEntity> {
+		implements QueryInfoSelectionSetter<RootEntity, RootEntity> {
 
 	@Override
 	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, CriteriaQuery<RootEntity>> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		CriteriaQuery<RootEntity> criteriaQuery = jpaContext.getCriteriaQuery();
 		Root<RootEntity> root = jpaContext.getRoot();

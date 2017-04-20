@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * #L%
  */
 
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -55,7 +54,7 @@ public class DescendingPaginatedResultIterator<T> implements PaginatedResultIter
 		} else {
 			PaginationInfo paginationInfo = queryInfo.getPaginationInfo();
 			Integer pageSize = paginationInfo.getPageSize();
-	
+
 			result = (int) Math.floor(totalCount / pageSize);
 
 			boolean hasNoRemainder = ((totalCount % pageSize) == 0);
@@ -86,14 +85,14 @@ public class DescendingPaginatedResultIterator<T> implements PaginatedResultIter
 	@Override
 	public boolean hasNext() {
 		boolean result;
-	
+
 		if (nextPageIndex == null) {
 			Long totalCount = getTotalCount();
 			result = (totalCount > 0);
 		} else {
 			result = (nextPageIndex > -1);
 		}
-	
+
 		return result;
 	}
 

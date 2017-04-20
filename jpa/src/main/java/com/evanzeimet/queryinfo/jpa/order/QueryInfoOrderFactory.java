@@ -33,7 +33,7 @@ import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 public interface QueryInfoOrderFactory<RootEntity> {
 
 	List<Order> createOrders(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, ?> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException;
 
 }

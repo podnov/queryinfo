@@ -32,7 +32,7 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 		extends AbstractQueryInfoBeanContext<RootEntity, RootEntity, RootEntity> {
 
 	private QueryInfoResultConverter<RootEntity, RootEntity> resultConverter = new DefaultEntityQueryInfoResultConverter<>();
-	private QueryInfoSelectionSetter<RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
+	private QueryInfoSelectionSetter<RootEntity, RootEntity> selectionSetter = new DefaultEntityQueryInfoSelectionSetter<>();
 
 	public AbstractEntityQueryInfoBeanContext() {
 		super();
@@ -53,11 +53,12 @@ public abstract class AbstractEntityQueryInfoBeanContext<RootEntity>
 	}
 
 	@Override
-	public QueryInfoSelectionSetter<RootEntity> getSelectionSetter() {
+	public QueryInfoSelectionSetter<RootEntity, RootEntity> getSelectionSetter() {
 		return selectionSetter;
 	}
 
-	public void setSelectionSetter(QueryInfoSelectionSetter<RootEntity> selectionSetter) {
+	public void setSelectionSetter(QueryInfoSelectionSetter<RootEntity, RootEntity> selectionSetter) {
 		this.selectionSetter = selectionSetter;
 	}
+
 }

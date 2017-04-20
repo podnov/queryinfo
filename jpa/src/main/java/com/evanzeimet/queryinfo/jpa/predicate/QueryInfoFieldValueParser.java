@@ -22,10 +22,20 @@ package com.evanzeimet.queryinfo.jpa.predicate;
  * #L%
  */
 
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.Expression;
+
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
+import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 /**
  * It appears that hibernate parses at least numeric types out of the box:
@@ -36,21 +46,11 @@ import java.util.Date;
  *
  * Let's parse everything else.
  */
-import javax.persistence.criteria.Expression;
-
-import com.evanzeimet.queryinfo.QueryInfoException;
-import com.evanzeimet.queryinfo.QueryInfoUtils;
-import com.evanzeimet.queryinfo.condition.ConditionOperator;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.ArrayType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-
-public class FieldValueParser {
+public class QueryInfoFieldValueParser {
 
 	private ObjectMapper objectMapper;
 
-	public FieldValueParser() {
+	public QueryInfoFieldValueParser() {
 		objectMapper = new QueryInfoUtils().createObjectMapper();
 	}
 
@@ -62,16 +62,20 @@ public class FieldValueParser {
 		this.objectMapper = objectMapper;
 	}
 
-	public Object parse(Expression<?> path,
+	public Object parseLiteral(JsonNode fieldValue) throws QueryInfoException {
+		return parseType(fieldValue, Object.class);
+	}
+
+	public Object parseLiteralForExpression(Expression<?> expression,
 			ConditionOperator conditionOperator,
 			JsonNode fieldValue) throws QueryInfoException {
 		Object result;
-		Class<?> javaType = path.getJavaType();
+		Class<?> javaType = expression.getJavaType();
 
 		boolean isEitherInOperator = ConditionOperator.isEitherInOperator(conditionOperator);
 
 		if (isEitherInOperator) {
-			result = parseIn(path, fieldValue);
+			result = parseInForExpression(expression, fieldValue);
 		} else if (Date.class.isAssignableFrom(javaType)) {
 			result = parseDate(fieldValue);
 		} else {
@@ -95,14 +99,14 @@ public class FieldValueParser {
 		return result;
 	}
 
-	protected <T> Object[] parseIn(Expression<?> path,
+	protected <T> List<T> parseInForExpression(Expression<?> path,
 			JsonNode fieldValue) throws QueryInfoException {
 		Class<?> javaType = path.getJavaType();
 
 		TypeFactory typeFactory = objectMapper.getTypeFactory();
-		ArrayType arrayType = typeFactory.constructArrayType(javaType);
+		CollectionType collectionType = typeFactory.constructCollectionType(List.class, javaType);
 
-		return objectMapper.convertValue(fieldValue, arrayType);
+		return objectMapper.convertValue(fieldValue, collectionType);
 	}
 
 	protected <T> T parseType(JsonNode fieldValue, Class<T> javaType) throws QueryInfoException {

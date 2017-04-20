@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.bean;
  * #L%
  */
 
-
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -39,12 +38,13 @@ import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
 import com.evanzeimet.queryinfo.jpa.predicate.QueryInfoPredicateFactory;
 
 public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult>
-		implements QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
+		implements
+		QueryInfoBeanContext<RootEntity, CriteriaQueryResult, QueryInfoResult> {
 
 	private QueryInfoEntityContextRegistry entityContextRegistry;
 	private EntityManager entityManager;
 	private QueryInfoGroupByFactory<RootEntity> groupByFactory = new DefaultQueryInfoGroupByFactory<>();
-	private QueryInfoJPAContextFactory<RootEntity> jpaContextFactory = new DefaultQueryInfoJPAContextFactory<>();
+	private QueryInfoJPAContextFactory jpaContextFactory = new DefaultQueryInfoJPAContextFactory();
 	private QueryInfoOrderFactory<RootEntity> orderFactory = new DefaultQueryInfoOrderFactory<>();
 	private QueryInfoPredicateFactory<RootEntity> predicateFactory = new DefaultQueryInfoPredicateFactory<>();
 	private Boolean useDistinctSelections = false;
@@ -81,11 +81,11 @@ public abstract class AbstractQueryInfoBeanContext<RootEntity, CriteriaQueryResu
 	}
 
 	@Override
-	public QueryInfoJPAContextFactory<RootEntity> getJpaContextFactory() {
+	public QueryInfoJPAContextFactory getJpaContextFactory() {
 		return jpaContextFactory;
 	}
 
-	public void setJpaContextFactory(QueryInfoJPAContextFactory<RootEntity> jpaContextFactory) {
+	public void setJpaContextFactory(QueryInfoJPAContextFactory jpaContextFactory) {
 		this.jpaContextFactory = jpaContextFactory;
 	}
 

@@ -33,6 +33,7 @@ import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestEmployeeEntity;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestEmployeeEntity_;
 import com.evanzeimet.queryinfo.jpa.test.entity.TestQueryInfoEntityContextRegistry;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ConditionBuilderTest {
 
@@ -72,9 +73,10 @@ public class ConditionBuilderTest {
 
 		assertNotNull(actualCondition);
 
-		String actualLeftHandSide = actualCondition.getLeftHandSide();
-		String expectedLeftHandSide = "mappedSuperclassFieldRenamed";
+		JsonNode actualLhsNode = actualCondition.getLeftHandSide();
+		String actualRawLhs = actualLhsNode.asText();
+		String expectedRawLhs = "mappedSuperclassFieldRenamed";
 
-		assertEquals(expectedLeftHandSide, actualLeftHandSide);
+		assertEquals(expectedRawLhs, actualRawLhs);
 	}
 }

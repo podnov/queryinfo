@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.join;
  * #L%
  */
 
-
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

@@ -33,18 +33,36 @@ import org.junit.Test;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoTestUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 public class ConditionGroupBuilderTest {
 
 	private ConditionGroupBuilder builder;
+	private PodamFactoryImpl podam;
 
 	@Before
 	public void setUp() {
 		builder = new ConditionGroupBuilder();
+		podam = new PodamFactoryImpl();
 	}
 
 	@Test
-	public void build() throws IOException,
+	public void build_allFields() throws JsonProcessingException {
+		DefaultConditionGroup givenCondition = podam.manufacturePojo(DefaultConditionGroup.class);
+
+		ConditionGroup actualCondition = builder.builderReferenceInstance(givenCondition)
+				.build();
+
+		String actualJson = QueryInfoTestUtils.createActualJson(actualCondition);
+		String expectedJson = QueryInfoTestUtils.createActualJson(givenCondition);
+
+		assertEquals(expectedJson, actualJson);
+	}
+
+	@Test
+	public void build_fieldValues() throws IOException,
 			QueryInfoException {
 		List<ConditionGroup> givenConditionGroups = new ArrayList<ConditionGroup>();
 

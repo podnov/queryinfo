@@ -22,9 +22,6 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
-
-
 import com.evanzeimet.queryinfo.it.organizations.Organization;
 
 public interface Person {

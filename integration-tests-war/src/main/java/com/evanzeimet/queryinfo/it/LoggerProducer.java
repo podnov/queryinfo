@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it;
  * #L%
  */
 
-
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Bean;

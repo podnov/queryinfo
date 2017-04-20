@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.field;
  * #L%
  */
 
-
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;

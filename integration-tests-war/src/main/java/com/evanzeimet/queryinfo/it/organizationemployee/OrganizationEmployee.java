@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  * #L%
  */
 
-
 public interface OrganizationEmployee {
 
 	String getName();

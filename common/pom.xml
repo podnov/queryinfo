@@ -45,6 +45,11 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>uk.co.jemos.podam</groupId>
+			<artifactId>podam</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.selection;
  * #L%
  */
 
-
 public class SelectionBuilder {
 
 	private Selection builderReferenceInstance = createDefaultInstance();

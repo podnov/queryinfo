@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
 public interface PersonToCompany {
 
 	Long getCompanyId();

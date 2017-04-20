@@ -26,9 +26,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface Condition {
 
-	String getLeftHandSide();
+	JsonNode getLeftHandSide();
 
-	void setLeftHandSide(String leftHandSide);
+	void setLeftHandSide(JsonNode leftHandSide);
+
+	OperandType getLeftHandSideType();
+
+	void setLeftHandSideType(OperandType leftHandSideType);
+
+	String getLeftHandSideTypeConfig();
+
+	void setLeftHandSideTypeConfig(String leftHandSideTypeConfig);
 
 	String getOperator();
 
@@ -37,5 +45,13 @@ public interface Condition {
 	JsonNode getRightHandSide();
 
 	void setRightHandSide(JsonNode rightHandSide);
+
+	OperandType getRightHandSideType();
+
+	void setRightHandSideType(OperandType rightHandSideType);
+
+	String getRightHandSideTypeConfig();
+
+	void setRightHandSideTypeConfig(String rightHandSideTypeConfig);
 
 }

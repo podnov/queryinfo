@@ -22,11 +22,9 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
 import com.evanzeimet.queryinfo.it.organizations.Organization;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;
 import com.evanzeimet.testidmapper.IdProducer;
-
 
 public class PersonToEmployerOrganizationIdProducer
 		implements IdProducer<TestPerson, OrganizationEntity, Organization, Long> {

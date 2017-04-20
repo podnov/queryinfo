@@ -71,7 +71,7 @@ public class QueryInfoJPAAttributePathBuilderTest {
 	@Test
 	public void buildString_clear() {
 		TestQueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
-	
+
 		String actual = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)
 				.root(TestOrganizationEntity.class)
 				.add(TestOrganizationEntity_.employeeEntities)
@@ -82,7 +82,7 @@ public class QueryInfoJPAAttributePathBuilderTest {
 				.add(TestEmployeeEntity_.firstName)
 				.buildString();
 		String expected = "employees.firstName";
-	
+
 		assertEquals(expected, actual);
 	}
 

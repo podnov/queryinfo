@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.sort;
  * #L%
  */
 
-
 public class SortBuilder {
 
 	private Sort builderReferenceInstance = createDefaultInstance();

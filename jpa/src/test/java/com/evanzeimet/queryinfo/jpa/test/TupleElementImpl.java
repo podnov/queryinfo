@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.test;
  * #L%
  */
 
-
 import javax.persistence.TupleElement;
 
 public class TupleElementImpl<X> implements TupleElement<X> {

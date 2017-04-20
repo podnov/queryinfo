@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * #L%
  */
 
-
 import java.util.Iterator;
 
 import com.evanzeimet.queryinfo.pagination.PaginatedResult;

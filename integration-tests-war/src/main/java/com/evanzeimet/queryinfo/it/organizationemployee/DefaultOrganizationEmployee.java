@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  * #L%
  */
 
-
 public class DefaultOrganizationEmployee implements OrganizationEmployee {
 
 	private String employeesFirstName;

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.bean.entity;
  * #L%
  */
 
-
 public class DefaultEntityQueryInfoBeanContext<RootEntity> extends AbstractEntityQueryInfoBeanContext<RootEntity> {
 
 	private Class<RootEntity> rootEntityClass;
