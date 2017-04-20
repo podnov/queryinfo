@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.join;
  * #L%
  */
 
-
 public class QueryInfoJoinInfoBuilder {
 
 	private QueryInfoJoinInfo builderReferenceInstance = new DefaultQueryInfoJoinInfo();

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  * #L%
  */
 
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;

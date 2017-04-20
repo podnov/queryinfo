@@ -187,7 +187,7 @@ public class QueryInfoJPAAttributePathBuilder<R, T> {
 					(Class<H>) attributeHost,
 					(Attribute<? super H, ?>) attribute);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected <H> String getLeafAttributeName(Class<?> attributeHost,
 			Attribute<?, ?> attribute,

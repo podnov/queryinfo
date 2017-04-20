@@ -25,7 +25,6 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
  * #L%
  */
 
-
 public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 
 	private String jpaAttributeName;

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizations.entity;
  * #L%
  */
 
-
 import javax.ejb.Stateless;
 
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;

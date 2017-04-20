@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.feature.iterator;
  * #L%
  */
 
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;

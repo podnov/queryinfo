@@ -26,6 +26,206 @@ Background:
 	| I'm       | Unemployed |                          |
 
 
+
+Scenario: exists query, with subquery name, chained not exists query, people that work for an employer that does not have an employee named Pete Mitchell
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"directive": "EXISTS",
+			"directiveConfig": {
+				"subqueryRootAttributePath": "employer",
+				"subqueryName": "allEmployers"
+			},
+			"conditionGroups": [
+				{
+					"directive": "NOT_EXISTS",
+					"directiveConfig": {
+						"subqueryRootAttributePath": "employees"
+					},
+					"conditions": [
+						{
+							"leftHandSide": "firstName",
+							"operator": "=",
+							"rightHandSide": "Pete"
+						},
+						{
+							"leftHandSide": "lastName",
+							"operator": "=",
+							"rightHandSide": "Mitchell"
+						},
+						{
+							"leftHandSide": "employerOrganizationId",
+							"operator": "=",
+							"rightHandSide": "id",
+							"rightHandSideType": "ATTRIBUTE_PATH",
+							"rightHandSideTypeConfig": "allEmployers"
+						}
+					]
+				}
+			],
+			"conditions": [
+				{
+					"leftHandSide": "id",
+					"operator": "=",
+					"rightHandSide": "employer.id",
+					"rightHandSideType": "ATTRIBUTE_PATH",
+					"rightHandSideTypeConfig": "root"
+				}
+			]
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Evan      | Zeimet     |
+	| Larry     | Page       |
+	| Judith    | Faulkner   |
+	| Jeff      | Bezos      |
+	| Mark      | Zuckerberg |
+
+
+Scenario: Exists query, with subquery name, chained exists query, people that aren't named Pete Mitchell that work for an employer that has an employee named Pete Mitchell
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditionGroups": [
+				{
+					"directive": "EXISTS",
+					"directiveConfig": {
+						"subqueryRootAttributePath": "employer",
+						"subqueryName": "allEmployers"
+					},
+					"conditionGroups": [
+						{
+							"directive": "EXISTS",
+							"directiveConfig": {
+								"subqueryRootAttributePath": "employees"
+							},
+							"conditions": [
+								{
+									"leftHandSide": "firstName",
+									"operator": "=",
+									"rightHandSide": "Pete"
+								},
+								{
+									"leftHandSide": "lastName",
+									"operator": "=",
+									"rightHandSide": "Mitchell"
+								},
+								{
+									"leftHandSide": "employerOrganizationId",
+									"operator": "=",
+									"rightHandSide": "id",
+									"rightHandSideType": "ATTRIBUTE_PATH",
+									"rightHandSideTypeConfig": "allEmployers"
+								}
+							]
+						}
+					],
+					"conditions": [
+						{
+							"leftHandSide": "id",
+							"operator": "=",
+							"rightHandSide": "employer.id",
+							"rightHandSideType": "ATTRIBUTE_PATH",
+							"rightHandSideTypeConfig": "root"
+						}
+					]
+				},
+				{
+					"conditions": [
+						{
+							"leftHandSide": "firstName",
+							"operator": "<>",
+							"rightHandSide": "Pete"
+						},
+						{
+							"leftHandSide": "lastName",
+							"operator": "<>",
+							"rightHandSide": "Mitchell"
+						}
+					],
+					"operator": "and"
+				}
+			]
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Nick      | Bradshaw   |
+	| Tom       | Kazanski   |
+	| Mike      | Metcalf    |
+
+
+Scenario: Exists query, no subquery name, people that aren't named Pete Mitchell that work for an employer that has an employee named Pete Mitchell
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditionGroups": [
+				{
+					"directive": "EXISTS",
+					"directiveConfig": {
+						"subqueryRootAttributePath": "employer"
+					},
+					"conditions": [
+						{
+							"leftHandSide": "employees.firstName",
+							"operator": "=",
+							"rightHandSide": "Pete"
+						},
+						{
+							"leftHandSide": "employees.lastName",
+							"operator": "=",
+							"rightHandSide": "Mitchell"
+						},
+						{
+							"leftHandSide": "id",
+							"operator": "=",
+							"rightHandSide": "employer.id",
+							"rightHandSideType": "ATTRIBUTE_PATH",
+							"rightHandSideTypeConfig": "root"
+						}
+					]
+				},
+				{
+					"conditions": [
+						{
+							"leftHandSide": "firstName",
+							"operator": "<>",
+							"rightHandSide": "Pete"
+						},
+						{
+							"leftHandSide": "lastName",
+							"operator": "<>",
+							"rightHandSide": "Mitchell"
+						}
+					],
+					"operator": "and"
+				}
+			]
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| Nick      | Bradshaw   |
+	| Tom       | Kazanski   |
+	| Mike      | Metcalf    |
+
+
 Scenario: First Page
 
 	Given the generic query info web service for the "organizationEntity"

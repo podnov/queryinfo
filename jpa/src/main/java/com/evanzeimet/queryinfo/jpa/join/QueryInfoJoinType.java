@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.join;
  * #L%
  */
 
-
 import javax.persistence.criteria.JoinType;
 
 public enum QueryInfoJoinType {

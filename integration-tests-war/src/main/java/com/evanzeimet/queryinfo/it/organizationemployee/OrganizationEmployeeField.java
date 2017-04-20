@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  * #L%
  */
 
-
 public enum OrganizationEmployeeField {
 
 	EMPLOYEE_FIRST_NAME,

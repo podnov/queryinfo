@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -53,6 +52,27 @@ public class QueryInfoUtilsTest {
 		utils = new QueryInfoUtils();
 
 		utils.setDefaultPageSize(defaultPageSize);
+	}
+
+	@Test
+	public void coalesce_notNull() {
+		String givenValue = "given";
+
+		String actual = utils.coalesce(givenValue, "default");
+		String expected = givenValue;
+
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void coalesce_null() {
+		String givenValue = null;
+		String givenDefault = "default";
+
+		String actual = utils.coalesce(givenValue, givenDefault);
+		String expected = givenDefault;
+
+		assertEquals(expected, actual);
 	}
 
 	@Test

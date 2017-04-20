@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.selection;
  * #L%
  */
 
-
 public interface Selection {
 
 	AggregateFunction getAggregateFunction();

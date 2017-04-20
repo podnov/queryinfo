@@ -131,7 +131,7 @@ public class QueryInfoAttributeUtilsTest {
 
 		QueryInfoEntityContextRegistry entityContextRegistry = TestQueryInfoEntityContextRegistry.create();
 
-		QueryInfoJPAContext<TestOrganizationEntity> jpaContext = new QueryInfoJPAContext<>();
+		QueryInfoJPAContext<TestOrganizationEntity, ?> jpaContext = new QueryInfoJPAContext<>();
 		jpaContext.setRoot(organizationRoot);
 
 		{

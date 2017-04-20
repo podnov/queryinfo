@@ -22,11 +22,9 @@ package com.evanzeimet.queryinfo.it.cucumber;
  * #L%
  */
 
-
 import java.math.BigDecimal;
 import cucumber.deps.com.thoughtworks.xstream.converters.UnmarshallingContext;
 import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamReader;
-
 
 public class BigDecimalConverter extends AbstractDecimalFormatConverter {
 

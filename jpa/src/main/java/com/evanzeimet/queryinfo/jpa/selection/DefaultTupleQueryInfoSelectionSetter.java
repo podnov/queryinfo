@@ -23,6 +23,8 @@ package com.evanzeimet.queryinfo.jpa.selection;
  */
 
 import java.util.List;
+
+import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Selection;
 
@@ -33,7 +35,7 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
 public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
-		implements QueryInfoSelectionSetter<RootEntity> {
+		implements QueryInfoSelectionSetter<RootEntity, Tuple> {
 
 	protected QueryInfoUtils utils = new QueryInfoUtils();
 	protected QueryInfoSelectionUtils selectionUtils = new QueryInfoSelectionUtils();
@@ -43,22 +45,22 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 	}
 
 	protected void setAllFieldSelections(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext) throws QueryInfoException {
+			QueryInfoJPAContext<RootEntity, CriteriaQuery<Tuple>> jpaContext) throws QueryInfoException {
 		List<com.evanzeimet.queryinfo.selection.Selection> selections = selectionUtils.createAllFieldQueryInfoSelections(entityContextRegistry, jpaContext);
 		setExplicitSelections(entityContextRegistry, jpaContext, selections);
 	}
 
 	protected void setExplicitSelections(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, CriteriaQuery<Tuple>> jpaContext,
 			List<com.evanzeimet.queryinfo.selection.Selection> selections) throws QueryInfoException {
 		List<Selection<?>> jpaSelections = selectionUtils.createJpaSelections(entityContextRegistry, jpaContext, selections);
 
-		CriteriaQuery<?> criteriaQuery = jpaContext.getCriteriaQuery();
+		CriteriaQuery<Tuple> criteriaQuery = jpaContext.getCriteriaQuery();
 		criteriaQuery.multiselect(jpaSelections);
 	}
 
 	protected void setExplicitSelections(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, CriteriaQuery<Tuple>> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		List<com.evanzeimet.queryinfo.selection.Selection> selections = utils.coalesceSelections(queryInfo);
 		setExplicitSelections(entityContextRegistry, jpaContext, selections);
@@ -66,7 +68,7 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 
 	@Override
 	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
+			QueryInfoJPAContext<RootEntity, CriteriaQuery<Tuple>> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		boolean hasRequestedAllFields = utils.hasRequestedAllFields(queryInfo);
 
@@ -76,4 +78,5 @@ public class DefaultTupleQueryInfoSelectionSetter<RootEntity>
 			setExplicitSelections(entityContextRegistry, jpaContext, queryInfo);
 		}
 	}
+
 }

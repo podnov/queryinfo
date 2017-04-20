@@ -24,7 +24,6 @@ import javax.ejb.Stateless;
  * #L%
  */
 
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import com.evanzeimet.queryinfo.it.QueryInfoTest;

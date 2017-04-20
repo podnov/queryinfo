@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.generic;
  * #L%
  */
 
-
 import java.util.List;
 
 import javax.ejb.Stateless;

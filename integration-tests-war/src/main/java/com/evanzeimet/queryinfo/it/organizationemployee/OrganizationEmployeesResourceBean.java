@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
  * #L%
  */
 
-
 import java.util.List;
 
 import javax.ejb.Stateless;

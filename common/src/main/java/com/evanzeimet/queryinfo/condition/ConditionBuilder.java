@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.condition;
  * #L%
  */
 
-
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -40,8 +39,12 @@ public class ConditionBuilder {
 		Condition result = createDefaultInstance();
 
 		result.setLeftHandSide(builderReferenceInstance.getLeftHandSide());
+		result.setLeftHandSideType(builderReferenceInstance.getLeftHandSideType());
+		result.setLeftHandSideTypeConfig(builderReferenceInstance.getLeftHandSideTypeConfig());
 		result.setOperator(builderReferenceInstance.getOperator());
 		result.setRightHandSide(builderReferenceInstance.getRightHandSide());
+		result.setRightHandSideType(builderReferenceInstance.getRightHandSideType());
+		result.setRightHandSideTypeConfig(builderReferenceInstance.getRightHandSideTypeConfig());
 
 		return result;
 	}
@@ -49,6 +52,21 @@ public class ConditionBuilder {
 	public ConditionBuilder builderReferenceInstance(Condition builderReferenceInstance) {
 		this.builderReferenceInstance = builderReferenceInstance;
 		return this;
+	}
+
+	protected JsonNode convertObjectToJsonNode(Object rightHandSide) {
+		boolean needsConversion = (rightHandSide != null);
+		needsConversion = (needsConversion && !(rightHandSide instanceof JsonNode));
+
+		JsonNode jsonNode;
+
+		if (needsConversion) {
+			jsonNode = utils.treeify(rightHandSide);
+		} else {
+			jsonNode = ((JsonNode) rightHandSide);
+		}
+
+		return jsonNode;
 	}
 
 	public static ConditionBuilder create() {
@@ -59,8 +77,23 @@ public class ConditionBuilder {
 		return new DefaultCondition();
 	}
 
-	public ConditionBuilder leftHandSide(String leftHandSide) {
+	public ConditionBuilder leftHandSide(Object leftHandSide) {
+		JsonNode jsonNode = convertObjectToJsonNode(leftHandSide);
+		return leftHandSide(jsonNode);
+	}
+
+	public ConditionBuilder leftHandSide(JsonNode leftHandSide) {
 		builderReferenceInstance.setLeftHandSide(leftHandSide);
+		return this;
+	}
+
+	public ConditionBuilder leftHandSideType(OperandType leftHandSideType) {
+		builderReferenceInstance.setLeftHandSideType(leftHandSideType);
+		return this;
+	}
+
+	public ConditionBuilder leftHandSideTypeConfig(String leftHandSideTypeConfig) {
+		builderReferenceInstance.setLeftHandSideTypeConfig(leftHandSideTypeConfig);
 		return this;
 	}
 
@@ -75,17 +108,7 @@ public class ConditionBuilder {
 	}
 
 	public ConditionBuilder rightHandSide(Object rightHandSide) {
-		boolean needsConversion = (rightHandSide != null);
-		needsConversion = (needsConversion && !(rightHandSide instanceof JsonNode));
-
-		JsonNode jsonNode;
-
-		if (needsConversion) {
-			jsonNode = utils.treeify(rightHandSide);
-		} else {
-			jsonNode = ((JsonNode) rightHandSide);
-		}
-
+		JsonNode jsonNode = convertObjectToJsonNode(rightHandSide);
 		return rightHandSide(jsonNode);
 	}
 
@@ -93,4 +116,15 @@ public class ConditionBuilder {
 		builderReferenceInstance.setRightHandSide(rightHandSide);
 		return this;
 	}
+
+	public ConditionBuilder rightHandSideType(OperandType rightHandSideType) {
+		builderReferenceInstance.setRightHandSideType(rightHandSideType);
+		return this;
+	}
+
+	public ConditionBuilder rightHandSideTypeConfig(String rightHandSideTypeConfig) {
+		builderReferenceInstance.setRightHandSideTypeConfig(rightHandSideTypeConfig);
+		return this;
+	}
+
 }

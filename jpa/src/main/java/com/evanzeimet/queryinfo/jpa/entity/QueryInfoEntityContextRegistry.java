@@ -33,7 +33,7 @@ public interface QueryInfoEntityContextRegistry {
 
 	<Entity> QueryInfoEntityContext<Entity> getContext(Class<Entity> entityClass);
 
-	<Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity> jpaContext);
+	<Entity> QueryInfoEntityContext<Entity> getContextForRoot(QueryInfoJPAContext<Entity, ?> jpaContext);
 
 	List<QueryInfoEntityContext<?>> getContexts();
 

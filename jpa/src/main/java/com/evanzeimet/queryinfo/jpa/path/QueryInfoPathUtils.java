@@ -22,9 +22,10 @@ package com.evanzeimet.queryinfo.jpa.path;
  * #L%
  */
 
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
+import javax.persistence.metamodel.Bindable;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
@@ -32,7 +33,7 @@ import com.evanzeimet.queryinfo.selection.AggregateFunction;
 
 public class QueryInfoPathUtils {
 
-	public Expression<?> applyAggregate(QueryInfoJPAContext<?> jpaContext,
+	public Expression<?> applyAggregate(QueryInfoJPAContext<?, ?> jpaContext,
 			Expression<?> expression,
 			AggregateFunction aggregateFunction) throws QueryInfoException {
 		Expression<?> result = null;
@@ -71,4 +72,17 @@ public class QueryInfoPathUtils {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T> Class<T> getBindableJavaType(Path<T> path) {
+		Class<T> result;
+		Bindable<T> model = path.getModel();
+
+		if (model == null) {
+			result = ((Class<T>) path.getJavaType());
+		} else {
+			result = model.getBindableJavaType();
+		}
+
+		return result;
+	}
 }

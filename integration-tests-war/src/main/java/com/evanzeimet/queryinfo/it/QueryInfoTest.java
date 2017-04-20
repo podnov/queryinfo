@@ -25,7 +25,6 @@ import java.lang.annotation.RetentionPolicy;
  * #L%
  */
 
-
 @Retention(RetentionPolicy.RUNTIME)
 public @interface QueryInfoTest {
 

@@ -24,13 +24,11 @@ import com.evanzeimet.queryinfo.it.feature.DataTableUtils;
  * #L%
  */
 
-
 import cucumber.deps.com.thoughtworks.xstream.converters.Converter;
 import cucumber.deps.com.thoughtworks.xstream.converters.MarshallingContext;
 import cucumber.deps.com.thoughtworks.xstream.converters.UnmarshallingContext;
 import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
 
 public class BooleanConverter implements Converter {
 

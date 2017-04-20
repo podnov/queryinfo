@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.cucumber;
  * #L%
  */
 
-
 import java.text.DecimalFormat;
 
 import com.evanzeimet.queryinfo.it.feature.DataTableUtils;
@@ -32,7 +31,6 @@ import cucumber.deps.com.thoughtworks.xstream.converters.MarshallingContext;
 import cucumber.deps.com.thoughtworks.xstream.converters.UnmarshallingContext;
 import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-
 
 public abstract class AbstractDecimalFormatConverter implements Converter {
 

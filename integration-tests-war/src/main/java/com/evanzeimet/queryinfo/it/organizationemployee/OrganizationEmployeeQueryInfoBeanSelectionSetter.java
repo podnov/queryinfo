@@ -25,6 +25,9 @@ package com.evanzeimet.queryinfo.it.organizationemployee;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaQuery;
+
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
@@ -41,13 +44,13 @@ import com.evanzeimet.queryinfo.selection.Selection;
 
 public class OrganizationEmployeeQueryInfoBeanSelectionSetter
 		extends DefaultTupleQueryInfoSelectionSetter<OrganizationEntity>
-		implements QueryInfoSelectionSetter<OrganizationEntity> {
+		implements QueryInfoSelectionSetter<OrganizationEntity, Tuple> {
 
 	protected QueryInfoUtils utils = new QueryInfoUtils();
 
 	@Override
 	public void setSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<OrganizationEntity> jpaContext,
+			QueryInfoJPAContext<OrganizationEntity, CriteriaQuery<Tuple>> jpaContext,
 			QueryInfo queryInfo) throws QueryInfoException {
 		boolean hasRequestedAllFields = utils.hasRequestedAllFields(queryInfo);
 
@@ -59,7 +62,7 @@ public class OrganizationEmployeeQueryInfoBeanSelectionSetter
 	}
 
 	protected void setRequestedAllFieldsSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<OrganizationEntity> jpaContext) throws QueryInfoException {
+			QueryInfoJPAContext<OrganizationEntity, CriteriaQuery<Tuple>> jpaContext) throws QueryInfoException {
 		List<Selection> selections = new ArrayList<>();
 
 		QueryInfoJPAAttributePathBuilder<OrganizationEntity, OrganizationEntity> attributePathBuilder = QueryInfoJPAAttributePathBuilder.create(entityContextRegistry)

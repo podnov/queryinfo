@@ -24,15 +24,17 @@ package com.evanzeimet.queryinfo.jpa.predicate;
 
 import javax.persistence.criteria.Predicate;
 
-import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
+import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContexts;
 
 public interface QueryInfoPredicateFactory<RootEntity> {
 
 	Predicate[] createPredicates(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<RootEntity> jpaContext,
-			QueryInfo queryInfo) throws QueryInfoException;
+			QueryInfoJPAContexts<?, ?> jpaContexts,
+			QueryInfoJPAContext<RootEntity, ?> currentJpaContext,
+			ConditionGroup conditionGroup) throws QueryInfoException;
 
 }

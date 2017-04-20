@@ -28,6 +28,7 @@ import javax.persistence.metamodel.Attribute;
 
 import com.evanzeimet.queryinfo.condition.Condition;
 import com.evanzeimet.queryinfo.condition.ConditionOperator;
+import com.evanzeimet.queryinfo.condition.OperandType;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeUtils;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -75,8 +76,26 @@ public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.Conditi
 	}
 
 	@Override
-	public ConditionBuilder leftHandSide(String leftHandSide) {
+	public ConditionBuilder leftHandSide(Object leftHandSide) {
 		super.leftHandSide(leftHandSide);
+		return this;
+	}
+
+	@Override
+	public ConditionBuilder leftHandSide(JsonNode leftHandSide) {
+		super.leftHandSide(leftHandSide);
+		return this;
+	}
+
+	@Override
+	public ConditionBuilder leftHandSideType(OperandType leftHandSideType) {
+		super.leftHandSideType(leftHandSideType);
+		return this;
+	}
+
+	@Override
+	public ConditionBuilder leftHandSideTypeConfig(String leftHandSideTypeConfig) {
+		super.leftHandSideTypeConfig(leftHandSideTypeConfig);
 		return this;
 	}
 
@@ -104,6 +123,18 @@ public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.Conditi
 		return this;
 	}
 
+	@Override
+	public ConditionBuilder rightHandSideType(OperandType rightHandSideType) {
+		super.rightHandSideType(rightHandSideType);
+		return this;
+	}
+
+	@Override
+	public ConditionBuilder rightHandSideTypeConfig(String rightHandSideTypeConfig) {
+		super.rightHandSideTypeConfig(rightHandSideTypeConfig);
+		return this;
+	}
+
 	public static class AttributeHostBuilder<T> {
 
 		private final Class<T> attributeHost;
@@ -113,7 +144,7 @@ public class ConditionBuilder extends com.evanzeimet.queryinfo.condition.Conditi
 			this.conditionBuilder = conditionBuilder;
 			this.attributeHost = attributeHost;
 		}
-		
+
 		public ConditionBuilder leftHandSide(Attribute<? super T, ?> leftHandSide) {
 			return conditionBuilder.leftHandSide(attributeHost, leftHandSide);
 		}

@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.attribute;
  * #L%
  */
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -124,7 +123,7 @@ public class DefaultEntityAnnotationsAttributeInfoResolverTest {
 
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	public void createJoinInfo() throws NoSuchMethodException,
 			QueryInfoException {

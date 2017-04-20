@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.result;
  * #L%
  */
 
-
 import static java.lang.invoke.MethodType.methodType;
 
 import java.lang.invoke.MethodHandle;
@@ -116,7 +115,6 @@ public abstract class AbstractTupleToPojoQueryInfoResultConverter<QueryInfoResul
 		Class<QueryInfoResultType> resultClass = getResultClass();
 		return findFieldPutHandle(resultClass, memberName, elementJavaType);
 	}
-
 
 	protected MethodHandle findFieldPutHandle(Class<?> hostClass,
 			String memberName,

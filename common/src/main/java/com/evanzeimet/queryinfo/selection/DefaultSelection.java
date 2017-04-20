@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.selection;
  * #L%
  */
 
-
 public class DefaultSelection implements Selection {
 
 	private AggregateFunction aggregateFunction;

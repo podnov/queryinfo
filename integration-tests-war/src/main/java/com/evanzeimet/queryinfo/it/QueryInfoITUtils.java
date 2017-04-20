@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it;
  * #L%
  */
 
-
 import javax.ws.rs.core.Response;
 
 public class QueryInfoITUtils {

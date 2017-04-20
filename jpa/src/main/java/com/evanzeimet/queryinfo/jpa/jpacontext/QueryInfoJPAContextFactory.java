@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.jpacontext;
 
+import javax.persistence.criteria.AbstractQuery;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -23,14 +25,16 @@ package com.evanzeimet.queryinfo.jpa.jpacontext;
  */
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Subquery;
 
-import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBeanContext;
+public interface QueryInfoJPAContextFactory {
 
-public interface QueryInfoJPAContextFactory<RootEntity> {
+	<RootEntity, QueryType extends AbstractQuery<?>> QueryInfoJPAContext<RootEntity, QueryType> createJpaContext(CriteriaBuilder criteriaBuilder,
+			Class<RootEntity> rootEntityClass,
+			QueryType criteriaQuery);
 
-	<CriteriaQueryResultType> QueryInfoJPAContext<RootEntity> createJpaContext(CriteriaBuilder criteriaBuilder,
-			QueryInfoBeanContext<RootEntity, ?, ?> beanContext,
-			CriteriaQuery<CriteriaQueryResultType> criteriaQuery);
+	<RootEntity> QueryInfoJPAContext<RootEntity, Subquery<RootEntity>> createSubqueryJpaContext(CriteriaBuilder criteriaBuilder, 
+			Class<RootEntity> rootEntityClass, 
+			AbstractQuery<?> enclosingQuery);
 
 }

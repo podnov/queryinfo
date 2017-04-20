@@ -24,7 +24,6 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
  * #L%
  */
 
-
 public interface QueryInfoFieldInfo extends QueryInfoAttributeInfo {
 
 	Boolean getIsOrderable();

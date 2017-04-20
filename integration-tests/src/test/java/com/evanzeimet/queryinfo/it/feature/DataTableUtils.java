@@ -46,7 +46,6 @@ public class DataTableUtils {
 	private static final Integer FAKE_DATA_TABLE_LINE_NUMBER = -1;
 	private static final List<Comment> FAKE_DATA_TABLE_ROW_COMMENTS = Collections.emptyList();
 
-
 	private ObjectMapper objectMapper = new ObjectMapper();
 	private Boolean stringifyNestedJsonObjects = false;
 	private TableConverter tableConverter;

@@ -27,9 +27,6 @@ import com.evanzeimet.queryinfo.it.people.Person;
  * #L%
  */
 
-
-
-
 public interface Organization {
 
 	Boolean getActive();

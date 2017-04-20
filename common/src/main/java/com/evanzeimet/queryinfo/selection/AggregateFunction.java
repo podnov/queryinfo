@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
  * #L%
  */
 
-
 @JsonDeserialize(using = AggregateFunctionDeserializer.class)
 public enum AggregateFunction {
 

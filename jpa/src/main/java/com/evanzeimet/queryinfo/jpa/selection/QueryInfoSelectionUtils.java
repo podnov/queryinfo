@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.selection;
  * #L%
  */
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +48,7 @@ public class QueryInfoSelectionUtils {
 	protected QueryInfoPathUtils pathUtils = new QueryInfoPathUtils();
 
 	public <E> Expression<?> createJpaSelection(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<E> jpaContext,
+			QueryInfoJPAContext<E, ?> jpaContext,
 			QueryInfoPathFactory<E> pathFactory,
 			com.evanzeimet.queryinfo.selection.Selection selection) throws QueryInfoException {
 		Root<E> root = jpaContext.getRoot();
@@ -73,7 +72,7 @@ public class QueryInfoSelectionUtils {
 	}
 
 	public <E> List<Selection<?>> createJpaSelections(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<E> jpaContext,
+			QueryInfoJPAContext<E, ?> jpaContext,
 			List<com.evanzeimet.queryinfo.selection.Selection> selections) throws QueryInfoException {
 		QueryInfoEntityContext<E> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoPathFactory<E> pathFactory = entityContext.getPathFactory();
@@ -90,7 +89,7 @@ public class QueryInfoSelectionUtils {
 	}
 
 	public List<com.evanzeimet.queryinfo.selection.Selection> createAllFieldQueryInfoSelections(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<?> jpaContext) {
+			QueryInfoJPAContext<?, ?> jpaContext) {
 		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContextForRoot(jpaContext);
 		QueryInfoAttributeContext queryInfoAttributeContext = entityContext.getAttributeContext();
 

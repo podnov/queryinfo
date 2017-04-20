@@ -25,6 +25,7 @@ package com.evanzeimet.queryinfo.it.organizations;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
+
 import com.evanzeimet.queryinfo.it.people.Person;
 import com.evanzeimet.queryinfo.it.people.PersonEntity;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoField;
@@ -85,7 +87,8 @@ public class OrganizationEntity extends DefaultOrganization {
 	}
 
 	@JsonIgnore
-	@QueryInfoJoin(name = "employees", joinType = QueryInfoJoinType.LEFT)
+	@QueryInfoJoin(name = "employees",
+			joinType = QueryInfoJoinType.LEFT)
 	@OneToMany(mappedBy = "employerEntity")
 	public List<PersonEntity> getEmployeeEntities() {
 		return employeeEntities;

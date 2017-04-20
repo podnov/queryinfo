@@ -1,7 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.join;
 
-
-
 /*
  * #%L
  * queryinfo-jpa
@@ -23,7 +21,6 @@ package com.evanzeimet.queryinfo.jpa.join;
  * limitations under the License.
  * #L%
  */
-
 
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeType;
 

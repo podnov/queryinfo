@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it;
  * #L%
  */
 
-
 import javax.persistence.EntityManager;
 
 import com.evanzeimet.queryinfo.it.organizations.OrganizationEntity;

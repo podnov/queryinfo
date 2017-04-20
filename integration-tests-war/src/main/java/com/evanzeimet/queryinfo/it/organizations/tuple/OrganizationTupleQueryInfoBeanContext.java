@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizations.tuple;
  * #L%
  */
 
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

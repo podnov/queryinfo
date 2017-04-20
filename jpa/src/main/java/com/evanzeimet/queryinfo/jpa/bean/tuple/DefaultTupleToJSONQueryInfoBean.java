@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.bean.tuple;
  * #L%
  */
 
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DefaultTupleToJSONQueryInfoBean<RootEntity> extends DefaultTupleQueryInfoBean<RootEntity, ObjectNode> {

@@ -44,6 +44,7 @@
 		<version.info.cukes.cucumber-junit>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-junit>
 		<version.javax.javaee-api>7.0</version.javax.javaee-api>
 		<version.junit.junit>4.12</version.junit.junit>
+		<version.mysql.mysql-connector-java>5.1.36</version.mysql.mysql-connector-java>
 		<version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
 		<version.org.apache.maven.plugins.maven-compiler-plugin>3.3</version.org.apache.maven.plugins.maven-compiler-plugin>
 		<version.org.apache.maven.plugins.maven-ear-plugin>2.10.1</version.org.apache.maven.plugins.maven-ear-plugin>
@@ -60,7 +61,7 @@
 		<version.org.mockito.mockito-all>1.9.5</version.org.mockito.mockito-all>
 		<version.org.slf4j.slf4j-api>1.7.21</version.org.slf4j.slf4j-api>
 		<version.org.wildfly.wildfly-parent>9.0.1.Final</version.org.wildfly.wildfly-parent>
-		<version.mysql.mysql-connector-java>5.1.36</version.mysql.mysql-connector-java>
+		<version.uk.co.jemos.podam.podam>7.0.5.RELEASE</version.uk.co.jemos.podam.podam>
 	</properties>
 
 	<dependencyManagement>
@@ -229,6 +230,13 @@
 				<version>${version.org.wildfly.wildfly-parent}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>uk.co.jemos.podam</groupId>
+				<artifactId>podam</artifactId>
+				<version>${version.uk.co.jemos.podam.podam}</version>
+				<scope>test</scope>
 			</dependency>
 
 		</dependencies>

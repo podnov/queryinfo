@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.pagination;
  * #L%
  */
 
-
 public interface PaginationInfo {
 
 	Integer getPageIndex();

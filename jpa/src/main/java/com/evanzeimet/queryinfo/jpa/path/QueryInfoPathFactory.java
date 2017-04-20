@@ -22,8 +22,8 @@ package com.evanzeimet.queryinfo.jpa.path;
  * #L%
  */
 
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
@@ -34,10 +34,11 @@ public interface QueryInfoPathFactory<RootEntity> {
 
 	Class<RootEntity> getEntityClass();
 
-	<T> Expression<T> getPathForAttribute(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<?> jpaContext,
+	<T> Path<T> getPathForAttribute(QueryInfoEntityContextRegistry entityContextRegistry,
+			QueryInfoJPAContext<?, ?> jpaContext,
 			From<?, RootEntity> from,
 			String attributePath,
-			QueryInfoAttributePurpose purpose) throws QueryInfoException;
+			QueryInfoAttributePurpose purpose)
+			throws QueryInfoException;
 
 }

@@ -34,7 +34,16 @@ public interface ConditionGroup {
 
 	void setConditions(List<Condition> conditions);
 
+	String getDirective();
+
+	void setDirective(String directive);
+
+	String getDirectiveConfig();
+
+	void setDirectiveConfig(String directiveConfig);
+
 	String getOperator();
 
 	void setOperator(String operator);
+
 }

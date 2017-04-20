@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.iterator;
  * #L%
  */
 
-
 public enum PaginatedResultIteratorDirection {
 
 	ASCENDING,

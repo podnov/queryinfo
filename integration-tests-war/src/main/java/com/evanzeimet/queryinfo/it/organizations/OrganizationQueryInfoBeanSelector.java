@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.organizations;
  * #L%
  */
 
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.inject.Inject;

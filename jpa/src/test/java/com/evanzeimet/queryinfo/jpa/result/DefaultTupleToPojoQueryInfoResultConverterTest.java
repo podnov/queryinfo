@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.result;
  * #L%
  */
 
-
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;

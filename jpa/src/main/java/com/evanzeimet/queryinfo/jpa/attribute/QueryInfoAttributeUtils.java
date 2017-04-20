@@ -264,7 +264,7 @@ public class QueryInfoAttributeUtils {
 	}
 
 	public <Z, X> Join<Z, X> getJoinForAttributePath(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<?> jpaContext,
+			QueryInfoJPAContext<?, ?> jpaContext,
 			List<String> jpaAttributeNames) {
 		Join<Z, X> result = null;
 		From<?, ?> currentJoinParent = jpaContext.getRoot();

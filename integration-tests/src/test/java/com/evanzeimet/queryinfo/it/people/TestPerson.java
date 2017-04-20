@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
 import com.evanzeimet.queryinfo.it.people.DefaultPerson;
 
 public class TestPerson extends DefaultPerson {

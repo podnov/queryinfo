@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.people;
  * #L%
  */
 
-
 public class TestPersonToCompany {
 
 	private String company;

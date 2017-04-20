@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.it.people.entity;
  * #L%
  */
 
-
 import javax.ejb.Stateless;
 
 import com.evanzeimet.queryinfo.it.people.PersonEntity;

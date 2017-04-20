@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.result;
  * #L%
  */
 
-
 import java.util.List;
 
 public class DefaultEntityQueryInfoResultConverter<RootEntity>

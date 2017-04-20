@@ -22,7 +22,6 @@ package com.evanzeimet.queryinfo.jpa.test;
  * #L%
  */
 
-
 import java.util.List;
 
 import javax.persistence.Tuple;

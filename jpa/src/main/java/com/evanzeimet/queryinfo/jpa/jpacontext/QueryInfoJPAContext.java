@@ -1,6 +1,5 @@
 package com.evanzeimet.queryinfo.jpa.jpacontext;
 
-
 /*
  * #%L
  * queryinfo-jpa
@@ -26,8 +25,8 @@ package com.evanzeimet.queryinfo.jpa.jpacontext;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
@@ -36,10 +35,11 @@ import javax.persistence.criteria.Root;
 import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 
-public class QueryInfoJPAContext<RootEntity> {
+public class QueryInfoJPAContext<RootEntity, QueryType extends AbstractQuery<?>> {
 
 	protected CriteriaBuilder criteriaBuilder;
-	protected CriteriaQuery<?> criteriaQuery;
+	protected QueryType criteriaQuery;
+	protected QueryInfoJPAContextFactory factory;
 	protected Map<QueryInfoJoinKey, Join<?, ?>> joins = new HashMap<>();
 	protected Root<RootEntity> root;
 
@@ -55,13 +55,20 @@ public class QueryInfoJPAContext<RootEntity> {
 		this.criteriaBuilder = criteriaBuilder;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> CriteriaQuery<T> getCriteriaQuery() {
-		return (CriteriaQuery<T>) criteriaQuery;
+	public QueryType getCriteriaQuery() {
+		return criteriaQuery;
 	}
 
-	public void setCriteriaQuery(CriteriaQuery<?> criteriaQuery) {
+	public void setCriteriaQuery(QueryType criteriaQuery) {
 		this.criteriaQuery = criteriaQuery;
+	}
+
+	public QueryInfoJPAContextFactory getFactory() {
+		return factory;
+	}
+
+	public void setFactory(QueryInfoJPAContextFactory factory) {
+		this.factory = factory;
 	}
 
 	public Root<RootEntity> getRoot() {
