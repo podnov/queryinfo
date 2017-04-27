@@ -33,6 +33,7 @@ public class QueryInfoJoinInfoBuilder {
 	public QueryInfoJoinInfo build() {
 		QueryInfoJoinInfo result = new DefaultQueryInfoJoinInfo();
 
+		result.setEntityClass(builderReferenceInstance.getEntityClass());
 		result.setJpaAttributeName(builderReferenceInstance.getJpaAttributeName());
 		result.setJoinType(builderReferenceInstance.getJoinType());
 		result.setName(builderReferenceInstance.getName());
@@ -41,14 +42,27 @@ public class QueryInfoJoinInfoBuilder {
 	}
 
 	public QueryInfoJoinInfoBuilder annotation(QueryInfoJoin annotation) {
-		QueryInfoJoinType joinType = annotation.joinType();
 		String name = annotation.name();
+
+		Class<?> entityClass = annotation.entityClass();
+		if (QueryInfoJoin.class.equals(entityClass)) {
+			entityClass = null;
+		}
+
+		QueryInfoJoinType joinType = annotation.joinType();
+
 		return joinType(joinType)
+				.entityClass(entityClass)
 				.name(name);
 	}
 
 	public static QueryInfoJoinInfoBuilder create() {
 		return new QueryInfoJoinInfoBuilder();
+	}
+
+	public QueryInfoJoinInfoBuilder entityClass(Class<?> entityClass) {
+		builderReferenceInstance.setEntityClass(entityClass);
+		return this;
 	}
 
 	public QueryInfoJoinInfoBuilder jpaAttributeName(String jpaAttributeName) {

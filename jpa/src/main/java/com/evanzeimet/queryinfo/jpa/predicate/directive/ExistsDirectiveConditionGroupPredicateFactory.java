@@ -23,7 +23,6 @@ package com.evanzeimet.queryinfo.jpa.predicate.directive;
  */
 
 import static com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose.PREDICATE;
-import static com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose.SUBQUERY_ROOT;
 
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -37,6 +36,8 @@ import com.evanzeimet.queryinfo.QueryInfoException;
 import com.evanzeimet.queryinfo.QueryInfoUtils;
 import com.evanzeimet.queryinfo.condition.ConditionGroup;
 import com.evanzeimet.queryinfo.condition.ConditionGroupBuilder;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeContext;
+import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeInfo;
 import com.evanzeimet.queryinfo.jpa.condition.directive.ExistsConditionGroupDirectiveConfig;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContext;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
@@ -52,12 +53,12 @@ import com.evanzeimet.queryinfo.jpa.predicate.DefaultQueryInfoPredicateFactory;
  */
 public class ExistsDirectiveConditionGroupPredicateFactory<RootEntity> {
 
-	private QueryInfoUtils queryInfoUtils;
 	private QueryInfoPathUtils queryInfoPathUtils;
+	private QueryInfoUtils queryInfoUtils;
 
 	public ExistsDirectiveConditionGroupPredicateFactory() {
-		queryInfoUtils = new QueryInfoUtils();
 		queryInfoPathUtils = new QueryInfoPathUtils();
+		queryInfoUtils = new QueryInfoUtils();
 	}
 
 	protected <SubqueryRoot> QueryInfoJPAContext<SubqueryRoot, Subquery<SubqueryRoot>> createJpaContextForSubquery(QueryInfoEntityContextRegistry entityContextRegistry,
@@ -156,20 +157,38 @@ public class ExistsDirectiveConditionGroupPredicateFactory<RootEntity> {
 		return queryInfoUtils.objectify(rawDirectiveConfig, ExistsConditionGroupDirectiveConfig.class);
 	}
 
-	protected <SubqueryRoot> Class<SubqueryRoot> getSubqueryRootEntityClass(
-			QueryInfoEntityContextRegistry entityContextRegistry,
+	@SuppressWarnings("unchecked")
+	protected <SubqueryRoot> Class<SubqueryRoot> getSubqueryRootEntityClass(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<RootEntity, ?> enclosingQueryJpaContext,
 			String subqueryRootAttributePath) throws QueryInfoException {
 		Root<RootEntity> enclosingQueryRoot = enclosingQueryJpaContext.getRoot();
-		QueryInfoEntityContext<RootEntity> enclosingQueryRootEntityContext = entityContextRegistry.getContextForRoot(enclosingQueryJpaContext);
-		QueryInfoPathFactory<RootEntity> enclosingQueryRootEntityPathFactory = enclosingQueryRootEntityContext.getPathFactory();
+		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(enclosingQueryRoot);
+		QueryInfoAttributeContext enclosingQueryRootAttributeContext = entityContext.getAttributeContext();
 
-		Path<SubqueryRoot> path = enclosingQueryRootEntityPathFactory.getPathForAttribute(entityContextRegistry,
-				enclosingQueryJpaContext,
-				enclosingQueryRoot,
-				subqueryRootAttributePath,
-				SUBQUERY_ROOT);
+		QueryInfoAttributeInfo attributeInfo = enclosingQueryRootAttributeContext.getField(subqueryRootAttributePath);
 
-		return queryInfoPathUtils.getBindableJavaType(path);
+		if (attributeInfo == null) {
+			attributeInfo = enclosingQueryRootAttributeContext.getJoin(subqueryRootAttributePath);
+		}
+
+		if (attributeInfo == null) {
+			Class<? extends RootEntity> enclosingQueryRootJavaType = enclosingQueryRoot.getJavaType();
+			String enclosingQueryRootClassName = enclosingQueryRootJavaType.getName();
+			String message = String.format("Unable to find query info attribute with name [%s] on [%s]",
+					subqueryRootAttributePath,
+					enclosingQueryRootClassName);
+			throw new QueryInfoException(message);
+		}
+
+		Class<?> result = attributeInfo.getEntityClass();
+
+		if (result == null) {
+			String subqueryRootJpaAttributeName = attributeInfo.getJpaAttributeName();
+			Path<?> subqueryRootPath = enclosingQueryRoot.get(subqueryRootJpaAttributeName);
+
+			result = queryInfoPathUtils.getBindableJavaType(subqueryRootPath);
+		}
+
+		return (Class<SubqueryRoot>) result;
 	}
 }

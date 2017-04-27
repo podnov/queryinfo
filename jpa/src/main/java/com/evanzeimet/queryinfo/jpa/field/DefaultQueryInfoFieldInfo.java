@@ -27,6 +27,7 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 
 public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 
+	private Class<?> entityClass;
 	private String jpaAttributeName;
 	private Boolean isOrderable;
 	private Boolean isPredicateable;
@@ -41,6 +42,16 @@ public class DefaultQueryInfoFieldInfo implements QueryInfoFieldInfo {
 	@Override
 	public QueryInfoAttributeType getAttributeType() {
 		return QueryInfoAttributeType.FIELD;
+	}
+
+	@Override
+	public Class<?> getEntityClass() {
+		return entityClass;
+	}
+
+	@Override
+	public void setEntityClass(Class<?> entityClass) {
+		this.entityClass = entityClass;
 	}
 
 	@Override

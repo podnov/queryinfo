@@ -88,7 +88,8 @@ public class OrganizationEntity extends DefaultOrganization {
 
 	@JsonIgnore
 	@QueryInfoJoin(name = "employees",
-			joinType = QueryInfoJoinType.LEFT)
+			joinType = QueryInfoJoinType.LEFT,
+			entityClass = PersonEntity.class)
 	@OneToMany(mappedBy = "employerEntity")
 	public List<PersonEntity> getEmployeeEntities() {
 		return employeeEntities;
