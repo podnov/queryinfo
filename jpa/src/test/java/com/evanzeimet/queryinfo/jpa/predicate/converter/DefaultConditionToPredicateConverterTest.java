@@ -35,6 +35,7 @@ import static org.mockito.Mockito.spy;
 import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 
 import org.junit.Before;
@@ -49,6 +50,8 @@ import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContexts;
 import com.evanzeimet.queryinfo.jpa.path.QueryInfoPathFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.NullNode;
 
 public class DefaultConditionToPredicateConverterTest {
 
@@ -142,6 +145,30 @@ public class DefaultConditionToPredicateConverterTest {
 				givenCondition);
 
 		assertNull(actual);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void createLiteralExpression_null() throws QueryInfoException {
+		QueryInfoJPAContext<Object, ?> givenCurrentJpaContext = mock(QueryInfoJPAContext.class);
+
+		CriteriaBuilder givenCriteriaBuilder = mock(CriteriaBuilder.class);
+		doReturn(givenCriteriaBuilder).when(givenCurrentJpaContext).getCriteriaBuilder();
+
+		Expression<?> givenNullLiteralExpression = mock(Expression.class);
+		doReturn(givenNullLiteralExpression).when(givenCriteriaBuilder).nullLiteral(any(Class.class));
+
+		JsonNode givenJsonNode = NullNode.instance;
+		ConditionOperator givenConditionOperator = ConditionOperator.IS_NULL;
+		Expression<?> givenLiteralReferenceAttributePath = null;
+
+		Expression<?> actual = converter.createLiteralExpression(givenCurrentJpaContext,
+				givenJsonNode,
+				givenConditionOperator,
+				givenLiteralReferenceAttributePath);
+		Expression<?> expected = givenNullLiteralExpression;
+
+		assertEquals(expected, actual);
 	}
 
 	@Test
