@@ -26,6 +26,28 @@ Background:
 	| I'm       | Unemployed |                          |
 
 
+Scenario: is null condition
+
+	Given the people query info web service
+	When I send the query:
+	"""
+	{
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "employerOrganizationId",
+					"operator": "is null",
+					"rightHandSide": null
+				}
+			]
+		}
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive these people:
+	| firstName | lastName   |
+	| I'm       | Unemployed |
+
 
 Scenario: exists query, with subquery name, chained not exists query, people that work for an employer that does not have an employee named Pete Mitchell
 

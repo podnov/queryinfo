@@ -53,11 +53,7 @@ public class DefaultConditionToPredicateConverter<RootEntity>
 
 	private final QueryInfoFieldValueParser fieldValueParser = new QueryInfoFieldValueParser();
 	private final QueryInfoPredicateUtils predicateUtils = new QueryInfoPredicateUtils();
-	private final QueryInfoUtils queryInfoUtils;
-
-	public DefaultConditionToPredicateConverter() {
-		queryInfoUtils = new QueryInfoUtils();
-	}
+	private final QueryInfoUtils queryInfoUtils = new QueryInfoUtils();
 
 	@Override
 	public Predicate convert(QueryInfoEntityContextRegistry entityContextRegistry,
@@ -115,9 +111,7 @@ public class DefaultConditionToPredicateConverter<RootEntity>
 		return result;
 	}
 
-	protected Expression<?> createLiteralExpression(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContexts<?, ?> jpaContexts,
-			QueryInfoJPAContext<RootEntity, ?> currentJpaContext,
+	protected Expression<?> createLiteralExpression(QueryInfoJPAContext<RootEntity, ?> currentJpaContext,
 			JsonNode jsonNode,
 			ConditionOperator conditionOperator,
 			Expression<?> literalReferenceAttributePath) throws QueryInfoException {
@@ -132,8 +126,15 @@ public class DefaultConditionToPredicateConverter<RootEntity>
 		}
 
 		CriteriaBuilder criteriaBuilder = currentJpaContext.getCriteriaBuilder();
+		Expression<?> result;
 
-		return criteriaBuilder.literal(literal);
+		if (literal == null) {
+			result = criteriaBuilder.nullLiteral(Object.class);
+		} else {
+			result = criteriaBuilder.literal(literal);
+		}
+
+		return result;
 	}
 
 	protected Expression<?> createLeftHandSideExpression(QueryInfoEntityContextRegistry entityContextRegistry,
@@ -171,9 +172,7 @@ public class DefaultConditionToPredicateConverter<RootEntity>
 			Expression<?> literalReferenceAttributePath) throws QueryInfoException {
 		JsonNode leftHandSide = condition.getLeftHandSide();
 		ConditionOperator conditionOperator = parseConditionOperator(condition);
-		return createLiteralExpression(entityContextRegistry,
-				jpaContexts,
-				currentJpaContext,
+		return createLiteralExpression(currentJpaContext,
 				leftHandSide,
 				conditionOperator,
 				literalReferenceAttributePath);
@@ -214,9 +213,7 @@ public class DefaultConditionToPredicateConverter<RootEntity>
 			Expression<?> literalReferenceAttributePath) throws QueryInfoException {
 		JsonNode rightHandSide = condition.getRightHandSide();
 		ConditionOperator conditionOperator = parseConditionOperator(condition);
-		return createLiteralExpression(entityContextRegistry,
-				jpaContexts,
-				currentJpaContext,
+		return createLiteralExpression(currentJpaContext,
 				rightHandSide,
 				conditionOperator,
 				literalReferenceAttributePath);
