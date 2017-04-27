@@ -34,6 +34,12 @@ import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 @Target(METHOD)
 public @interface QueryInfoField {
 
+	/**
+	 * This is used in specific use-cases when you have a joined entity whose
+	 * class cannot be easily determined at run-time.
+	 */
+	public Class<?> entityClass() default QueryInfoField.class;
+
 	public boolean isOrderable() default true;
 
 	public boolean isPredicateable() default true;

@@ -32,6 +32,12 @@ import java.lang.annotation.Target;
 @Target(METHOD)
 public @interface QueryInfoJoin {
 
+	/**
+	 * This is used in specific use-cases when you have a joined entity whose
+	 * class cannot be easily determined at run-time.
+	 */
+	public Class<?> entityClass() default QueryInfoJoin.class;
+
 	public QueryInfoJoinType joinType() default QueryInfoJoinType.UNSPECIFIED;
 
 	public String name() default "";

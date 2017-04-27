@@ -27,7 +27,6 @@ public enum QueryInfoAttributePurpose {
 	GROUP_BY,
 	ORDER,
 	PREDICATE,
-	SELECT,
-	SUBQUERY_ROOT;
+	SELECT;
 
 }

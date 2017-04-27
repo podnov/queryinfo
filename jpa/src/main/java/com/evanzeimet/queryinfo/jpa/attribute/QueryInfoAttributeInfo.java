@@ -28,13 +28,17 @@ public interface QueryInfoAttributeInfo {
 
 	QueryInfoAttributeType getAttributeType();
 
-	String getJpaAttributeName();
+	Class<?> getEntityClass();
 
-	void setJpaAttributeName(String jpaAttributeName);
+	void setEntityClass(Class<?> entityClass);
 
 	QueryInfoJoinType getJoinType();
 
 	void setJoinType(QueryInfoJoinType joinType);
+
+	String getJpaAttributeName();
+
+	void setJpaAttributeName(String jpaAttributeName);
 
 	String getName();
 

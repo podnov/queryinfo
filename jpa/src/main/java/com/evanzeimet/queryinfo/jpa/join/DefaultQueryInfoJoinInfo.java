@@ -26,6 +26,7 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributeType;
 
 public class DefaultQueryInfoJoinInfo implements QueryInfoJoinInfo {
 
+	private Class<?> entityClass;
 	private String jpaAttributeName;
 	private QueryInfoJoinType joinType;
 	private String name;
@@ -37,6 +38,16 @@ public class DefaultQueryInfoJoinInfo implements QueryInfoJoinInfo {
 	@Override
 	public QueryInfoAttributeType getAttributeType() {
 		return QueryInfoAttributeType.JOIN;
+	}
+
+	@Override
+	public Class<?> getEntityClass() {
+		return entityClass;
+	}
+
+	@Override
+	public void setEntityClass(Class<?> entityClass) {
+		this.entityClass = entityClass;
 	}
 
 	@Override

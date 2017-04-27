@@ -1,5 +1,7 @@
 package com.evanzeimet.queryinfo.jpa.path;
 
+import java.util.Set;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -24,6 +26,7 @@ package com.evanzeimet.queryinfo.jpa.path;
 
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 
 import com.evanzeimet.queryinfo.QueryInfoException;
@@ -55,30 +58,6 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 			From<?, RootEntity> from) {
 		QueryInfoEntityContext<?> entityContext = entityContextRegistry.getContext(from);
 		return entityContext.getAttributeContext();
-	}
-
-	protected <T> Path<T> getAttributePath(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<?, ?> jpaContext,
-			From<?, RootEntity> from,
-			String attributePath,
-			QueryInfoAttributePurpose purpose)
-			throws QueryInfoException {
-		Path<T> result = null;
-
-		switch (purpose) {
-			case GROUP_BY:
-			case ORDER:
-			case PREDICATE:
-			case SELECT:
-				result = getFieldPath(entityContextRegistry, jpaContext, from, attributePath, purpose);
-				break;
-
-			case SUBQUERY_ROOT:
-				result = getSubqueryRootPath(entityContextRegistry, jpaContext, from, attributePath, purpose);
-				break;
-		}
-
-		return result;
 	}
 
 	protected QueryInfoFieldInfo getFieldInfo(QueryInfoEntityContextRegistry entityContextRegistry,
@@ -137,7 +116,8 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		return queryInfoAttributeContext.getJoin(attributePath);
 	}
 
-	protected <T> Path<T> getJoinPath(QueryInfoEntityContextRegistry entityContextRegistry,
+	@SuppressWarnings("unchecked")
+	protected <T> Class<T> getJoinBindableJavaType(QueryInfoEntityContextRegistry entityContextRegistry,
 			QueryInfoJPAContext<?, ?> jpaContext,
 			From<?, RootEntity> from,
 			String attributePath,
@@ -146,21 +126,23 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 				from,
 				attributePath);
 
-		Path<T> result = null;
 		String jpaJoinAttributeName = joinInfo.getJpaAttributeName();
+		QueryInfoJoinType queryInfoJoinType = joinInfo.getJoinType();
 
-		try {
-			result = from.get(jpaJoinAttributeName);
-		} catch (IllegalArgumentException e) {
-			String fromName = from.getModel().getBindableJavaType().getName();
-			String message = String.format("Could not find jpa attribute [%s] for join attribute path [%s] in [%s]",
-					jpaJoinAttributeName,
-					attributePath,
-					fromName);
-			throw new QueryInfoException(message, e);
+		boolean queryInfoJoinTypeIsUnspecified = QueryInfoJoinType.isUnspecified(queryInfoJoinType);
+		Join<?, ?> join;
+
+		if (queryInfoJoinTypeIsUnspecified) {
+			join = from.join(jpaJoinAttributeName);
+		} else {
+			JoinType jpaJoinType = queryInfoJoinType.toJpaType();
+			join = from.join(jpaJoinAttributeName, jpaJoinType);
 		}
 
-		return result;
+		Set<Join<RootEntity, ?>> joins = from.getJoins();
+		joins.remove(join);
+
+		return (Class<T>) join.getModel().getBindableJavaType();
 	}
 
 	protected <JoinedEntity> QueryInfoPathFactory<JoinedEntity> getJoinPathFactory(QueryInfoEntityContextRegistry entityContextRegistry,
@@ -184,27 +166,6 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 		if (pathParts.hasJoins()) {
 			result = walkJoinPaths(entityContextRegistry, jpaContext, from, pathParts, purpose);
 		} else {
-			result = getAttributePath(entityContextRegistry, jpaContext, from, attributePath, purpose);
-		}
-
-		return result;
-	}
-
-	protected <T> Path<T> getSubqueryRootPath(QueryInfoEntityContextRegistry entityContextRegistry,
-			QueryInfoJPAContext<?, ?> jpaContext,
-			From<?, RootEntity> from,
-			String attributePath,
-			QueryInfoAttributePurpose purpose) throws QueryInfoException {
-		Path<T> result = null;
-		QueryInfoFieldInfo fieldInfo = getFieldInfo(entityContextRegistry, from, attributePath);
-
-		if (fieldInfo == null) {
-			QueryInfoJoinInfo joinInfo = getJoinInfo(entityContextRegistry, from, attributePath);
-
-			if (joinInfo != null) {
-				result = getJoin(entityContextRegistry, jpaContext, from, attributePath);
-			}
-		} else {
 			result = getFieldPath(entityContextRegistry, jpaContext, from, attributePath, purpose);
 		}
 
@@ -225,7 +186,6 @@ public class DefaultQueryInfoPathFactory<RootEntity>
 				break;
 
 			case PREDICATE:
-			case SUBQUERY_ROOT:
 				result = fieldInfo.getIsPredicateable();
 				break;
 		}

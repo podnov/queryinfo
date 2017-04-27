@@ -33,8 +33,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,8 +43,6 @@ import com.evanzeimet.queryinfo.jpa.attribute.QueryInfoAttributePurpose;
 import com.evanzeimet.queryinfo.jpa.entity.QueryInfoEntityContextRegistry;
 import com.evanzeimet.queryinfo.jpa.field.DefaultQueryInfoFieldInfo;
 import com.evanzeimet.queryinfo.jpa.field.QueryInfoFieldInfo;
-import com.evanzeimet.queryinfo.jpa.join.DefaultQueryInfoJoinInfo;
-import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinInfo;
 import com.evanzeimet.queryinfo.jpa.join.QueryInfoJoinType;
 import com.evanzeimet.queryinfo.jpa.jpacontext.QueryInfoJPAContext;
 
@@ -71,152 +67,6 @@ public class DefaultQueryInfoPathFactoryTest {
 		queryInfoAttributeContext = mock(QueryInfoAttributeContext.class);
 		doReturn(queryInfoAttributeContext).when(pathFactory).getAttributeContext(entityContextRegistry,
 				from);
-	}
-
-	@Test
-	public void getSubqueryRootPath_isAField_invalidPurpose() {
-		String givenAttributePath = "myAttributePath";
-		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.SUBQUERY_ROOT;
-
-		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsPredicateable(false);
-		givenFieldInfo.setName(givenAttributePath);
-
-		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenAttributePath);
-
-		QueryInfoException actualException = null;
-
-		try {
-			pathFactory.getSubqueryRootPath(entityContextRegistry,
-					jpaContext,
-					from,
-					givenAttributePath,
-					givenPurpose);
-		} catch (QueryInfoException e) {
-			actualException = e;
-		}
-
-		assertNotNull(actualException);
-
-		String actualExceptionMessage = actualException.getMessage();
-		String expectedExceptionMessage = "Field name [myAttributePath] is not valid for [SUBQUERY_ROOT]";
-
-		assertEquals(expectedExceptionMessage, actualExceptionMessage);
-	}
-
-	@Test
-	public void getSubqueryRootPath_isAField_validPurpose() throws QueryInfoException {
-		String givenAttributePath = "myAttributePath";
-		String givenJpaAttributeName = givenAttributePath;
-
-		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.SUBQUERY_ROOT;
-
-		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsPredicateable(true);
-		givenFieldInfo.setJpaAttributeName(givenJpaAttributeName);
-		givenFieldInfo.setName(givenAttributePath);
-
-		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenAttributePath);
-
-		@SuppressWarnings("unchecked")
-		Path<Object> givenPath = mock(Path.class);
-		doReturn(givenPath).when(from).get(givenJpaAttributeName);
-
-		Path<Object> actual = pathFactory.getSubqueryRootPath(entityContextRegistry,
-					jpaContext,
-					from,
-					givenAttributePath,
-					givenPurpose);
-
-		Path<Object> expected = givenPath;
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void getSubqueryRootPath_isAFieldAndAJoin() throws QueryInfoException {
-		String givenAttributePath = "myAttributePath";
-		String givenFieldJpaAttributeName = "myFieldJpaAttributePath";
-		String givenJoinJpaAttributeName = "myJoinJpaAttributePath";
-
-		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.SUBQUERY_ROOT;
-
-		QueryInfoFieldInfo givenFieldInfo = new DefaultQueryInfoFieldInfo();
-		givenFieldInfo.setIsPredicateable(true);
-		givenFieldInfo.setJpaAttributeName(givenFieldJpaAttributeName);
-		givenFieldInfo.setName(givenAttributePath);
-
-		doReturn(givenFieldInfo).when(queryInfoAttributeContext).getField(givenAttributePath);
-
-		@SuppressWarnings("unchecked")
-		Path<Object> givenFieldPath = mock(Path.class);
-		doReturn(givenFieldPath).when(from).get(givenFieldJpaAttributeName);
-
-		QueryInfoJoinInfo givenJoinInfo = new DefaultQueryInfoJoinInfo();
-		givenJoinInfo.setJpaAttributeName(givenJoinJpaAttributeName);
-		givenJoinInfo.setName(givenAttributePath);
-
-		doReturn(givenJoinInfo).when(queryInfoAttributeContext).getJoin(givenAttributePath);
-
-		@SuppressWarnings("unchecked")
-		Join<Object, Object> givenJoinPath = mock(Join.class);
-		doReturn(givenJoinPath).when(jpaContext).getJoin(from, givenJoinInfo);
-
-		Path<Object> actual = pathFactory.getSubqueryRootPath(entityContextRegistry,
-				jpaContext,
-				from,
-				givenAttributePath,
-				givenPurpose);
-
-		Path<Object> expected = givenFieldPath;
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void getSubqueryRootPath_isAJoin() throws QueryInfoException {
-		String givenAttributePath = "myAttributePath";
-		String givenJpaAttributeName = givenAttributePath;
-
-		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.SUBQUERY_ROOT;
-
-		QueryInfoJoinInfo givenJoinInfo = new DefaultQueryInfoJoinInfo();
-		givenJoinInfo.setJpaAttributeName(givenJpaAttributeName);
-		givenJoinInfo.setName(givenAttributePath);
-
-		doReturn(null).when(queryInfoAttributeContext).getField(givenAttributePath);
-		doReturn(givenJoinInfo).when(queryInfoAttributeContext).getJoin(givenAttributePath);
-
-		@SuppressWarnings("unchecked")
-		Join<Object, Object> givenPath = mock(Join.class);
-		doReturn(givenPath).when(jpaContext).getJoin(from, givenJoinInfo);
-
-		Path<Object> actual = pathFactory.getSubqueryRootPath(entityContextRegistry,
-				jpaContext,
-				from,
-				givenAttributePath,
-				givenPurpose);
-
-		Path<Object> expected = givenPath;
-
-		assertEquals(expected, actual);
-	}
-
-	@Test
-	public void getSubqueryRootPath_notAField_notAJoin() throws QueryInfoException {
-		String givenAttributePath = "myAttributePath";
-		QueryInfoAttributePurpose givenPurpose = QueryInfoAttributePurpose.SUBQUERY_ROOT;
-
-		doReturn(null).when(queryInfoAttributeContext).getField(givenAttributePath);
-		doReturn(null).when(queryInfoAttributeContext).getJoin(givenAttributePath);
-
-		Path<Object> actual = pathFactory.getSubqueryRootPath(entityContextRegistry,
-					jpaContext,
-					from,
-					givenAttributePath,
-					givenPurpose);
-
-		assertNull(actual);
 	}
 
 	@Test

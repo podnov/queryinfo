@@ -34,12 +34,19 @@ public class QueryInfoFieldInfoBuilder {
 
 	public QueryInfoFieldInfoBuilder annotation(QueryInfoField annotation) {
 		String fieldName = annotation.name();
+
+		Class<?> entityClass = annotation.entityClass();
+		if (QueryInfoField.class.equals(entityClass)) {
+			entityClass = null;
+		}
+
 		boolean isPredicateable = annotation.isPredicateable();
 		boolean isSelectable = annotation.isSelectable();
 		boolean isOrderable = annotation.isOrderable();
 		QueryInfoJoinType joinType = annotation.joinType();
 
 		return name(fieldName)
+				.entityClass(entityClass)
 				.isOrderable(isOrderable)
 				.isPredicateable(isPredicateable)
 				.isSelectable(isSelectable)
@@ -49,6 +56,7 @@ public class QueryInfoFieldInfoBuilder {
 	public QueryInfoFieldInfo build() {
 		QueryInfoFieldInfo result = new DefaultQueryInfoFieldInfo();
 
+		result.setEntityClass(builderReferenceInstance.getEntityClass());
 		result.setIsOrderable(builderReferenceInstance.getIsOrderable());
 		result.setIsPredicateable(builderReferenceInstance.getIsPredicateable());
 		result.setIsSelectable(builderReferenceInstance.getIsSelectable());
@@ -61,6 +69,11 @@ public class QueryInfoFieldInfoBuilder {
 
 	public static QueryInfoFieldInfoBuilder create() {
 		return new QueryInfoFieldInfoBuilder();
+	}
+
+	public QueryInfoFieldInfoBuilder entityClass(Class<?> entityClass) {
+		builderReferenceInstance.setEntityClass(entityClass);
+		return this;
 	}
 
 	public QueryInfoFieldInfoBuilder isOrderable(Boolean isOrderable) {
