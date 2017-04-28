@@ -35,7 +35,7 @@ The purpose of this code is to easily create and execute dynamic queries against
 	},
 	"paginationInfo": {
 		"pageIndex": 0,
-		"pageSize": 9223372036854775807
+		"pageSize": 2147483647
 	},
 	"selections": [
 		{
