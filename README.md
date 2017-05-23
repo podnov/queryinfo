@@ -53,7 +53,7 @@ The purpose of this code is to easily create and execute dynamic queries against
 	],
 	"sorts": [
 		{
-			"attribuePath": "name",
+			"attributePath": "name",
 			"direction": "desc"
 		}
 	]
