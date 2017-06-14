@@ -25,7 +25,13 @@ package com.evanzeimet.queryinfo.condition;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evanzeimet.queryinfo.QueryInfoException;
+import com.evanzeimet.queryinfo.QueryInfoRuntimeException;
+import com.evanzeimet.queryinfo.QueryInfoUtils;
+
 public class ConditionGroupBuilder {
+
+	private static final QueryInfoUtils utils = new QueryInfoUtils();
 
 	private ConditionGroup builderReferenceInstance = createDefaultInstance();
 
@@ -89,6 +95,11 @@ public class ConditionGroupBuilder {
 		return this;
 	}
 
+	public ConditionGroupBuilder directiveConfig(Object directiveConfig) {
+		String rawDirectiveConfig = stringify(directiveConfig);
+		return directiveConfig(rawDirectiveConfig);
+	}
+
 	public ConditionGroupBuilder directiveConfig(String directiveConfig) {
 		builderReferenceInstance.setDirectiveConfig(directiveConfig);
 		return this;
@@ -110,4 +121,17 @@ public class ConditionGroupBuilder {
 		builderReferenceInstance.setOperator(operator);
 		return this;
 	}
+
+	protected String stringify(Object object) {
+		String result;
+
+		try {
+			result = utils.stringify(object);
+		} catch (QueryInfoException e) {
+			throw new QueryInfoRuntimeException(e);
+		}
+
+		return result;
+	}
+
 }
