@@ -38,6 +38,7 @@ import com.evanzeimet.queryinfo.selection.Selection;
 import com.evanzeimet.queryinfo.selection.SelectionBuilder;
 import com.evanzeimet.queryinfo.sort.Sort;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -281,6 +282,18 @@ public class QueryInfoUtils {
 			JavaType javaType = objectMapper.constructType(typeOfT);
 			result = objectMapper.readValue(json, javaType);
 		} catch (IOException e) {
+			throw new QueryInfoException(e);
+		}
+
+		return result;
+	}
+
+	public String stringify(Object object) throws QueryInfoException {
+		String result;
+
+		try {
+			result = createObjectMapper().writeValueAsString(object);
+		} catch (JsonProcessingException e) {
 			throw new QueryInfoException(e);
 		}
 
