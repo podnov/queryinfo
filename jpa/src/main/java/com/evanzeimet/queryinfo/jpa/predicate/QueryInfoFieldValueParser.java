@@ -1,5 +1,8 @@
 package com.evanzeimet.queryinfo.jpa.predicate;
 
+import static com.evanzeimet.queryinfo.condition.ConditionOperator.isEitherInOperator;
+import static com.evanzeimet.queryinfo.condition.ConditionOperator.isEitherNullOperator;
+
 /*
  * #%L
  * queryinfo-jpa
@@ -72,10 +75,10 @@ public class QueryInfoFieldValueParser {
 		Object result;
 		Class<?> javaType = expression.getJavaType();
 
-		boolean isEitherInOperator = ConditionOperator.isEitherInOperator(conditionOperator);
-
-		if (isEitherInOperator) {
+		if (isEitherInOperator(conditionOperator)) {
 			result = parseInForExpression(expression, fieldValue);
+		} else if (isEitherNullOperator(conditionOperator)) {
+			result = null;
 		} else if (Date.class.isAssignableFrom(javaType)) {
 			result = parseDate(fieldValue);
 		} else {
