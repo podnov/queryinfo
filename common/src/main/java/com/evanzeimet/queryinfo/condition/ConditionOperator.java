@@ -84,4 +84,11 @@ public enum ConditionOperator {
 		result = (result || NOT_IN.equals(conditionOperator));
 		return result;
 	}
+
+	public static boolean isEitherNullOperator(ConditionOperator conditionOperator) {
+		boolean result = IS_NULL.equals(conditionOperator);
+		result = (result || IS_NOT_NULL.equals(conditionOperator));
+		return result;
+	}
+
 }
