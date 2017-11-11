@@ -104,8 +104,6 @@ public class BaseSteps {
 
 	protected void setUpRestAssured() {
 		RestAssured.basePath = "queryinfo-it";
-		RestAssured.baseURI = "http://127.0.0.1";
-		RestAssured.port = 8080;
 	}
 
 	@Given("^these organizations:$")
