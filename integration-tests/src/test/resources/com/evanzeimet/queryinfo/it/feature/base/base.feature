@@ -25,6 +25,102 @@ Background:
 	| Mike      | Metcalf    | U.S. Navy                |
 	| I'm       | Unemployed |                          |
 
+Scenario: Group By Count of Groups
+
+	Given the generic query info web service for the "organizationEntity"
+	When I send the query:
+	"""
+	{
+		"selections": [
+			{
+				"attributePath": "state"
+			}
+		],
+		"conditionGroup": {
+			"conditions": [
+				{
+					"leftHandSide": "state",
+					"operator": "<>",
+					"rightHandSide": "WA"
+				}
+			]
+		},
+		"groupByAttributePaths": [
+			"state"
+		],
+		"sorts": [
+			{
+				"attributePath": "state",
+				"direction": "asc"
+			}
+		]
+	}
+	"""
+	Then the http response code should be 200
+	And I should receive this json:
+	"""
+	{
+	  "pageResults" : [
+	    {
+	      "@id" : 1,
+	      "active" : null,
+	      "address1" : null,
+	      "address2" : null,
+	      "city" : null,
+	      "dateCreated" : null,
+	      "id" : null,
+	      "name" : null,
+	      "state" : "CA",
+	      "yearFounded" : null,
+	      "zip" : null,
+	      "employees" : null
+	    },
+	    {
+	      "@id" : 2,
+	      "active" : null,
+	      "address1" : null,
+	      "address2" : null,
+	      "city" : null,
+	      "dateCreated" : null,
+	      "id" : null,
+	      "name" : null,
+	      "state" : "DC",
+	      "yearFounded" : null,
+	      "zip" : null,
+	      "employees" : null
+	    },
+	    {
+	      "@id" : 3,
+	      "active" : null,
+	      "address1" : null,
+	      "address2" : null,
+	      "city" : null,
+	      "dateCreated" : null,
+	      "id" : null,
+	      "name" : null,
+	      "state" : "IL",
+	      "yearFounded" : null,
+	      "zip" : null,
+	      "employees" : null
+	    },
+	    {
+	      "@id" : 4,
+	      "active" : null,
+	      "address1" : null,
+	      "address2" : null,
+	      "city" : null,
+	      "dateCreated" : null,
+	      "id" : null,
+	      "name" : null,
+	      "state" : "WI",
+	      "yearFounded" : null,
+	      "zip" : null,
+	      "employees" : null
+	    }
+	  ],
+	  "totalCount" : 4
+	}
+	"""
 
 Scenario: is not null shouldn't parse rightHandSide (in case of type mismatch)
 

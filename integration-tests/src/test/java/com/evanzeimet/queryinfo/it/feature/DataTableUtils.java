@@ -130,6 +130,12 @@ public class DataTableUtils {
 		return row;
 	}
 
+	public List<String> getColumnNames(DataTable dataTable) {
+		List<DataTableRow> gherkinRows = dataTable.getGherkinRows();
+		DataTableRow firstRow = gherkinRows.get(0);
+		return firstRow.getCells();
+	}
+
 	public boolean isDataTableNull(String value) {
 		boolean result;
 

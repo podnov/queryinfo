@@ -108,6 +108,9 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 			throw new QueryInfoException(message);
 		}
 
+		List<String> groupByAttributePaths = queryInfoUtils.coalesceGroupByAttributePaths(queryInfo);
+		boolean isGroupBy = !groupByAttributePaths.isEmpty();
+
 		EntityManager entityManager = getEntityManager();
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
@@ -120,9 +123,22 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		setCountSelection(criteriaBuilder, criteriaQuery, jpaContexts);
 		setQueryPredicates(jpaContexts, queryInfo);
 
+		if (isGroupBy) {
+			setQueryGroupBy(jpaContexts, queryInfo);
+		}
+
 		TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery);
 
-		return typedQuery.getSingleResult();
+		Long result;
+
+		if (isGroupBy) {
+			result = (long) typedQuery.getResultList().size();
+		} else {
+			result = typedQuery.getSingleResult();
+		}
+
+		return result;
+
 	}
 
 	@Override
@@ -267,9 +283,9 @@ public abstract class AbstractQueryInfoBean<RootEntity, CriteriaQueryResult, Que
 		typedQuery.setMaxResults(maxResults);
 	}
 
-	protected void setQueryGroupBy(QueryInfoJPAContexts<RootEntity, CriteriaQueryResult> jpaContexts,
+	protected void setQueryGroupBy(QueryInfoJPAContexts<RootEntity, ?> jpaContexts,
 			QueryInfo queryInfo) throws QueryInfoException {
-		QueryInfoJPAContext<RootEntity, CriteriaQuery<CriteriaQueryResult>> rootContext = jpaContexts.getRootContext();
+		QueryInfoJPAContext<RootEntity, ?> rootContext = jpaContexts.getRootContext();
 		QueryInfoEntityContextRegistry entityContextRegistry = beanContext.getEntityContextRegistry();
 		QueryInfoGroupByFactory<RootEntity> groupByFactory = beanContext.getGroupByFactory();
 

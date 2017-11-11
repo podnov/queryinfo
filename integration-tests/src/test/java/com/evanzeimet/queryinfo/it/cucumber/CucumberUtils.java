@@ -62,6 +62,11 @@ public class CucumberUtils {
 		new TableDiffer(expected, actual).calculateDiffs();
 	}
 
+	public DataTable convertListToDataTable(List<?> actual, List<String> columnNames) {
+		String[] columnNameArray = columnNames.toArray(new String[0]);
+		return convertListToDataTable(actual, columnNameArray);
+	}
+	
 	public DataTable convertListToDataTable(List<?> actual, String[] columnNames) {
 		TableConverter tableConverter = createTableConverter();
 		return tableConverter.toTable(actual, columnNames);

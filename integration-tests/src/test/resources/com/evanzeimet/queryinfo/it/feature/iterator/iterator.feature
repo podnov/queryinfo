@@ -49,8 +49,6 @@ Scenario: Descending Page Iterator
 	| Google    | 1600 Amphitheatre Parkway |          | Mountain View | CA    | 94043 | 1998        | true   |
 
 
-
-
 Scenario: Ascending Page Iterator
 
 	Given an organization entity query info bean
