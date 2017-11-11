@@ -275,6 +275,7 @@
 												-Duser.timezone=${user.timezone}
 												-Xdebug
 												-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=${cargo.wildfly.debug.port}
+												-Djava.net.preferIPv4Stack=true
 											</cargo.jvmargs>
 										</properties>
 									</configuration>

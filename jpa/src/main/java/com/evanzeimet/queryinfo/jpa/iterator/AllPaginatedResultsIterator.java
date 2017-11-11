@@ -28,7 +28,8 @@ import java.util.NoSuchElementException;
 import com.evanzeimet.queryinfo.QueryInfo;
 import com.evanzeimet.queryinfo.jpa.bean.QueryInfoBean;
 
-public class AllPaginatedResultsIterator<T> implements Iterator<T> {
+public class AllPaginatedResultsIterator<T>
+		implements Iterator<T> {
 
 	protected Iterator<T> currentPageResultsIterator;
 	protected PaginatedResultIterator<T> pageIterator;
@@ -59,15 +60,18 @@ public class AllPaginatedResultsIterator<T> implements Iterator<T> {
 		if (zeroPages) {
 			result = false;
 		} else {
-			result = currentPageResultsIterator.hasNext();
+			boolean currentPageHasNext = currentPageResultsIterator.hasNext();
+			boolean currentPageIsEmptyWithMorePages = (!currentPageHasNext && pageIterator.hasNext());
 
-			if (!result && pageIterator.hasNext()) {
+			while (currentPageIsEmptyWithMorePages) {
 				currentPageResultsIterator = pageIterator.next()
 						.getPageResults()
 						.iterator();
-
-				result = currentPageResultsIterator.hasNext();
+				currentPageHasNext = currentPageResultsIterator.hasNext();
+				currentPageIsEmptyWithMorePages = (!currentPageHasNext && pageIterator.hasNext());
 			}
+
+			result = currentPageHasNext;
 		}
 
 		return result;

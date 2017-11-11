@@ -113,7 +113,7 @@ public class IteratorSteps {
 		DefaultQueryInfo queryInfo = testUtils.objectify(rawQueryInfo,
 				DefaultQueryInfo.class);
 
-		Iterator<? extends Object> iterator = queryInfoBean.queryForIterator(queryInfo, direction);
+		Iterator<?> iterator = queryInfoBean.queryForIterator(queryInfo, direction);
 
 		actualQueryResults = Lists.newArrayList(iterator);
 	}
