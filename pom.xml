@@ -47,7 +47,7 @@
 		<version.javax.xml.ws.jaxws-api>2.3.1</version.javax.xml.ws.jaxws-api>
 		<version.javax.xml.bind.jaxb-api>2.3.1</version.javax.xml.bind.jaxb-api>
 		<version.junit.junit>4.13.1</version.junit.junit>
-		<version.mysql.mysql-connector-java>5.1.36</version.mysql.mysql-connector-java>
+		<version.mysql.mysql-connector-java>8.0.16</version.mysql.mysql-connector-java>
 		<version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
 		<version.org.apache.maven.plugins.maven-compiler-plugin>3.3</version.org.apache.maven.plugins.maven-compiler-plugin>
 		<version.org.apache.maven.plugins.maven-ear-plugin>2.10.1</version.org.apache.maven.plugins.maven-ear-plugin>
