@@ -15,7 +15,7 @@ install: skip
 
 before_script:
 - mysql -u root -e "create database queryinfo_test default character set utf8 default collate utf8_general_ci;"
-- mysql -u root -e "create user 'queryinfo_test'@'localhost' IDENTIFIED BY 'queryinfo_test';"
-- mysql -u root -e "grant all privileges on *.* to 'queryinfo_test'@'localhost';"
+- mysql -u root -e "create user 'queryinfo_test'@'%' IDENTIFIED BY 'queryinfo_test';"
+- mysql -u root -e "grant all privileges on *.* to 'queryinfo_test'@'%';"
 
 script: mvn verify -Ptravis
