@@ -1,17 +1,21 @@
 ---
 
 language: java
+services:
+- mysql
 
 notifications:
   email:
     recipients:
-      - podnov@gmail.com
+    - podnov@gmail.com
     on_success: change
     on_failure: always
 
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dcargo.skip=true -Dliquibase.shouldRun=false -B -V
+install: skip
 
 before_script:
- - mysql -e 'create database queryinfo_test default character set utf8 default collate utf8_general_ci;'
+- mysql -u root -e "create database queryinfo_test default character set utf8 default collate utf8_general_ci;"
+- mysql -u root -e "create user 'queryinfo_test'@'localhost' IDENTIFIED BY 'queryinfo_test';"
+- mysql -u root -e "grant all privileges on *.* to 'queryinfo_test'@'localhost';"
 
 script: mvn verify -Ptravis
