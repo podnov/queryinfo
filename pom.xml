@@ -43,7 +43,7 @@
 		<version.info.cukes.cucumber-java>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-java>
 		<version.info.cukes.cucumber-junit>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-junit>
 		<version.javax.javaee-api>7.0</version.javax.javaee-api>
-		<version.junit.junit>4.12</version.junit.junit>
+		<version.junit.junit>4.13.1</version.junit.junit>
 		<version.mysql.mysql-connector-java>5.1.36</version.mysql.mysql-connector-java>
 		<version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
 		<version.org.apache.maven.plugins.maven-compiler-plugin>3.3</version.org.apache.maven.plugins.maven-compiler-plugin>
