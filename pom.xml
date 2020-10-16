@@ -43,6 +43,7 @@
 		<version.info.cukes.cucumber-java>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-java>
 		<version.info.cukes.cucumber-junit>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-junit>
 		<version.javax.javaee-api>7.0</version.javax.javaee-api>
+		<version.javax.xml.ws.jaxws-api>2.3.1</version.javax.xml.ws.jaxws-api>
 		<version.junit.junit>4.13.1</version.junit.junit>
 		<version.mysql.mysql-connector-java>5.1.36</version.mysql.mysql-connector-java>
 		<version.org.apache.commons.commons-lang3>3.4</version.org.apache.commons.commons-lang3>
@@ -190,6 +191,13 @@
 				<artifactId>javaee-api</artifactId>
 				<version>${version.javax.javaee-api}</version>
 				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.xml.ws</groupId>
+				<artifactId>jaxws-api</artifactId>
+				<version>${version.javax.xml.ws.jaxws-api}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>
