@@ -38,7 +38,7 @@
 
 		<version.com.github.podnov.test-id-mapper>RELEASE-TAG-0.0.3</version.com.github.podnov.test-id-mapper>
 		<version.com.jayway.restassured.rest-assured>2.6.0</version.com.jayway.restassured.rest-assured>
-		<version.commons-io.commons-io>2.4</version.commons-io.commons-io>
+		<version.commons-io.commons-io>2.7</version.commons-io.commons-io>
 		<version.commons-logging.commons-logging>1.2</version.commons-logging.commons-logging>
 		<version.info.cukes.cucumber-java>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-java>
 		<version.info.cukes.cucumber-junit>${version.info.cukes.cucumber-jvm}</version.info.cukes.cucumber-junit>
