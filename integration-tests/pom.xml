@@ -13,11 +13,10 @@
 
 	<properties>
 		<cargo.basedir>target/cargo</cargo.basedir>
-		<cargo.containerId>wildfly9x</cargo.containerId>
+		<cargo.containerId>wildfly12x</cargo.containerId>
 		<cargo.skip>false</cargo.skip>
 		<cargo.wildfly.debug.port>5006</cargo.wildfly.debug.port>
-		<cargo.wildfly.management-http.port>9991</cargo.wildfly.management-http.port>
-		<cargo.wildfly.version>9.0.1.Final</cargo.wildfly.version>
+		<cargo.wildfly.version>12.0.0.Final</cargo.wildfly.version>
 
 		<cargo.wildfly.install>${cargo.basedir}/installs/wildfly-dist-${cargo.wildfly.version}/wildfly-${cargo.wildfly.version}</cargo.wildfly.install>
 		<cargo.wildfly.modules>${cargo.wildfly.install}/modules</cargo.wildfly.modules>
@@ -240,7 +239,7 @@
 									<type>ear</type>
 								</deployable>
 							</deployables>
-							<configuration>
+							<!--<configuration>
 								<files>
 									<copy>
 										<file>${project.basedir}/target/test-classes/wildfly/standalone/configuration/</file>
@@ -253,10 +252,7 @@
 										<overwrite>true</overwrite>
 									</copy>
 								</files>
-								<properties>
-									<cargo.jboss.management-http.port>${cargo.wildfly.management-http.port}</cargo.jboss.management-http.port>
-								</properties>
-							</configuration>
+							</configuration>-->
 						</configuration>
 						<executions>
 							<execution>
