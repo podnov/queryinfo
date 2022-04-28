@@ -64,7 +64,7 @@
 		<version.org.hibernate.hibernate-jpamodelgen>${version.org.hibernate}</version.org.hibernate.hibernate-jpamodelgen>
 		<version.org.mockito.mockito-all>1.9.5</version.org.mockito.mockito-all>
 		<version.org.slf4j.slf4j-api>1.7.21</version.org.slf4j.slf4j-api>
-		<version.org.wildfly.wildfly-parent>9.0.1.Final</version.org.wildfly.wildfly-parent>
+		<version.org.wildfly.wildfly-parent>23.0.2.Final</version.org.wildfly.wildfly-parent>
 		<version.uk.co.jemos.podam.podam>7.0.5.RELEASE</version.uk.co.jemos.podam.podam>
 	</properties>
 
